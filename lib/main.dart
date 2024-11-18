@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/provider/appstate.dart';
+import 'package:moapp_toto/screens/add/add_screen.dart';
+import 'package:moapp_toto/screens/friend/friend_screen.dart';
 import 'package:moapp_toto/screens/home/home_screen.dart';
+import 'package:moapp_toto/screens/landing/landing_screen.dart';
+import 'package:moapp_toto/screens/mission/mission_screen.dart';
+import 'package:moapp_toto/screens/profile/profile_screen.dart';
+import 'package:moapp_toto/screens/signIn/signIn_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -22,7 +28,13 @@ class MyApp extends StatelessWidget {
         title: '투데이투게더',
         initialRoute: '/',
         routes: {
+          '/landing': (BuildContext context) => const LandingPage(),
+          '/signIn': (BuildContext context) => const SignInPage(),
           '/': (BuildContext context) => const HomePage(),
+          '/add': (BuildContext context) => const AddPage(),
+          '/friend': (BuildContext context) => const FriendPage(),
+          '/mission': (BuildContext context) => const MissionPage(),
+          '/profile': (BuildContext context) => const ProfilePage(),
         },
         theme: ThemeData.light(useMaterial3: true)
             .copyWith(primaryColor: Colors.blue),
