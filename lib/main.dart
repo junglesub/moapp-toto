@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: '투데이투게더',
-        initialRoute: '/',
+        initialRoute: '/landing',
         routes: {
           '/landing': (BuildContext context) => const LandingPage(),
           '/signIn': (BuildContext context) => const SignInPage(),
