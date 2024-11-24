@@ -5,6 +5,13 @@ class AddPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('오늘의 기록'),
+      ),
+      body: const Center(
+        child: Text('Page Body'),
+      ),
+    );
   }
 }
