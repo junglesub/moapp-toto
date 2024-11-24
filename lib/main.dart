@@ -36,8 +36,21 @@ class MyApp extends StatelessWidget {
           '/mission': (BuildContext context) => const MissionPage(),
           '/profile': (BuildContext context) => const ProfilePage(),
         },
-        theme: ThemeData.light(useMaterial3: true)
-            .copyWith(primaryColor: Colors.blue),
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: const Color(0xFF363536),
+            surface: const Color(0xFFFFFFF5),
+          ),
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF363536),
+            foregroundColor: Color(0xFFFFFFF5),
+          ),
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(color: Colors.black),
+          ),
+        ),
       ),
     );
   }
