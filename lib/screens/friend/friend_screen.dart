@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:moapp_toto/screens/friend/widgets/recommand_friend_row.dart';
+import 'package:moapp_toto/widgets/custom_full_button.dart';
+
+import 'package:search_page/search_page.dart';
 
 class FriendPage extends StatelessWidget {
   const FriendPage({super.key});
@@ -24,18 +28,7 @@ class FriendPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('주변 친구 검색'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
+          FindFriend(),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
