@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:moapp_toto/screens/friend/widgets/current_friend_list.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:moapp_toto/screens/friend/widgets/recommand_friend_row.dart';
-import 'package:moapp_toto/widgets/custom_full_button.dart';
-
-import 'package:search_page/search_page.dart';
 
 class FriendPage extends StatelessWidget {
   const FriendPage({super.key});
@@ -17,6 +14,14 @@ class FriendPage extends StatelessWidget {
       'Friend 3',
       'Friend 4',
       'Friend 5',
+    ];
+
+    final List<String> currentFriends = [
+      'Alice',
+      'Bob',
+      'Charlie',
+      'Diana',
+      'Eva',
     ];
 
     return Scaffold(
@@ -38,10 +43,19 @@ class FriendPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Expanded(
+            flex: 2,
             child: RecommandFriendRow(
               friends: friends,
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text(
+              '현재 친구',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ),
+          CurrentFriendList(currentFriends: currentFriends),
         ],
       ),
     );
