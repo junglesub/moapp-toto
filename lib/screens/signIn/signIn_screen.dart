@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moapp_toto/widgets/custom_full_button.dart';
 import 'package:moapp_toto/widgets/my_text_field.dart';
 
+import '../add/widgets/animated_btn_widget.dart';
+
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 
@@ -63,12 +65,18 @@ class SignInPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            CustomFullWidthButton(
-                label: "시작하기",
-                height: 59,
-                onPressed: () {
-                  Navigator.pushNamed(context, '/signIn');
-                }),
+            CustomAnimatedButton(
+              key: const ValueKey(2),
+              text: "시작하기",
+              onPressed: () async {
+                await Future.delayed(const Duration(milliseconds: 500));
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/',
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
           ],
         ),
       ),
