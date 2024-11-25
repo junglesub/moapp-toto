@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: '투데이투게더',
-        initialRoute: '/',
+        initialRoute: '/profile',
         routes: {
           '/landing': (BuildContext context) => const LandingPage(),
           '/signIn': (BuildContext context) => const SignInPage(),
@@ -49,6 +49,11 @@ class MyApp extends StatelessWidget {
           ),
           textTheme: const TextTheme(
             bodyMedium: TextStyle(color: Colors.black),
+          ),
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Color(0xFF363536),
           ),
         ),
       ),
