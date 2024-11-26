@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:moapp_toto/screens/friend/widgets/current_friend_list.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:moapp_toto/screens/friend/widgets/recommand_friend_row.dart';
+import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 
-class FriendPage extends StatelessWidget {
+int _selectedIndex = 0;
+
+class FriendPage extends StatefulWidget {
   const FriendPage({super.key});
 
+  @override
+  State<FriendPage> createState() => _FriendPageState();
+}
+
+class _FriendPageState extends State<FriendPage> {
   @override
   Widget build(BuildContext context) {
     final List<String> friends = [
@@ -57,6 +65,14 @@ class FriendPage extends StatelessWidget {
           ),
           CurrentFriendList(currentFriends: currentFriends),
         ],
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
