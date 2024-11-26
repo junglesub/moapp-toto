@@ -14,6 +14,9 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _showAppBarTitle = false;
   int _selectedIndex = 0;
 
+  bool _taggedPosts = false;
+  bool _likedPosts = false;
+
   @override
   void initState() {
     super.initState();
@@ -36,11 +39,117 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
+  void _showFilterSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.2,
+          minChildSize: 0.1,
+          maxChildSize: 0.2,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+              ),
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey[200],
+                        child:
+                            const Icon(Icons.local_offer, color: Colors.black),
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '태그된 게시물',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '회원님이 태그된 게시물만 표시합니다.',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Switch(
+                        value: _taggedPosts,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _taggedPosts = value;
+                          });
+                          Navigator.pop(context);
+                        },
+                        activeTrackColor: Colors.black,
+                        inactiveTrackColor: Colors.grey,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(Icons.thumb_up, color: Colors.black),
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '좋아요 누른 게시물',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '회원님이 좋아요를 누른 게시물만 표시합니다.',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Switch(
+                        value: _likedPosts,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _likedPosts = value;
+                          });
+                          Navigator.pop(context);
+                        },
+                        activeTrackColor: Colors.black,
+                        inactiveTrackColor: Colors.grey,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _showAppBarTitle ? const Center(child: Text('유저 닉네임')) : null,
+        title:
+            _showAppBarTitle ? const Center(child: Text('Ryoo Jungsub')) : null,
         actions: [
           IconButton(
             icon: const Icon(Icons.dark_mode),
@@ -90,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 70),
           const Text(
-            '개발의 정석',
+            'Ryoo Jungsub',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -146,9 +255,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.tune),
-                          onPressed: () {
-                            // 필터 아이콘 동작
-                          },
+                          onPressed: _showFilterSheet,
                         ),
                       ],
                     ),
@@ -169,9 +276,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       postImagePath: 'assets/images/toto.jpg',
                     );
                   },
-                )
-
-                // 게시물 리스트 끝
+                ),
               ],
             ),
           ),
