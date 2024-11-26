@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
   final String label;
+  final TextEditingController? controller;
 
-  const MyTextField({super.key, required this.label});
+  const MyTextField({super.key, required this.label, this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(fontSize: 14, color: Colors.grey),
