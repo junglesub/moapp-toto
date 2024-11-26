@@ -41,7 +41,7 @@ class LandingPage extends StatelessWidget {
                     height: 59,
                     padding: 48,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signIn');
+                      Navigator.pushNamed(context, '/signup');
                     }),
                 SizedBox(height: 32),
                 Text(

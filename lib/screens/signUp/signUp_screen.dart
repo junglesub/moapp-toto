@@ -4,8 +4,8 @@ import 'package:moapp_toto/widgets/my_text_field.dart';
 
 import '../add/widgets/animated_btn_widget.dart';
 
-class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {

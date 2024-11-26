@@ -6,7 +6,7 @@ import 'package:moapp_toto/screens/home/home_screen.dart';
 import 'package:moapp_toto/screens/landing/landing_screen.dart';
 import 'package:moapp_toto/screens/mission/mission_screen.dart';
 import 'package:moapp_toto/screens/profile/profile_screen.dart';
-import 'package:moapp_toto/screens/signIn/signIn_screen.dart';
+import 'package:moapp_toto/screens/signUp/signUp_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/profile',
         routes: {
           '/landing': (BuildContext context) => const LandingPage(),
-          '/signIn': (BuildContext context) => const SignInPage(),
+          '/signup': (BuildContext context) => const SignUpPage(),
           '/': (BuildContext context) => const HomePage(),
           '/add': (BuildContext context) => const AddPage(),
           '/friend': (BuildContext context) => const FriendPage(),
