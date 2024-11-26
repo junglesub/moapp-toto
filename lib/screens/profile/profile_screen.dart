@@ -51,11 +51,8 @@ class _ProfilePageState extends State<ProfilePage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.2,
-          minChildSize: 0.1,
-          maxChildSize: 0.2,
-          builder: (BuildContext context, ScrollController scrollController) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
             return Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -63,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               padding: const EdgeInsets.all(16.0),
               child: ListView(
-                controller: scrollController,
+                shrinkWrap: true,
                 children: [
                   Row(
                     children: [
@@ -93,10 +90,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       Switch(
                         value: _taggedPosts,
                         onChanged: (bool value) {
-                          setState(() {
+                          setModalState(() {
                             _taggedPosts = value;
                           });
-                          Navigator.pop(context);
+                          setState(() {});
                         },
                         activeTrackColor: Colors.black,
                         inactiveTrackColor: Colors.grey,
@@ -131,10 +128,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       Switch(
                         value: _likedPosts,
                         onChanged: (bool value) {
-                          setState(() {
+                          setModalState(() {
                             _likedPosts = value;
                           });
-                          Navigator.pop(context);
+                          setState(() {});
                         },
                         activeTrackColor: Colors.black,
                         inactiveTrackColor: Colors.grey,
