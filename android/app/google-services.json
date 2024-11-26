@@ -12,7 +12,12 @@
           "package_name": "app.handong.toto"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "377762176742-i4f0r3b1v91b44s41gvktaujh5he5em8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAOhFSh2aifG2pblN9rihfK8Atrh3Eh2N0"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "377762176742-i4f0r3b1v91b44s41gvktaujh5he5em8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "377762176742-6smdkhnnkc4ckrkv2ng71ifahsgphf2f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.moappToto"
+              }
+            }
+          ]
         }
       }
     }

@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '377762176742',
     projectId: 'moapp-toto',
     storageBucket: 'moapp-toto.firebasestorage.app',
+    iosClientId: '377762176742-6smdkhnnkc4ckrkv2ng71ifahsgphf2f.apps.googleusercontent.com',
     iosBundleId: 'com.example.moappToto',
   );
 
@@ -72,6 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '377762176742',
     projectId: 'moapp-toto',
     storageBucket: 'moapp-toto.firebasestorage.app',
+    iosClientId: '377762176742-6smdkhnnkc4ckrkv2ng71ifahsgphf2f.apps.googleusercontent.com',
     iosBundleId: 'com.example.moappToto',
   );
 
@@ -83,4 +85,5 @@ class DefaultFirebaseOptions {
     authDomain: 'moapp-toto.firebaseapp.com',
     storageBucket: 'moapp-toto.firebasestorage.app',
   );
+
 }
