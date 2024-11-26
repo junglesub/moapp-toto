@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: Text(
-                "T # P ###",
+                "T 5 P 100",
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -128,7 +128,7 @@ class HomePage extends StatelessWidget {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: const Text(
-              "누적 일기 ##개째...",
+              "🔥 누적 일기 16개째...",
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -139,21 +139,21 @@ class HomePage extends StatelessWidget {
                 _buildPostCard(
                   authorName: "Author A",
                   date: "2024년 11월 12일",
-                  content: "오늘은 정말 좋은 날이었어요!",
+                  content: "오늘은 날씨가 너무 좋았다!!",
                   imageUrl:
                       "https://via.placeholder.com/300", // Placeholder image
                 ),
                 _buildPostCard(
                   authorName: "Author B",
                   date: "2024년 11월 11일",
-                  content: "Flutter로 멋진 앱을 만들었어요.",
+                  content: "플러터로 앱 개발을 함. 굿",
                   imageUrl:
                       "https://via.placeholder.com/300", // Placeholder image
                 ),
                 _buildPostCard(
                   authorName: "Author C",
                   date: "2024년 11월 10일",
-                  content: "오늘 날씨는 정말 쾌청했어요!",
+                  content: "드라이브해서 바다 보고옴",
                 ),
               ],
             ),
