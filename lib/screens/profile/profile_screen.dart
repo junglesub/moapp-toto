@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:moapp_toto/screens/profile/widgets/toto_card_widget.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -72,14 +72,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: CircleAvatar(
                   radius: 70,
                   backgroundColor: Colors.grey[300],
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.black,
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        // 프로필 사진 변경
+                      },
                     ),
-                    onPressed: () {
-                      // 프로필 사진 변경
-                    },
                   ),
                 ),
               ),
@@ -132,9 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       '누적 투투 15개째',
                       style: TextStyle(fontSize: 14),
                     ),
-                    const SizedBox(
-                      height: 2,
-                    ),
+                    const SizedBox(height: 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -154,50 +155,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // 게시물 리스트 시작
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: 5, // 더미 데이터 3개
+                  itemCount: 3,
                   itemBuilder: (context, index) {
-                    return Container(
-                      height: 200,
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                              ),
-                              child: Image.asset(
-                                'assets/images/toto.jpg',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                              ),
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              '유저가 작성한 게시물',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                        // 애니메이션 추가
-                        .animate()
-                        .fadeIn(duration: 1000.ms)
-                        .slideY(begin: 0.1, end: 0, duration: 1000.ms);
+                    return const ToToCard(
+                      userName: 'Ryoo Jungsub',
+                      userImagePath: 'assets/images/profile.jpg',
+                      postDate: '2020년 4월 17일',
+                      postContent:
+                          '뒤에는 영화관에서 구매한 포스터 - 앞에는 코로나 때문에 영화관을 못 가는 나를 위해 구매한 블루레이',
+                      postImagePath: 'assets/images/toto.jpg',
+                    );
                   },
-                ),
+                )
+
                 // 게시물 리스트 끝
               ],
             ),
