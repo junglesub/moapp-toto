@@ -1,13 +1,43 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:moapp_toto/constants.dart';
 import 'package:moapp_toto/widgets/custom_button.dart';
 import 'package:moapp_toto/widgets/custom_full_button.dart';
 
 class LandingPage extends StatelessWidget {
-  const LandingPage({super.key});
+  LandingPage({super.key});
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _signInWithGoogle() async {
+      try {
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        if (googleUser == null) {
+          return; // The user canceled the sign-in
+        }
+
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        await _auth.signInWithCredential(credential);
+
+        // Handle Redirect in User Provider
+        // Navigator.pushReplacementNamed(context, '/');
+      } catch (e) {
+        print(e);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to sign in with Google: $e')),
+        );
+      }
+    }
+
     return Scaffold(
       backgroundColor: whiteBackgroundColor,
       body: Stack(
@@ -40,9 +70,7 @@ class LandingPage extends StatelessWidget {
                     label: "구글로 계속",
                     height: 59,
                     padding: 48,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/signup');
-                    }),
+                    onPressed: _signInWithGoogle),
                 SizedBox(height: 32),
                 Text(
                   "개발의 정석",
