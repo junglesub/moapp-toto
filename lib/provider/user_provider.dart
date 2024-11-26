@@ -52,6 +52,8 @@ class UserProvider with ChangeNotifier {
         }
       } else {
         // user is null. Cancel subscription? 유저 관련된 subsciption 만
+        navigatorKey.currentState?.pushNamedAndRemoveUntil(
+            "/landing", (Route<dynamic> route) => false);
         _ueSub?.cancel();
       }
     });

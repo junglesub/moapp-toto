@@ -1,29 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserEntry {
-  String? email;
-  String? name;
   String uid;
-  String statusMessage;
+  String? email;
+  String? nickname;
+  String? gender;
+  int? birthyear;
 
   UserEntry({
     required this.uid,
-    required this.statusMessage,
+    required this.gender,
     this.email,
-    this.name,
+    this.nickname,
+    this.birthyear,
   });
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {
       'uid': uid,
-      'status_message': statusMessage,
     };
 
     if (email != null) {
       data['email'] = email;
     }
-    if (name != null) {
-      data['name'] = name;
+    if (nickname != null) {
+      data['nickname'] = nickname;
+    }
+    if (gender != null) {
+      data['gender'] = gender;
+    }
+    if (birthyear != null) {
+      data['birthyear'] = birthyear;
     }
 
     return data;
@@ -33,9 +40,10 @@ class UserEntry {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserEntry(
       uid: data['uid'],
-      statusMessage: data['status_message'],
+      gender: data['gender'],
       email: data['email'],
-      name: data['name'],
+      nickname: data['nickname'],
+      birthyear: data['birthyear'],
     );
   }
 }

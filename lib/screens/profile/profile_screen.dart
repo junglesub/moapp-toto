@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/models/user_entity.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/profile/widgets/toto_card_widget.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -16,6 +20,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool _taggedPosts = false;
   bool _likedPosts = false;
+
+  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -146,10 +152,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.watch();
     return Scaffold(
       appBar: AppBar(
-        title:
-            _showAppBarTitle ? const Center(child: Text('Ryoo Jungsub')) : null,
+        title: _showAppBarTitle
+            ? Center(
+                child: Text(up.ue?.nickname ?? up.ue?.uid ?? "Unknown User"))
+            : null,
         actions: [
           IconButton(
             icon: const Icon(Icons.dark_mode),
@@ -160,7 +169,8 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              Navigator.pushNamed(context, '/landing');
+              // Navigator.pushNamed(context, '/landing');
+              _auth.signOut();
             },
           ),
         ],
@@ -198,8 +208,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           const SizedBox(height: 70),
-          const Text(
-            'Ryoo Jungsub',
+          Text(
+            up.ue?.nickname ?? up.ue?.uid ?? "Unknown User",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
