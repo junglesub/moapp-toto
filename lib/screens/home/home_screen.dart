@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:moapp_toto/widgets/custom_button.dart';
+// import 'package:moapp_toto/widgets/custom_bottom_navigation_bar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
 
   void _selectDate(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
@@ -12,13 +21,11 @@ class HomePage extends StatelessWidget {
       lastDate: DateTime(2100),
     );
     if (selectedDate != null) {
-      // Handle the selected date
       print("Selected date: $selectedDate");
     }
   }
 
   Widget _buildPostCard({
-    // required String profileName,
     required String authorName,
     required String date,
     required String content,
@@ -31,7 +38,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile and Author
             Row(
               children: [
                 const CircleAvatar(
@@ -55,19 +61,16 @@ class HomePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12.0),
-            // Content
             Text(content),
             const SizedBox(height: 12.0),
-            // Image
             if (imageUrl != null)
-              Image.network(
+              Image.asset(
                 imageUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 200,
               ),
             const SizedBox(height: 12.0),
-            // Emotion Icons
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -112,7 +115,6 @@ class HomePage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Calendar icon
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
@@ -120,7 +122,6 @@ class HomePage extends StatelessWidget {
               onPressed: () => _selectDate(context),
             ),
           ),
-          // Beige background with text
           Container(
             width: double.infinity,
             height: 20,
@@ -132,7 +133,6 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 14),
             ),
           ),
-          // Scrollable area with posts
           Expanded(
             child: ListView(
               children: [
@@ -140,15 +140,13 @@ class HomePage extends StatelessWidget {
                   authorName: "Author A",
                   date: "2024년 11월 12일",
                   content: "오늘은 날씨가 너무 좋았다!!",
-                  imageUrl:
-                      "https://via.placeholder.com/300", // Placeholder image
+                  imageUrl: "assets/images/toto.jpg",
                 ),
                 _buildPostCard(
                   authorName: "Author B",
                   date: "2024년 11월 11일",
                   content: "플러터로 앱 개발을 함. 굿",
-                  imageUrl:
-                      "https://via.placeholder.com/300", // Placeholder image
+                  imageUrl: "assets/images/toto.jpg",
                 ),
                 _buildPostCard(
                   authorName: "Author C",
@@ -159,6 +157,15 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          print("Selected tab: $index");
+        },
       ),
     );
   }
