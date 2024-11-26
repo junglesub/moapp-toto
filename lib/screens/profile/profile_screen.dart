@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:moapp_toto/screens/profile/widgets/toto_card_widget.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -13,6 +13,9 @@ class _ProfilePageState extends State<ProfilePage> {
   final ScrollController _scrollController = ScrollController();
   bool _showAppBarTitle = false;
   int _selectedIndex = 0;
+
+  bool _taggedPosts = false;
+  bool _likedPosts = false;
 
   @override
   void initState() {
@@ -36,11 +39,117 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
+  void _showFilterSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.2,
+          minChildSize: 0.1,
+          maxChildSize: 0.2,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+              ),
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey[200],
+                        child:
+                            const Icon(Icons.local_offer, color: Colors.black),
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '태그된 게시물',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '회원님이 태그된 게시물만 표시합니다.',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Switch(
+                        value: _taggedPosts,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _taggedPosts = value;
+                          });
+                          Navigator.pop(context);
+                        },
+                        activeTrackColor: Colors.black,
+                        inactiveTrackColor: Colors.grey,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(Icons.thumb_up, color: Colors.black),
+                      ),
+                      const SizedBox(width: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '좋아요 누른 게시물',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '회원님이 좋아요를 누른 게시물만 표시합니다.',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Switch(
+                        value: _likedPosts,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _likedPosts = value;
+                          });
+                          Navigator.pop(context);
+                        },
+                        activeTrackColor: Colors.black,
+                        inactiveTrackColor: Colors.grey,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _showAppBarTitle ? const Center(child: Text('유저 닉네임')) : null,
+        title:
+            _showAppBarTitle ? const Center(child: Text('Ryoo Jungsub')) : null,
         actions: [
           IconButton(
             icon: const Icon(Icons.dark_mode),
@@ -72,14 +181,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: CircleAvatar(
                   radius: 70,
                   backgroundColor: Colors.grey[300],
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.black,
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        // 프로필 사진 변경
+                      },
                     ),
-                    onPressed: () {
-                      // 프로필 사진 변경
-                    },
                   ),
                 ),
               ),
@@ -87,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 70),
           const Text(
-            '개발의 정석',
+            'Ryoo Jungsub',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -132,9 +244,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       '누적 투투 15개째',
                       style: TextStyle(fontSize: 14),
                     ),
-                    const SizedBox(
-                      height: 2,
-                    ),
+                    const SizedBox(height: 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -145,60 +255,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.tune),
-                          onPressed: () {
-                            // 필터 아이콘 동작
-                          },
+                          onPressed: _showFilterSheet,
                         ),
                       ],
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                // 게시물 리스트 시작
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: 5, // 더미 데이터 3개
+                  itemCount: 3,
                   itemBuilder: (context, index) {
-                    return Container(
-                      height: 200,
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                              ),
-                              child: Image.asset(
-                                'assets/images/toto.jpg',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                              ),
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              '유저가 작성한 게시물',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                        // 애니메이션 추가
-                        .animate()
-                        .fadeIn(duration: 1000.ms)
-                        .slideY(begin: 0.1, end: 0, duration: 1000.ms);
+                    return const ToToCard(
+                      userName: 'Ryoo Jungsub',
+                      userImagePath: 'assets/images/profile.jpg',
+                      postDate: '2020년 4월 17일',
+                      postContent:
+                          '뒤에는 영화관에서 구매한 포스터 - 앞에는 코로나 때문에 영화관을 못 가는 나를 위해 구매한 블루레이',
+                      postImagePath: 'assets/images/toto.jpg',
+                    );
                   },
                 ),
-                // 게시물 리스트 끝
               ],
             ),
           ),
