@@ -1,4 +1,4 @@
-package com.example.moapp_toto
+package app.handong.toto
 
 import io.flutter.embedding.android.FlutterActivity
 
