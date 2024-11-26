@@ -36,7 +36,8 @@ class UserEntry {
     return data;
   }
 
-  static UserEntry fromDocumentSnapshot(DocumentSnapshot snapshot) {
+  static UserEntry? fromDocumentSnapshot(DocumentSnapshot snapshot) {
+    if (!snapshot.exists) return null;
     final data = snapshot.data() as Map<String, dynamic>;
     return UserEntry(
       uid: data['uid'],
