@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class ToToCard extends StatelessWidget {
+class ToToCard extends StatefulWidget {
   final String userName;
   final String userImagePath;
   final String postDate;
@@ -18,6 +18,53 @@ class ToToCard extends StatelessWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
+  _ToToCardState createState() => _ToToCardState();
+}
+
+class _ToToCardState extends State<ToToCard> {
+  bool isLiked = false;
+
+  void _showOptionsModal() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.edit, color: Colors.black),
+                title: const Text(
+                  '투투 수정',
+                  style: TextStyle(fontSize: 16),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.black),
+                title: const Text('투투 삭제',
+                    style: TextStyle(fontSize: 16, color: Colors.black)),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
@@ -30,23 +77,50 @@ class ToToCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage(userImagePath),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      userName,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: AssetImage(widget.userImagePath),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      postDate,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.userName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          widget.postDate,
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : null,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.more_horiz),
+                      onPressed: () {
+                        _showOptionsModal();
+                      },
                     ),
                   ],
                 ),
@@ -54,14 +128,14 @@ class ToToCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              postContent,
+              widget.postContent,
               style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 10),
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.asset(
-                postImagePath,
+                widget.postImagePath,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 200,
