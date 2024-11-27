@@ -1,15 +1,6 @@
-// import 'package:flutter/material.dart';
-
-// class MissionPage extends StatelessWidget {
-//   const MissionPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
-
+import 'package:moapp_toto/screens/mission/widgets/roulette.dart';
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 
 class MissionPage extends StatefulWidget {
@@ -21,6 +12,18 @@ class MissionPage extends StatefulWidget {
 
 class _MissionPageState extends State<MissionPage> {
   int _currentIndex = 0;
+
+  // 각 미션 버튼, onPressed 정의
+  final List<Map<String, dynamic>> _buttonData = [
+    {"text": "출석체크 하고 티켓 ( 00일째 )", "onPressed": () => print("출석체크 클릭됨")},
+    {"text": "랜덤 운동하고 티켓받기", "onPressed": () => print("운동 클릭됨")},
+    {
+      "text": "새로운 장소 인증하고 티켓받기 (누적 장소 00곳)",
+      "onPressed": () => print("장소 인증 클릭됨")
+    },
+    {"text": "광고 보고 티켓 받기", "onPressed": () => print("광고 클릭됨")},
+    {"text": "친구 공유하고 티켓받기", "onPressed": () => print("친구 공유 클릭됨")},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +61,28 @@ class _MissionPageState extends State<MissionPage> {
             child: ListView(
               children: [
                 // 첫 번째 섹션: 룰렛 돌리기
-                Card(
-                  margin: const EdgeInsets.all(16.0),
-                  child: Container(
-                    height: 150,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "룰렛 돌리기",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                GestureDetector(
+                  onTap: () {
+                    // 룰렛 페이지로 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RoulettePage(),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.all(16.0),
+                    child: Container(
+                      height: 150,
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "룰렛 돌리기",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -87,26 +103,20 @@ class _MissionPageState extends State<MissionPage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                ...List.generate(5, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // 버튼 클릭 동작 (추후 구현)
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      ),
-                      child: Text("버튼 ${index + 1}"),
-                    ),
-                  );
-                }),
+                Center(
+                  child: Column(
+                    children: [
+                      ..._buttonData.map((button) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            child: CustomAnimatedButton(
+                              text: button["text"],
+                              onPressed: button["onPressed"],
+                            ),
+                          )),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

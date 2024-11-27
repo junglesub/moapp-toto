@@ -504,6 +504,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
+  roulette:
+    dependency: "direct main"
+    description:
+      name: roulette
+      sha256: "619172aa21878e489f60e29883fedb90a98d7998dc7085dd5a6913b690b037d1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   search_page:
     dependency: "direct main"
     description:

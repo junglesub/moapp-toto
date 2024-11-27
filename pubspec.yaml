@@ -47,6 +47,7 @@ dependencies:
   cloud_firestore: ^5.5.0
   firebase_storage: ^12.3.6
   google_sign_in: ^6.2.2
+  roulette: ^0.2.0
 
 dev_dependencies:
   flutter_test:
