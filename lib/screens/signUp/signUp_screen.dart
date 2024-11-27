@@ -143,7 +143,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 await userDocRef.set(ue.toMap());
 
                 // Simulate a delay and navigate
-                await Future.delayed(const Duration(milliseconds: 500));
+                // await Future.delayed(const Duration(milliseconds: 500));
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/',

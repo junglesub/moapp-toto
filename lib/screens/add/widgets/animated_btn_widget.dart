@@ -30,7 +30,10 @@ class CustomAnimatedButton extends StatelessWidget {
       borderColor: Colors.black,
       borderRadius: 30,
       borderWidth: 2,
-      onPress: onPressed,
+      onPress: () async {
+        await Future.delayed(const Duration(milliseconds: 600));
+        onPressed();
+      },
     );
   }
 }

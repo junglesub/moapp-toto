@@ -106,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: Colors.grey[200],
-                        child: const Icon(Icons.thumb_up, color: Colors.black),
+                        child: const Icon(Icons.favorite, color: Colors.black),
                       ),
                       const SizedBox(width: 16),
                       const Column(
