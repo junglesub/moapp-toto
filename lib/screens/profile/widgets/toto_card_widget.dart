@@ -197,6 +197,7 @@ class _ToToCardState extends State<ToToCard> {
 
   void _performEditAction() {
     // 수정 동작 로직 추가
+    Navigator.pushNamed(context, '/edit');
   }
 
   void _performDeleteAction() {

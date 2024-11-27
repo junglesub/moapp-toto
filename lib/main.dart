@@ -4,6 +4,7 @@ import 'package:moapp_toto/firebase_options.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/add_screen.dart';
+import 'package:moapp_toto/screens/edit/edit_screen.dart';
 import 'package:moapp_toto/screens/friend/friend_screen.dart';
 import 'package:moapp_toto/screens/home/home_screen.dart';
 import 'package:moapp_toto/screens/landing/landing_screen.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
           '/signup': (BuildContext context) => const SignUpPage(),
           '/': (BuildContext context) => const HomePage(),
           '/add': (BuildContext context) => const AddPage(),
+          '/edit': (BuildContext context) => const EditPage(),
           '/friend': (BuildContext context) => const FriendPage(),
           '/mission': (BuildContext context) => const MissionPage(),
           '/profile': (BuildContext context) => const ProfilePage(),
