@@ -238,7 +238,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 20),
           const Divider(
-            color: Color.fromARGB(255, 184, 184, 184),
+            thickness: 8,
+            color: Color.fromARGB(255, 245, 245, 245),
           ),
           Padding(
             padding: const EdgeInsets.all(30.0),
