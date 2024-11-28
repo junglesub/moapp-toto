@@ -58,6 +58,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+                const Spacer(), // 오른쪽으로 하트 정렬
+                IconButton(
+                  icon: const Icon(Icons.favorite_border),
+                  onPressed: () {},
+                ),
               ],
             ),
             const SizedBox(height: 12.0),
@@ -71,23 +76,6 @@ class _HomePageState extends State<HomePage> {
                 height: 200,
               ),
             const SizedBox(height: 12.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.favorite),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.thumb_up),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.thumb_down),
-                  onPressed: () {},
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -115,22 +103,22 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              icon: const Icon(Icons.calendar_today),
-              onPressed: () => _selectDate(context),
-            ),
-          ),
           Container(
             width: double.infinity,
-            height: 20,
+            height: 30,
             color: Colors.yellow[100],
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: const Text(
               "🔥 누적 일기 16개째...",
               style: TextStyle(fontSize: 14),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              icon: const Icon(Icons.calendar_today),
+              onPressed: () => _selectDate(context),
             ),
           ),
           Expanded(
