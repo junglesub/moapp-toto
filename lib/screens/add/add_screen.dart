@@ -20,6 +20,16 @@ class _AddPageState extends State<AddPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('오늘의 투투'),
+        actions: isAnalysisPage
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  onPressed: () {
+                    // 저장 버튼 클릭 시 동작 추가
+                  },
+                ),
+              ]
+            : null,
       ),
       body: Stack(
         children: [
@@ -35,16 +45,10 @@ class _AddPageState extends State<AddPage> {
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 600),
                 child: isAnalysisPage
-                    ? CustomAnimatedButton(
-                        key: const ValueKey(1),
-                        text: "투투 등록하기",
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/add');
-                        },
-                      )
+                    ? null
                     : CustomAnimatedButton(
                         key: const ValueKey(2),
-                        text: "오늘 하루 기분 분석하기",
+                        text: "투두 등록하기",
                         onPressed: () {
                           setState(() {
                             isAnalysisPage = true;
@@ -96,7 +100,7 @@ class _AddPageState extends State<AddPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  "AI가 판단한 오늘의 기분",
+                  "AI가 판단한 오늘의 리액션",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
