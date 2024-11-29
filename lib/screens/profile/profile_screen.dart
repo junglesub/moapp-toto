@@ -261,9 +261,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.tune),
-                          onPressed: _showFilterSheet,
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.loupe),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/add');
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.tune),
+                              onPressed: _showFilterSheet,
+                            ),
+                          ],
                         ),
                       ],
                     ),
