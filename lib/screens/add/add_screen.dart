@@ -3,6 +3,7 @@ import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:moapp_toto/utils/emotions.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -158,16 +159,22 @@ class _AddPageState extends State<AddPage> {
           ),
           child: ListView(
             controller: scrollController,
-            children: const [
+            children: [
               ListTile(
-                leading: Icon(Icons.mood),
-                title: Text('기분'),
+                leading: const Icon(Icons.mood),
+                title: const Text('기분'),
+                onTap: () async {
+                  String? mood = await _navigateToMoodPage(context);
+                  if (mood != null) {
+                    print("선택된 기분: $mood");
+                  }
+                },
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.location_on),
                 title: Text('위치 추가'),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.person),
                 title: Text('사람 태그'),
               ),
@@ -175,6 +182,44 @@ class _AddPageState extends State<AddPage> {
           ),
         );
       },
+    );
+  }
+
+  Future<String?> _navigateToMoodPage(BuildContext context) async {
+    return Navigator.push<String>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MoodSelectionPage(),
+      ),
+    );
+  }
+}
+
+class MoodSelectionPage extends StatelessWidget {
+  const MoodSelectionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    List<MoodOption> moodOptions = MoodOption.moodOptions;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("기분 선택"),
+      ),
+      body: ListView.builder(
+        itemCount: moodOptions.length,
+        itemBuilder: (context, index) {
+          final mood = moodOptions[index];
+          return ListTile(
+            leading: Text(mood.emoji, style: TextStyle(fontSize: 30)),
+            title: Text(mood.name),
+            onTap: () {
+              // 선택된 기분 이름을 반환
+              Navigator.pop(context, mood.name);
+            },
+          );
+        },
+      ),
     );
   }
 }
