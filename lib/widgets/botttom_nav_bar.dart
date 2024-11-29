@@ -25,10 +25,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
             Navigator.pushNamed(context, '/mission');
             break;
           case 2:
-            Navigator.pushNamed(context, '/add');
+            Navigator.pushNamed(context, '/friend');
             break;
           case 3:
-            Navigator.pushNamed(context, '/friend');
+            Navigator.pushNamed(context, '/notification');
             break;
           case 4:
             Navigator.pushNamed(context, '/profile');
@@ -45,11 +45,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle),
+          icon: Icon(Icons.group),
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.group),
+          icon: Icon(Icons.notifications),
           label: '',
         ),
         BottomNavigationBarItem(
