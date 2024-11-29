@@ -4,7 +4,7 @@ import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:moapp_toto/screens/friend/widgets/recommand_friend_row.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 
-int _selectedIndex = 0;
+int _selectedIndex = 2;
 
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key});

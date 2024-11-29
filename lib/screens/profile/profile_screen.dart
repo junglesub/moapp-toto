@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final ScrollController _scrollController = ScrollController();
   bool _showAppBarTitle = false;
-  int _selectedIndex = 0;
+  int _selectedIndex = 4;
 
   bool _taggedPosts = false;
   bool _likedPosts = false;

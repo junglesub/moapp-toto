@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 
-int _currentIndex = 0;
+int _currentIndex = 3;
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});

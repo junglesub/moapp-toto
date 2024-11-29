@@ -11,7 +11,7 @@ class MissionPage extends StatefulWidget {
 }
 
 class _MissionPageState extends State<MissionPage> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   // 각 미션 버튼, onPressed 정의
   final List<Map<String, dynamic>> _buttonData = [
