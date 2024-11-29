@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:moapp_toto/screens/add/location_select_screen.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
@@ -216,9 +218,18 @@ class _AddPageState extends State<AddPage> {
                   }
                 },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.location_on),
                 title: Text('위치 추가'),
+                onTap: () async {
+                  LatLng? mood = await _navigateToLocationPage(context);
+                  if (mood != null) {
+                    // print("선택된 기분: ${mood.name}");
+                    // setState(() {
+                    //   selectedMood = mood;
+                    // });
+                  }
+                },
               ),
               const ListTile(
                 leading: Icon(Icons.person),
@@ -236,6 +247,15 @@ class _AddPageState extends State<AddPage> {
       context,
       MaterialPageRoute(
         builder: (context) => MoodSelectionPage(),
+      ),
+    );
+  }
+
+  Future<LatLng?> _navigateToLocationPage(BuildContext context) async {
+    return Navigator.push<LatLng>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LocationSelectionPage(),
       ),
     );
   }
