@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final ScrollController _scrollController = ScrollController();
   bool _showAppBarTitle = false;
-  int _selectedIndex = 0;
+  int _selectedIndex = 4;
 
   bool _taggedPosts = false;
   bool _likedPosts = false;
@@ -261,9 +261,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.tune),
-                          onPressed: _showFilterSheet,
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.add_circle),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/add');
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.tune),
+                              onPressed: _showFilterSheet,
+                            ),
+                          ],
                         ),
                       ],
                     ),
