@@ -15,6 +15,7 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   final TextEditingController textController = TextEditingController();
   bool isAnalysisPage = false;
+  MoodOption? selectedMood;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +93,7 @@ class _AddPageState extends State<AddPage> {
   Widget _buildAnalysisPage() {
     return Padding(
       key: const ValueKey(2),
-      padding: const EdgeInsets.only(top: 50),
+      padding: const EdgeInsets.only(top: 16),
       child: ListView(
         children: [
           Padding(
@@ -100,6 +101,48 @@ class _AddPageState extends State<AddPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Row(
+                  children: [
+                    // Text("오늘 ㅇㅇ님의 기분은..."),
+                    // const SizedBox(width: 8),
+                    if (selectedMood != null)
+                      Chip(
+                        label: Row(
+                          mainAxisSize: MainAxisSize
+                              .min, // Make the Row as compact as possible
+                          children: [
+                            Text(
+                              selectedMood?.emoji ?? "", // Display the emoji
+                              style: TextStyle(
+                                  fontSize: 20), // Adjust the emoji size
+                            ),
+                            const SizedBox(
+                                width: 8), // Space between emoji and text
+                            Text(
+                              selectedMood?.name ?? "", // Display the mood name
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12, // Adjust the font size
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                        ),
+                        // backgroundColor: Colors.grey[300], // 배경 색상
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 0, vertical: 4), // 최소화된 패딩
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12), // 작은 둥근 모서리
+                          side: BorderSide(
+                            color: Colors.grey[300]!, // Set the border color
+                            width: 1.5, // Set the border width
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+                const SizedBox(height: 16),
                 const Text(
                   "AI가 판단한 오늘의 리액션",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -164,9 +207,12 @@ class _AddPageState extends State<AddPage> {
                 leading: const Icon(Icons.mood),
                 title: const Text('기분'),
                 onTap: () async {
-                  String? mood = await _navigateToMoodPage(context);
+                  MoodOption? mood = await _navigateToMoodPage(context);
                   if (mood != null) {
-                    print("선택된 기분: $mood");
+                    print("선택된 기분: ${mood.name}");
+                    setState(() {
+                      selectedMood = mood;
+                    });
                   }
                 },
               ),
@@ -185,8 +231,8 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  Future<String?> _navigateToMoodPage(BuildContext context) async {
-    return Navigator.push<String>(
+  Future<MoodOption?> _navigateToMoodPage(BuildContext context) async {
+    return Navigator.push<MoodOption>(
       context,
       MaterialPageRoute(
         builder: (context) => MoodSelectionPage(),
@@ -215,7 +261,7 @@ class MoodSelectionPage extends StatelessWidget {
             title: Text(mood.name),
             onTap: () {
               // 선택된 기분 이름을 반환
-              Navigator.pop(context, mood.name);
+              Navigator.pop(context, mood);
             },
           );
         },
