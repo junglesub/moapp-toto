@@ -264,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.loupe),
+                              icon: const Icon(Icons.add_circle),
                               onPressed: () {
                                 Navigator.pushNamed(context, '/add');
                               },
