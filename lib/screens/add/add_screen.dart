@@ -106,79 +106,78 @@ class _AddPageState extends State<AddPage> {
               children: [
                 Row(
                   children: [
-                    // Text("오늘 ㅇㅇ님의 기분은..."),
-                    // const SizedBox(width: 8),
                     if (selectedMood != null)
-                      Chip(
-                        label: Row(
-                          mainAxisSize: MainAxisSize
-                              .min, // Make the Row as compact as possible
-                          children: [
-                            Text(
-                              selectedMood?.emoji ?? "", // Display the emoji
-                              style: TextStyle(
-                                  fontSize: 20), // Adjust the emoji size
-                            ),
-                            const SizedBox(
-                                width: 8), // Space between emoji and text
-                            Text(
-                              selectedMood?.name ?? "", // Display the mood name
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12, // Adjust the font size
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                            minHeight: 45), // Set a fixed height
+                        child: Chip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                selectedMood?.emoji ?? "", // Display the emoji
+                                style: const TextStyle(
+                                    fontSize: 20), // Adjust the emoji size
                               ),
+                              const SizedBox(width: 8),
+                              Text(
+                                selectedMood?.name ??
+                                    "", // Display the mood name
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12, // Adjust the font size
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
                             ),
-                            const SizedBox(width: 8),
-                          ],
-                        ),
-                        // backgroundColor: Colors.grey[300], // 배경 색상
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 0, vertical: 4), // 최소화된 패딩
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), // 작은 둥근 모서리
-                          side: BorderSide(
-                            color: Colors.grey[300]!, // Set the border color
-                            width: 1.5, // Set the border width
                           ),
                         ),
                       ),
                     if (selectedLocation != null)
-                      Chip(
-                        label: Row(
-                          mainAxisSize: MainAxisSize
-                              .min, // Make the Row as compact as possible
-                          children: [
-                            Icon(
-                              Icons.location_on, // Use the location_on icon
-                              color: Colors.black, // Adjust icon color
-                              size: 16, // Adjust icon size
-                            ),
-                            const SizedBox(
-                                width: 8), // Space between icon and text
-                            Text(
-                              selectedLocation?.placeName ??
-                                  "", // Display the mood name
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12, // Adjust the font size
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                            minHeight: 45), // Same height as above
+                        child: Chip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.location_on, // Use the location_on icon
+                                color: Colors.black, // Adjust icon color
+                                size: 16, // Adjust icon size
                               ),
+                              const SizedBox(width: 8),
+                              Text(
+                                selectedLocation?.placeName ??
+                                    "", // Display the location name
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12, // Adjust the font size
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
                             ),
-                            const SizedBox(width: 8),
-                          ],
-                        ),
-                        // backgroundColor: Colors.grey[300], // 배경 색상
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 0, vertical: 4), // 최소화된 패딩
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), // 작은 둥근 모서리
-                          side: BorderSide(
-                            color: Colors.grey[300]!, // Set the border color
-                            width: 1.5, // Set the border width
                           ),
                         ),
-                      )
+                      ),
                   ],
                 ),
                 const SizedBox(height: 16),
