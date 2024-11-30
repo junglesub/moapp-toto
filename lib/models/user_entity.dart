@@ -6,6 +6,8 @@ class UserEntry {
   String? nickname;
   String? gender;
   int? birthyear;
+  // List<String> followers = [];
+  List<String> following = [];
 
   UserEntry({
     required this.uid,
@@ -13,11 +15,15 @@ class UserEntry {
     this.email,
     this.nickname,
     this.birthyear,
+    // this.followers = const [],
+    this.following = const [],
   });
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {
       'uid': uid,
+      // "followers": followers,
+      "followings": following
     };
 
     if (email != null) {
@@ -45,6 +51,10 @@ class UserEntry {
       email: data['email'],
       nickname: data['nickname'],
       birthyear: data['birthyear'],
+      // followers:
+      //     data['followers'] != null ? List<String>.from(data['followers']) : [],
+      following:
+          data['following'] != null ? List<String>.from(data['following']) : [],
     );
   }
 }

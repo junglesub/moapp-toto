@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/friend/widgets/current_friend_list.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:moapp_toto/screens/friend/widgets/recommand_friend_row.dart';
@@ -20,16 +21,22 @@ class _FriendPageState extends State<FriendPage> {
   @override
   Widget build(BuildContext context) {
     AllUsersProvider aup = context.watch();
+    UserProvider up = context.watch();
     print(aup.au);
-    final List<Person> friends = aup.au
+    final List<Person> recommendFriend = aup.au
+        .where((user) =>
+            (user?.following.contains(up.currentUser?.uid) ?? false) &&
+            (up.ue?.following.contains(user?.uid) == false))
         .map(
             (user) => Person(user?.nickname ?? user!.uid, user?.email ?? "", 0))
         .toList();
 
-    final List<Person> currentFriends = aup.au
-        .map(
-            (user) => Person(user?.nickname ?? user!.uid, user?.email ?? "", 0))
-        .toList();
+    final List<Person> currentFriends = up.ue?.following.map((uid) {
+          final user = aup.au.firstWhere((u) => uid == u?.uid);
+
+          return Person(user?.nickname ?? "unknown", user?.email ?? "email", 0);
+        }).toList() ??
+        [];
 
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +59,7 @@ class _FriendPageState extends State<FriendPage> {
           Expanded(
             flex: 2,
             child: RecommandFriendRow(
-              friends: friends,
+              friends: recommendFriend,
             ),
           ),
           const Padding(
