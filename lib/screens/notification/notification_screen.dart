@@ -35,7 +35,7 @@ class _NotificationPageState extends State<NotificationPage> {
             key: Key(notification['title']!),
             direction: DismissDirection.horizontal,
             background: Container(
-              color: Colors.white,
+              color: Theme.of(context).scaffoldBackgroundColor,
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.symmetric(horizontal: 20),
             ),
