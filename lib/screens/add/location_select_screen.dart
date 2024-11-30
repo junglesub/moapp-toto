@@ -113,6 +113,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
 
           final newLocation = LatLng(lat, lng);
 
+          _searchController.text = place['name'];
           setState(() {
             _selectedLocation = newLocation;
             _selectedPlaceName = place['name']; // Store place name
