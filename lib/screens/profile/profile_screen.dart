@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/models/user_entity.dart';
@@ -158,9 +159,17 @@ class _ProfilePageState extends State<ProfilePage> {
             : null,
         actions: [
           IconButton(
-            icon: const Icon(Icons.dark_mode),
+            icon: Icon(
+              AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
             onPressed: () {
-              // 다크모드 전환 로직
+              if (AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark) {
+                AdaptiveTheme.of(context).setLight();
+              } else {
+                AdaptiveTheme.of(context).setDark();
+              }
             },
           ),
           IconButton(
@@ -191,9 +200,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.camera_alt,
-                        color: Colors.black,
+                        color: Theme.of(context).iconTheme.color,
                       ),
                       onPressed: () {
                         // 프로필 사진 변경
@@ -237,9 +246,10 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           const SizedBox(height: 20),
-          const Divider(
+          Divider(
             thickness: 8,
-            color: Color.fromARGB(255, 245, 245, 245),
+            // color: Color.fromARGB(255, 245, 245, 245),
+            color: Theme.of(context).dividerColor,
           ),
           Padding(
             padding: const EdgeInsets.all(30.0),
