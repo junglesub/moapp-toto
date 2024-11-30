@@ -107,7 +107,8 @@ class _AddPageState extends State<AddPage> {
                 Row(
                   children: [
                     if (selectedMood != null)
-                      ConstrainedBox(
+                      Container(
+                        margin: EdgeInsets.only(right: 4),
                         constraints: const BoxConstraints(
                             minHeight: 45), // Set a fixed height
                         child: Chip(
