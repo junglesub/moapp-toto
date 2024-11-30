@@ -116,16 +116,18 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
           _searchController.text = place['name'];
           setState(() {
             _selectedLocation = newLocation;
+            _currentLocation = newLocation;
+
             _selectedPlaceName = place['name']; // Store place name
             _predictions = []; // Clear predictions
           });
 
-          if (_mapController != null) {
-            // Only animate the camera after the map is fully initialized
-            _mapController!.animateCamera(
-              CameraUpdate.newLatLngZoom(newLocation, 16),
-            );
-          }
+          // if (_mapController != null) {
+          //   // Only animate the camera after the map is fully initialized
+          //   _mapController!.animateCamera(
+          //     CameraUpdate.newLatLngZoom(newLocation, 16),
+          //   );
+          // }
         }
       }
     ]);
