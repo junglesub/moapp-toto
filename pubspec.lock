@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  bottom_bar_matu:
+    dependency: "direct main"
+    description:
+      name: bottom_bar_matu
+      sha256: "1566e067210380b543db1a548499e57d39dd8f5ceb9eaa878d036f82d886353e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.0"
   carousel_slider:
     dependency: "direct main"
     description:
@@ -241,6 +249,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.10.5"
+  floating_draggable_widget:
+    dependency: "direct main"
+    description:
+      name: floating_draggable_widget
+      sha256: "1d39f49f40d3f3bf82196c60d278d28bca95c4aa0cbf7f1837075ad8c0e488cf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   flutter:
     dependency: "direct main"
     description: flutter
