@@ -55,6 +55,7 @@ dependencies:
   google_places_flutter: ^2.0.9
   google_place: ^0.4.7
   bottom_bar_matu: ^1.5.0
+  flame: ^1.22.0
   floating_draggable_widget: ^2.3.0
   adaptive_theme: ^3.6.0
 
