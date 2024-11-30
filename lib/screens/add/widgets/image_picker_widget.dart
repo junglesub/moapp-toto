@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerWidget extends StatefulWidget {
-  const ImagePickerWidget({super.key});
+  final Function(File?) parentPickImage;
+  ImagePickerWidget({required this.parentPickImage});
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -15,6 +18,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   Future<void> getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
+    widget.parentPickImage(pickedFile == null ? null : File(pickedFile.path));
     if (pickedFile != null) {
       final bytes = await pickedFile.readAsBytes();
       setState(() {
