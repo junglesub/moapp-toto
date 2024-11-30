@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:moapp_toto/screens/add/location_select_screen.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
@@ -16,6 +18,7 @@ class _AddPageState extends State<AddPage> {
   final TextEditingController textController = TextEditingController();
   bool isAnalysisPage = false;
   MoodOption? selectedMood;
+  LocationResult? selectedLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -103,43 +106,79 @@ class _AddPageState extends State<AddPage> {
               children: [
                 Row(
                   children: [
-                    // Text("오늘 ㅇㅇ님의 기분은..."),
-                    // const SizedBox(width: 8),
                     if (selectedMood != null)
-                      Chip(
-                        label: Row(
-                          mainAxisSize: MainAxisSize
-                              .min, // Make the Row as compact as possible
-                          children: [
-                            Text(
-                              selectedMood?.emoji ?? "", // Display the emoji
-                              style: TextStyle(
-                                  fontSize: 20), // Adjust the emoji size
-                            ),
-                            const SizedBox(
-                                width: 8), // Space between emoji and text
-                            Text(
-                              selectedMood?.name ?? "", // Display the mood name
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12, // Adjust the font size
+                      Container(
+                        margin: EdgeInsets.only(right: 4),
+                        constraints: const BoxConstraints(
+                            minHeight: 45), // Set a fixed height
+                        child: Chip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                selectedMood?.emoji ?? "", // Display the emoji
+                                style: const TextStyle(
+                                    fontSize: 20), // Adjust the emoji size
                               ),
+                              const SizedBox(width: 8),
+                              Text(
+                                selectedMood?.name ??
+                                    "", // Display the mood name
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12, // Adjust the font size
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
                             ),
-                            const SizedBox(width: 8),
-                          ],
-                        ),
-                        // backgroundColor: Colors.grey[300], // 배경 색상
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 0, vertical: 4), // 최소화된 패딩
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), // 작은 둥근 모서리
-                          side: BorderSide(
-                            color: Colors.grey[300]!, // Set the border color
-                            width: 1.5, // Set the border width
                           ),
                         ),
-                      )
+                      ),
+                    if (selectedLocation != null)
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                            minHeight: 45), // Same height as above
+                        child: Chip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.location_on, // Use the location_on icon
+                                color: Colors.black, // Adjust icon color
+                                size: 16, // Adjust icon size
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                selectedLocation?.placeName ??
+                                    "", // Display the location name
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12, // Adjust the font size
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -216,9 +255,19 @@ class _AddPageState extends State<AddPage> {
                   }
                 },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.location_on),
                 title: Text('위치 추가'),
+                onTap: () async {
+                  LocationResult? locationResult =
+                      await _navigateToLocationPage(context);
+                  if (locationResult != null) {
+                    // print("선택된 기분: ${mood.name}");
+                    setState(() {
+                      selectedLocation = locationResult;
+                    });
+                  }
+                },
               ),
               const ListTile(
                 leading: Icon(Icons.person),
@@ -236,6 +285,15 @@ class _AddPageState extends State<AddPage> {
       context,
       MaterialPageRoute(
         builder: (context) => MoodSelectionPage(),
+      ),
+    );
+  }
+
+  Future<LocationResult?> _navigateToLocationPage(BuildContext context) async {
+    return Navigator.push<LocationResult>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LocationSelectionPage(),
       ),
     );
   }
