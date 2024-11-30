@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 
 class CurrentFriendList extends StatelessWidget {
   const CurrentFriendList({
@@ -7,7 +8,7 @@ class CurrentFriendList extends StatelessWidget {
     required this.currentFriends,
   });
 
-  final List<String> currentFriends;
+  final List<Person> currentFriends;
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +56,12 @@ class CurrentFriendList extends StatelessWidget {
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey[300],
                   child: Text(
-                    friend[0],
+                    friend.name[0],
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
-                title: Text(friend),
-                subtitle: const Text('Tap to view profile'),
+                title: Text(friend.name),
+                subtitle: Text(friend.email),
                 onTap: () {
                   // Navigate to friend's profile or perform another action
                   ScaffoldMessenger.of(context).showSnackBar(

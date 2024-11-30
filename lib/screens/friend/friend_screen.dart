@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/provider/all_users_provider.dart';
 import 'package:moapp_toto/screens/friend/widgets/current_friend_list.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:moapp_toto/screens/friend/widgets/recommand_friend_row.dart';
+import 'package:moapp_toto/screens/signUp/signUp_screen.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 int _selectedIndex = 2;
 
@@ -16,21 +19,17 @@ class FriendPage extends StatefulWidget {
 class _FriendPageState extends State<FriendPage> {
   @override
   Widget build(BuildContext context) {
-    final List<String> friends = [
-      'Friend 1',
-      'Friend 2',
-      'Friend 3',
-      'Friend 4',
-      'Friend 5',
-    ];
+    AllUsersProvider aup = context.watch();
+    print(aup.au);
+    final List<Person> friends = aup.au
+        .map(
+            (user) => Person(user?.nickname ?? user!.uid, user?.email ?? "", 0))
+        .toList();
 
-    final List<String> currentFriends = [
-      'Alice',
-      'Bob',
-      'Charlie',
-      'Diana',
-      'Eva',
-    ];
+    final List<Person> currentFriends = aup.au
+        .map(
+            (user) => Person(user?.nickname ?? user!.uid, user?.email ?? "", 0))
+        .toList();
 
     return Scaffold(
       appBar: AppBar(

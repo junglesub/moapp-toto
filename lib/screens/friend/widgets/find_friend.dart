@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:search_page/search_page.dart';
 
 class Person implements Comparable<Person> {
-  final String name, surname;
+  final String name, email;
   final num age;
 
-  const Person(this.name, this.surname, this.age);
+  const Person(this.name, this.email, this.age);
 
   @override
   int compareTo(Person other) => name.compareTo(other.name);
@@ -61,19 +61,19 @@ class FindFriend extends StatelessWidget {
                   ),
                 ),
                 suggestion: const Center(
-                  child: Text('Filter people by name, surname or age'),
+                  child: Text('Filter people by name, email or age'),
                 ),
                 failure: const Center(
                   child: Text('No person found :('),
                 ),
                 filter: (person) => [
                   person.name,
-                  person.surname,
+                  person.email,
                   person.age.toString(),
                 ],
                 builder: (person) => ListTile(
                   title: Text(person.name),
-                  subtitle: Text(person.surname),
+                  subtitle: Text(person.email),
                   // trailing: Text('${person.age} yo'),
                 ),
               ),

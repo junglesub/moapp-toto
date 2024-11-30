@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 
 class RecommandFriendRow extends StatefulWidget {
-  final List<String> friends; // Friends list as a parameter
+  final List<Person> friends; // Friends list as a parameter
   const RecommandFriendRow({Key? key, required this.friends}) : super(key: key);
 
   @override
@@ -33,7 +34,7 @@ class _RecommandFriendRowState extends State<RecommandFriendRow> {
                       children: [
                         const Icon(Icons.person, size: 48),
                         const SizedBox(height: 8),
-                        Text(friend),
+                        Text(friend.name),
                       ],
                     ),
                   ),
