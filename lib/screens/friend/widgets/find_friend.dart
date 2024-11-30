@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'package:search_page/search_page.dart';
 
@@ -12,14 +14,6 @@ class Person implements Comparable<Person> {
   int compareTo(Person other) => name.compareTo(other.name);
 }
 
-const people = [
-  Person('Mike', 'Barron', 64),
-  Person('Todd', 'Black', 30),
-  Person('Ahmad', 'Edwards', 55),
-  Person('Anthony', 'Johnson', 67),
-  Person('Annette', 'Brooks', 39),
-];
-
 class FindFriend extends StatelessWidget {
   const FindFriend({
     super.key,
@@ -27,6 +21,16 @@ class FindFriend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AllUsersProvider aup = context.watch();
+    print(aup.au);
+    final people = aup.au
+        .map(
+            (user) => Person(user?.nickname ?? user!.uid, user?.email ?? "", 0))
+        .toList();
+    // const people = [
+    //   Person('Mike', 'Barron', 64),
+
+    // ];
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SizedBox(
@@ -70,7 +74,7 @@ class FindFriend extends StatelessWidget {
                 builder: (person) => ListTile(
                   title: Text(person.name),
                   subtitle: Text(person.surname),
-                  trailing: Text('${person.age} yo'),
+                  // trailing: Text('${person.age} yo'),
                 ),
               ),
             );
