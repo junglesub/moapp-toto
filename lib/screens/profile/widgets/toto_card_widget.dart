@@ -115,11 +115,9 @@ class _ToToCardState extends State<ToToCard> {
   void _showOptionsModal() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
           decoration: const BoxDecoration(
-            color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -127,20 +125,26 @@ class _ToToCardState extends State<ToToCard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.edit, color: Colors.black),
-                title: const Text(
-                  '투투 수정',
-                  style: TextStyle(fontSize: 16),
+                leading: const Icon(
+                  Icons.edit,
                 ),
+                title: const Text('투투 수정',
+                    style: TextStyle(
+                      fontSize: 16,
+                    )),
                 onTap: () {
                   Navigator.pop(context);
                   _showConfirmationDialog('edit');
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.delete, color: Colors.black),
+                leading: const Icon(
+                  Icons.delete,
+                ),
                 title: const Text('투투 삭제',
-                    style: TextStyle(fontSize: 16, color: Colors.black)),
+                    style: TextStyle(
+                      fontSize: 16,
+                    )),
                 onTap: () {
                   Navigator.pop(context);
                   _showConfirmationDialog('delete');

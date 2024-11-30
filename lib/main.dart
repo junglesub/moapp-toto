@@ -144,6 +144,9 @@ class MyApp extends StatelessWidget {
             backgroundColor: const Color(0xFF363536),
             contentTextStyle: TextStyle(color: Colors.grey[200]),
           ),
+          bottomSheetTheme: const BottomSheetThemeData(
+            backgroundColor: Colors.white,
+          ),
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: Colors.white,
             selectedItemColor: Colors.black,
@@ -170,6 +173,9 @@ class MyApp extends StatelessWidget {
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[800],
             contentTextStyle: TextStyle(color: Colors.grey[200]),
+          ),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: Colors.grey[800],
           ),
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: Color(0xFF121212),
