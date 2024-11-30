@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:moapp_toto/models/user_entity.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
+import 'package:provider/provider.dart';
 
 class RecommandFriendRow extends StatefulWidget {
-  final List<Person> friends; // Friends list as a parameter
+  final List<UserEntry?> friends; // Friends list as a parameter
   const RecommandFriendRow({Key? key, required this.friends}) : super(key: key);
 
   @override
@@ -16,26 +19,38 @@ class _RecommandFriendRowState extends State<RecommandFriendRow> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.watch();
     return Column(
       children: [
         CarouselSlider(
           items: widget.friends.map((friend) {
+            if (friend == null) return Container();
             return Builder(
               builder: (BuildContext context) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 200, // Adjust height as needed
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.person, size: 48),
-                        const SizedBox(height: 8),
-                        Text(friend.name),
-                      ],
+                return GestureDetector(
+                  onTap: () {
+                    up.ue?.addFollowing(friend.uid);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content:
+                              Text('${friend.nickname ?? friend.uid} 팔로우 시작')),
+                    );
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 200, // Adjust height as needed
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.person, size: 48),
+                          const SizedBox(height: 8),
+                          Text(friend.nickname ?? friend.email ?? friend.uid),
+                        ],
+                      ),
                     ),
                   ),
                 );

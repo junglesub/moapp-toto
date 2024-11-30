@@ -42,6 +42,20 @@ class UserEntry {
     return data;
   }
 
+  Future<bool> addFollowing(String targetId) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'following': FieldValue.arrayUnion([targetId])
+    });
+    return true;
+  }
+
+  Future<bool> removeFollowing(String targetId) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'following': FieldValue.arrayRemove([targetId])
+    });
+    return true;
+  }
+
   static UserEntry? fromDocumentSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) return null;
     final data = snapshot.data() as Map<String, dynamic>;
