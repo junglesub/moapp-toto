@@ -144,6 +144,13 @@ class MyApp extends StatelessWidget {
           ),
           dividerColor: const Color.fromARGB(255, 245, 245, 245),
           iconTheme: const IconThemeData(color: Colors.black),
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: const Color(0xFF363536),
+            contentTextStyle: TextStyle(color: Colors.grey[200]),
+          ),
+          bottomSheetTheme: const BottomSheetThemeData(
+            backgroundColor: Colors.white,
+          ),
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: Colors.white,
             selectedItemColor: Colors.black,
@@ -167,6 +174,13 @@ class MyApp extends StatelessWidget {
           ),
           dividerColor: Colors.grey[800],
           iconTheme: IconThemeData(color: Colors.grey[200]),
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: Colors.grey[800],
+            contentTextStyle: TextStyle(color: Colors.grey[200]),
+          ),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: Colors.grey[800],
+          ),
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: Color(0xFF121212),
             selectedItemColor: Colors.white,
@@ -185,7 +199,7 @@ class MyApp extends StatelessWidget {
             '/add': (BuildContext context) => const AddPage(),
             '/edit': (BuildContext context) => const EditPage(),
             '/friend': (BuildContext context) => const FriendPage(),
-            '/notification': (BuildContext context) => const NotificationPage(),
+            '/notification': (BuildContext context) => NotificationPage(),
             '/mission': (BuildContext context) => const MissionPage(),
              '/game': (BuildContext context) => const GamePage(),
             '/profile': (BuildContext context) => const ProfilePage(),
