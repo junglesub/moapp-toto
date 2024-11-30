@@ -2,6 +2,7 @@ import 'package:floating_draggable_widget/floating_draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:moapp_toto/widgets/custom_button.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -166,7 +167,10 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
+      )
+          .animate()
+          .fadeIn(duration: 1000.ms)
+          .slideY(begin: 0.1, end: 0, duration: 1000.ms),
     );
   }
 
