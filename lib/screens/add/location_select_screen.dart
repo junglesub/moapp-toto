@@ -47,6 +47,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
 
   void _onMapTap(LatLng position) {
     setState(() {
+      _selectedPlaceName = null;
       _selectedLocation = position;
     });
   }
@@ -60,6 +61,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       );
 
       setState(() {
+        _selectedPlaceName = null;
         _selectedLocation = _currentLocation;
       });
     }
@@ -143,24 +145,61 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
   }
 
   // Save the selected location and return the place name and coordinates
-  void _saveLocation() {
-    if (_selectedLocation != null && _selectedPlaceName != null) {
-      // You can return a map with place name and coordinates
-      final result = {
-        'placeName': _selectedPlaceName,
-        'coordinates': _selectedLocation,
-      };
-
-      // For demonstration purposes, show the result in a SnackBar
+  void _saveLocation() async {
+    if (_selectedLocation == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Saved location: ${result['placeName']}')),
+        const SnackBar(content: Text('Please select a location')),
+      );
+      return;
+    }
+
+    if (_selectedPlaceName == null || _selectedPlaceName!.isEmpty) {
+      // Show a dialog to ask for the place name
+      final TextEditingController placeNameController = TextEditingController();
+      _selectedPlaceName = await showDialog<String>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('장소 이름을 추가해보세요!'),
+            content: TextField(
+              controller: placeNameController,
+              decoration: const InputDecoration(
+                hintText: 'ex) 양덕 카페',
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close without saving
+                },
+                child: const Text('취소'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(placeNameController.text);
+                },
+                child: const Text('추가'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    if (_selectedPlaceName != null && _selectedPlaceName!.isNotEmpty) {
+      final result = LocationResult(
+          coordinates: _selectedLocation!, placeName: _selectedPlaceName!);
+
+      // Show the result in a SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Saved location: ${result.placeName}')),
       );
 
       Navigator.pop(
           context, result); // Return the result (place name and coordinates)
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a location')),
+        const SnackBar(content: Text('Place name is required')),
       );
     }
   }
@@ -258,4 +297,11 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       ),
     );
   }
+}
+
+class LocationResult {
+  String placeName;
+  LatLng coordinates;
+
+  LocationResult({required this.placeName, required this.coordinates});
 }

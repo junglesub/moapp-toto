@@ -18,6 +18,7 @@ class _AddPageState extends State<AddPage> {
   final TextEditingController textController = TextEditingController();
   bool isAnalysisPage = false;
   MoodOption? selectedMood;
+  LocationResult? selectedLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +142,42 @@ class _AddPageState extends State<AddPage> {
                             width: 1.5, // Set the border width
                           ),
                         ),
+                      ),
+                    if (selectedLocation != null)
+                      Chip(
+                        label: Row(
+                          mainAxisSize: MainAxisSize
+                              .min, // Make the Row as compact as possible
+                          children: [
+                            Icon(
+                              Icons.location_on, // Use the location_on icon
+                              color: Colors.black, // Adjust icon color
+                              size: 16, // Adjust icon size
+                            ),
+                            const SizedBox(
+                                width: 8), // Space between icon and text
+                            Text(
+                              selectedLocation?.placeName ??
+                                  "", // Display the mood name
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12, // Adjust the font size
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                        ),
+                        // backgroundColor: Colors.grey[300], // 배경 색상
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 0, vertical: 4), // 최소화된 패딩
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12), // 작은 둥근 모서리
+                          side: BorderSide(
+                            color: Colors.grey[300]!, // Set the border color
+                            width: 1.5, // Set the border width
+                          ),
+                        ),
                       )
                   ],
                 ),
@@ -222,12 +259,13 @@ class _AddPageState extends State<AddPage> {
                 leading: Icon(Icons.location_on),
                 title: Text('위치 추가'),
                 onTap: () async {
-                  LatLng? mood = await _navigateToLocationPage(context);
-                  if (mood != null) {
+                  LocationResult? locationResult =
+                      await _navigateToLocationPage(context);
+                  if (locationResult != null) {
                     // print("선택된 기분: ${mood.name}");
-                    // setState(() {
-                    //   selectedMood = mood;
-                    // });
+                    setState(() {
+                      selectedLocation = locationResult;
+                    });
                   }
                 },
               ),
@@ -251,8 +289,8 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  Future<LatLng?> _navigateToLocationPage(BuildContext context) async {
-    return Navigator.push<LatLng>(
+  Future<LocationResult?> _navigateToLocationPage(BuildContext context) async {
+    return Navigator.push<LocationResult>(
       context,
       MaterialPageRoute(
         builder: (context) => const LocationSelectionPage(),
