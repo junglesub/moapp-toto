@@ -181,7 +181,7 @@ class MyApp extends StatelessWidget {
             '/add': (BuildContext context) => const AddPage(),
             '/edit': (BuildContext context) => const EditPage(),
             '/friend': (BuildContext context) => const FriendPage(),
-            '/notification': (BuildContext context) => const NotificationPage(),
+            '/notification': (BuildContext context) => NotificationPage(),
             '/mission': (BuildContext context) => const MissionPage(),
             '/profile': (BuildContext context) => const ProfilePage(),
           },
