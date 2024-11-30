@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         title: '투데이투게더',
         initialRoute: '/landing',
         navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
         routes: {
           '/landing': (BuildContext context) => LandingPage(),
           '/signup': (BuildContext context) => const SignUpPage(),
