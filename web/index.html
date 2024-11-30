@@ -32,6 +32,13 @@
       content="377762176742-i4f0r3b1v91b44s41gvktaujh5he5em8.apps.googleusercontent.com"
     />
 
+    <!-- Google Map API -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRUtIvSgxkahEQJyhU9fLfOKJFgOgo95w&libraries=places"
+      async
+      defer
+    ></script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
 
@@ -39,6 +46,43 @@
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>
+    <script>
+      let autocompleteService;
+      let placesService;
+
+      function initializeGoogleServices() {
+        autocompleteService = new google.maps.places.AutocompleteService();
+        placesService = new google.maps.places.PlacesService(
+          document.createElement("div")
+        );
+      }
+
+      function getAutocompletePredictions(input, callback) {
+        if (!autocompleteService) initializeGoogleServices();
+        autocompleteService.getPlacePredictions(
+          { input },
+          (predictions, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              callback(predictions);
+            } else {
+              callback([]);
+            }
+          }
+        );
+      }
+
+      function getPlaceDetails(placeId, callback) {
+        if (!placesService) initializeGoogleServices();
+        placesService.getDetails({ placeId }, (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            callback(place);
+          } else {
+            callback(null);
+          }
+        });
+      }
+    </script>
+
     <script src="flutter_bootstrap.js" async></script>
   </body>
 </html>

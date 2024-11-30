@@ -1,6 +1,8 @@
+import 'package:floating_draggable_widget/floating_draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:moapp_toto/widgets/custom_button.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -165,62 +167,98 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
+      )
+          .animate()
+          .fadeIn(duration: 1000.ms)
+          .slideY(begin: 0.1, end: 0, duration: 1000.ms),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Today, Together"),
-        centerTitle: false,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildAccumulativeDiary(),
-          const Divider(
-            thickness: 2,
-            color: Color.fromARGB(255, 245, 245, 245),
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                _buildPostCard(
-                  authorName: "Author A",
-                  date: "2024년 11월 12일",
-                  content: "오늘은 날씨가 너무 좋았다!!",
-                  imageUrl: "assets/images/toto.jpg",
-                  cardIndex: 0, // 카드 인덱스를 전달
-                ),
-                _buildPostCard(
-                  authorName: "Author B",
-                  date: "2024년 11월 11일",
-                  content: "플러터로 앱 개발을 함. 굿",
-                  imageUrl: "assets/images/toto.jpg",
-                  cardIndex: 1, // 카드 인덱스를 전달
-                ),
-                _buildPostCard(
-                  authorName: "Author C",
-                  date: "2024년 11월 10일",
-                  content: "드라이브해서 바다 보고옴",
-                  cardIndex: 2, // 카드 인덱스를 전달
-                ),
-              ],
+    return FloatingDraggableWidget(
+      mainScreenWidget: Scaffold(
+        appBar: AppBar(
+          title: const Text("Today, Together"),
+          centerTitle: false,
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildAccumulativeDiary(),
+            const Divider(
+              thickness: 2,
+              color: Color.fromARGB(255, 245, 245, 245),
             ),
-          ),
-        ],
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildPostCard(
+                    authorName: "Author A",
+                    date: "2024년 11월 12일",
+                    content: "오늘은 날씨가 너무 좋았다!!",
+                    imageUrl: "assets/images/toto.jpg",
+                    cardIndex: 0, // 카드 인덱스를 전달
+                  ),
+                  _buildPostCard(
+                    authorName: "Author B",
+                    date: "2024년 11월 11일",
+                    content: "플러터로 앱 개발을 함. 굿",
+                    imageUrl: "assets/images/toto.jpg",
+                    cardIndex: 1, // 카드 인덱스를 전달
+                  ),
+                  _buildPostCard(
+                    authorName: "Author C",
+                    date: "2024년 11월 10일",
+                    content: "드라이브해서 바다 보고옴",
+                    cardIndex: 2, // 카드 인덱스를 전달
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (indexPage) {
+            setState(() {
+              _currentIndex = indexPage;
+            });
+            print("Selected tab: $indexPage");
+          },
+        ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (indexPage) {
-          setState(() {
-            _currentIndex = indexPage;
-          });
-          print("Selected tab: $indexPage");
+      floatingWidget: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, '/add');
         },
+        child: Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(25),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 4,
+                offset: Offset(2, 2),
+              ),
+            ],
+          ),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
       ),
+      floatingWidgetHeight: 50,
+      floatingWidgetWidth: 50,
+      dx: 320,
+      dy: 700,
+      deleteWidget: const Icon(Icons.cancel),
+      deleteWidgetAlignment: Alignment.bottomCenter,
+      deleteWidgetPadding: const EdgeInsets.only(bottom: 80),
     );
   }
 }
