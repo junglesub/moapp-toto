@@ -9,6 +9,7 @@ import 'package:moapp_toto/screens/friend/friend_screen.dart';
 import 'package:moapp_toto/screens/home/home_screen.dart';
 import 'package:moapp_toto/screens/landing/landing_screen.dart';
 import 'package:moapp_toto/screens/mission/mission_screen.dart';
+import 'package:moapp_toto/screens/mission_game/game_screen.dart';
 import 'package:moapp_toto/screens/notification/notification_screen.dart';
 import 'package:moapp_toto/screens/profile/profile_screen.dart';
 import 'package:moapp_toto/screens/signUp/signUp_screen.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           '/friend': (BuildContext context) => const FriendPage(),
           '/notification': (BuildContext context) => const NotificationPage(),
           '/mission': (BuildContext context) => const MissionPage(),
+          '/game': (BuildContext context) => const GamePage(),
           '/profile': (BuildContext context) => const ProfilePage(),
         },
         theme: ThemeData(
