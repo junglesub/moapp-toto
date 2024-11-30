@@ -56,6 +56,7 @@ class _NotificationPageState extends State<NotificationPage> {
           });
           print("Selected tab: $index");
         },
+        notificationCount: notifications.length, // 알림 갯수 전달
       ),
     );
   }
