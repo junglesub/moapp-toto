@@ -31,19 +31,39 @@ class _NotificationPageState extends State<NotificationPage> {
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: ListTile(
-              leading: const CircleAvatar(
-                child: Icon(Icons.notifications),
+          return Dismissible(
+            key: Key(notification['title']!),
+            direction: DismissDirection.horizontal,
+            background: Container(
+              color: Colors.white,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+            ),
+            onDismissed: (direction) {
+              setState(() {
+                notifications.removeAt(index);
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('알림이 삭제되었습니다.'),
+                  duration: Duration(seconds: 1),
+                ),
+              );
+            },
+            child: Card(
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: ListTile(
+                leading: const CircleAvatar(
+                  child: Icon(Icons.notifications),
+                ),
+                title: Text(notification['title']!),
+                subtitle: Text(
+                    '${notification['subtitle']} • ${notification['timestamp']}'),
+                onTap: () {
+                  // 알림 클릭 시 동작
+                  print('알림 클릭: ${notification['title']}');
+                },
               ),
-              title: Text(notification['title']!),
-              subtitle: Text(
-                  '${notification['subtitle']} • ${notification['timestamp']}'),
-              onTap: () {
-                // 알림 클릭 시 동작
-                print('알림 클릭: ${notification['title']}');
-              },
             ),
           );
         },
