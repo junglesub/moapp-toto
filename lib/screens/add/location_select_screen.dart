@@ -51,7 +51,8 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     });
   }
 
-  void _moveToCurrentLocation() {
+  void _moveToCurrentLocation() async {
+    await _fetchCurrentLocation();
     if (_currentLocation != null && _mapController != null) {
       // Only animate the camera if the map controller is available
       _mapController!.animateCamera(
