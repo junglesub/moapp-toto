@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:moapp_toto/widgets/custom_button.dart';
-// import 'package:moapp_toto/widgets/custom_bottom_navigation_bar.dart';
-
-import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +11,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장
+  final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장 (임시)
 
   void _selectDate(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
@@ -47,7 +44,7 @@ class _HomePageState extends State<HomePage> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
             child: const Text(
-              "🔥 누적 일기 16개째...",
+              "🔥 누적 투투 16개째...",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
@@ -99,12 +96,12 @@ class _HomePageState extends State<HomePage> {
     required String date,
     required String content,
     String? imageUrl,
-    required int index, // 카드 인덱스를 받음
+    required int cardIndex, // 카드 인덱스를 받음
   }) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _isFavorited[index] = !_isFavorited[index]; // 하트 상태 토글
+          _isFavorited[cardIndex] = !_isFavorited[cardIndex]; // 하트 상태 토글
         });
       },
       child: Card(
@@ -138,15 +135,17 @@ class _HomePageState extends State<HomePage> {
                   // 하트 아이콘 수정 부분
                   IconButton(
                     icon: Icon(
-                      _isFavorited[index]
+                      _isFavorited[cardIndex]
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color:
-                          _isFavorited[index] ? Colors.red : null, // 하트 색상 변경
+                      color: _isFavorited[cardIndex]
+                          ? Colors.red
+                          : null, // 하트 색상 변경
                     ),
                     onPressed: () {
                       setState(() {
-                        _isFavorited[index] = !_isFavorited[index]; // 하트 상태 변경
+                        _isFavorited[cardIndex] =
+                            !_isFavorited[cardIndex]; // 하트 상태 변경
                       });
                     },
                   ),
@@ -181,6 +180,10 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildAccumulativeDiary(),
+          const Divider(
+            thickness: 2,
+            color: Color.fromARGB(255, 245, 245, 245),
+          ),
           Expanded(
             child: ListView(
               children: [
@@ -189,20 +192,20 @@ class _HomePageState extends State<HomePage> {
                   date: "2024년 11월 12일",
                   content: "오늘은 날씨가 너무 좋았다!!",
                   imageUrl: "assets/images/toto.jpg",
-                  index: 0, // 카드 인덱스를 전달
+                  cardIndex: 0, // 카드 인덱스를 전달
                 ),
                 _buildPostCard(
                   authorName: "Author B",
                   date: "2024년 11월 11일",
                   content: "플러터로 앱 개발을 함. 굿",
                   imageUrl: "assets/images/toto.jpg",
-                  index: 1, // 카드 인덱스를 전달
+                  cardIndex: 1, // 카드 인덱스를 전달
                 ),
                 _buildPostCard(
                   authorName: "Author C",
                   date: "2024년 11월 10일",
                   content: "드라이브해서 바다 보고옴",
-                  index: 2, // 카드 인덱스를 전달
+                  cardIndex: 2, // 카드 인덱스를 전달
                 ),
               ],
             ),
@@ -211,11 +214,11 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
+        onTap: (indexPage) {
           setState(() {
-            _currentIndex = index;
+            _currentIndex = indexPage;
           });
-          print("Selected tab: $index");
+          print("Selected tab: $indexPage");
         },
       ),
     );
