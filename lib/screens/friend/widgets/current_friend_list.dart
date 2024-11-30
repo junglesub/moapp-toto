@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:moapp_toto/models/user_entity.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
+import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
+import 'package:provider/provider.dart';
 
 class CurrentFriendList extends StatelessWidget {
   const CurrentFriendList({
@@ -7,16 +11,18 @@ class CurrentFriendList extends StatelessWidget {
     required this.currentFriends,
   });
 
-  final List<String> currentFriends;
+  final List<UserEntry?> currentFriends;
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.watch();
     return Expanded(
       flex: 3,
       child: ListView.builder(
         itemCount: currentFriends.length,
         itemBuilder: (context, index) {
           final friend = currentFriends[index];
+          if (friend == null) return Container();
           return Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
@@ -40,14 +46,17 @@ class CurrentFriendList extends StatelessWidget {
                   SlidableAction(
                     onPressed: (context) {
                       // Handle unfriend action
+                      up.ue?.removeFollowing(friend.uid);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('$friend unfriended')),
+                        SnackBar(
+                            content:
+                                Text('${friend.nickname ?? friend.uid} 언팔로우')),
                       );
                     },
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     icon: Icons.delete,
-                    label: 'Unfriend',
+                    label: '언팔로우',
                   ),
                 ],
               ),
@@ -55,12 +64,12 @@ class CurrentFriendList extends StatelessWidget {
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey[300],
                   child: Text(
-                    friend[0],
+                    (friend.nickname ?? friend.email ?? friend.uid)[0],
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
-                title: Text(friend),
-                subtitle: const Text('Tap to view profile'),
+                title: Text(friend.nickname ?? ""),
+                subtitle: Text(friend.email ?? ""),
                 onTap: () {
                   // Navigate to friend's profile or perform another action
                   ScaffoldMessenger.of(context).showSnackBar(

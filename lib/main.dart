@@ -80,6 +80,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:moapp_toto/firebase_options.dart';
+import 'package:moapp_toto/provider/all_users_provider.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/add_screen.dart';
@@ -118,6 +119,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TotoProvider()),
+        ChangeNotifierProvider(create: (context) => AllUsersProvider()),
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
           lazy: false,
