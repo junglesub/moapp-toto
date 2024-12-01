@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
+import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -32,23 +33,55 @@ class _ToToCardState extends State<ToToCard> {
   bool isLiked = false;
   List<String> hashtags = [];
 
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   // 게시글에서 location_name과 emotion 값을 받아와 해시태그로 추가
+  //   hashtags = [];
+
+  //   if (widget.t.emotion?.name != null) {
+  //     hashtags.add("${widget.t.emotion?.emoji} ${widget.t.emotion?.name}");
+  //   }
+
+  //   if (widget.t.location?.placeName != null) {
+  //     hashtags.add("${widget.t.location?.placeName}");
+  //   }
+
+  //   if (widget.t.taggedFriends != null && widget.t.taggedFriends!.isNotEmpty) {
+  //     hashtags.addAll(widget.t.taggedFriends! as Iterable<String>);
+  //   }
+  // }
   @override
   void initState() {
     super.initState();
+    _initializeHashtags();
+  }
 
-    // 게시글에서 location_name과 emotion 값을 받아와 해시태그로 추가
-    hashtags = [];
+  Future<void> _initializeHashtags() async {
+    List<String> tempHashtags = [];
 
     if (widget.t.emotion?.name != null) {
-      hashtags.add("${widget.t.emotion?.emoji} ${widget.t.emotion?.name}");
+      tempHashtags.add("${widget.t.emotion?.emoji} ${widget.t.emotion?.name}");
     }
 
     if (widget.t.location?.placeName != null) {
-      hashtags.add("${widget.t.location?.placeName}");
+      tempHashtags.add("# ${widget.t.location!.placeName}");
     }
 
-    // 다른 필요 항목도 추가 가능
-    // 함께한 사람 정보
+    if (widget.t.taggedFriends != null && widget.t.taggedFriends!.isNotEmpty) {
+      for (String? uid in widget.t.taggedFriends!) {
+        if (uid != null) {
+          UserEntry? userEntry = await UserEntry.getUserByUid(uid);
+          if (userEntry != null && userEntry.nickname != null) {
+            tempHashtags.add("# ${userEntry.nickname!}");
+          }
+        }
+      }
+    }
+    setState(() {
+      hashtags = tempHashtags;
+    });
   }
 
   @override

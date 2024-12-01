@@ -53,6 +53,17 @@ class UserEntry {
     return data;
   }
 
+  static Future<UserEntry?> getUserByUid(String uid) async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      return UserEntry.fromDocumentSnapshot(snapshot);
+    } catch (e) {
+      print("Error fetching user data by uid: $e");
+      return null;
+    }
+  }
+
   Future<bool> addFollowing(String targetId) async {
     await FirebaseFirestore.instance.collection('users').doc(uid).update({
       'following': FieldValue.arrayUnion([targetId])
