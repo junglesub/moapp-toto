@@ -129,7 +129,7 @@ class MyApp extends StatelessWidget {
           },
           theme: theme,
           darkTheme: darkTheme,
-        ),
+            debugShowCheckedModeBanner: false),
         debugShowFloatingThemeButton: false,
       ),
     );

@@ -18,6 +18,7 @@ class ToToEntity {
   final Timestamp? created;
   final Timestamp? modified;
   final List<String> liked;
+  final String? aiReaction;
 
   String? get imageUrlLink => imageUrl;
 
@@ -31,12 +32,14 @@ class ToToEntity {
       this.modified,
       this.imageUrl,
       this.location,
-      this.emotion});
+      this.emotion,
+      this.aiReaction});
 
   ToToEntity.withImageFile({
     this.id,
     this.emotion,
     this.location,
+    this.aiReaction,
     required this.name,
     required this.description,
     required this.creator,
@@ -119,7 +122,8 @@ class ToToEntity {
         modified = null,
         imageUrl = null,
         emotion = null,
-        location = null;
+        location = null,
+        aiReaction = null;
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {
@@ -147,6 +151,9 @@ class ToToEntity {
 
   static ToToEntity fromDocumentSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
+
+    GeoPoint? gp = data["location"];
+
     return ToToEntity(
       id: snapshot.id,
       name: data['name'],
@@ -156,11 +163,11 @@ class ToToEntity {
       modified: data['modified'],
       imageUrl: data['imageUrl'],
       emotion: data["emotion"],
-      location: data["location"] != null
+      aiReaction: data["aiReaction"],
+      location: gp != null
           ? LocationResult(
               placeName: data["location_name"],
-              coordinates: LatLng(
-                  data["location"]["latitude"], data["location"]["longitude"]))
+              coordinates: LatLng(gp.latitude, gp.longitude))
           : null,
       liked: data['liked'] != null ? List<String>.from(data['liked']) : [],
     );
