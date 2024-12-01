@@ -243,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 : Container(
                                     width: 140,
                                     height: 140,
-                                    color: Colors.grey[300],
+                                    color: Colors.blue,
                                     child: const Icon(
                                       Icons.person,
                                       size: 50,

@@ -113,6 +113,9 @@ class _HomePageState extends State<HomePage> {
         });
       },
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
