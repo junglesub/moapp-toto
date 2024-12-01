@@ -110,7 +110,7 @@ class _AddPageState extends State<AddPage> {
                       modified: toto.modified,
                       imageUrl: toto.imageUrl,
                       location: selectedLocation,
-                      emotion: selectedMood ?? toto.emotion,
+                       emotion: selectedMood ?? toto.emotion,
                       taggedFriends: taggedFriendUids,
                     );
                     await t.save();
@@ -224,29 +224,46 @@ class _AddPageState extends State<AddPage> {
                 // Mood와 Location 정보
                 Row(
                   children: [
-                    if (selectedMood != null)
-                      Container(
-                        margin: const EdgeInsets.only(right: 4),
-                        constraints: const BoxConstraints(
-                          minHeight: 45,
-                          // maxHeight: 45, // Height 고정
-                        ),
-                        child: Chip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                selectedMood?.emoji ?? "",
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                selectedMood?.name ?? "",
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                    if (toto?.emotion != null || selectedMood != null)
+                      Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 4),
+                          child: Chip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  selectedMood?.emoji ??
+                                      toto?.emotion?.emoji ??
+                                      "",
+                                  style: const TextStyle(fontSize: 20),
                                 ),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    selectedMood?.name ??
+                                        toto?.emotion?.name ??
+                                        "",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Handle text overflow
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                )
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(
+                                color: Colors.grey[300]!,
+                                width: 1.5,
                               ),
                             ],
                           ),
@@ -260,29 +277,41 @@ class _AddPageState extends State<AddPage> {
                         ),
                       ),
                     if (selectedLocation != null)
-                      Container(
-                        margin: const EdgeInsets.only(left: 4),
-                        constraints: const BoxConstraints(
-                          minHeight: 45,
-                          maxHeight: 45, // Height 고정
-                        ),
-                        child: Chip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.location_on,
-                                color: Colors.black,
-                                size: 16,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                selectedLocation?.placeName ?? "",
-                                style: const TextStyle(
+                      Flexible(
+                        child: Container(
+                          child: Chip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  size: 16,
                                 ),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    selectedLocation?.placeName ?? "",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Handle text overflow
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                )
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(
+                                color: Colors.grey[300]!,
+                                width: 1.5,
                               ),
                             ],
                           ),
@@ -375,35 +404,53 @@ class _AddPageState extends State<AddPage> {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  "AI가 판단한 오늘의 리액션",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
-                    child: AnimatedTextKit(
-                      key: ValueKey(toto?.aiReaction),
-                      totalRepeatCount: 1,
-                      animatedTexts: [
-                        TypewriterAnimatedText(
-                          '투투를 기반으로 기분을 분석 중입니다.',
-                          textStyle: const TextStyle(fontSize: 15),
-                          speed: const Duration(milliseconds: 100),
+                Text(toto?.id ?? "Unknown ID"),
+                if (!isEditMode)
+                  Column(
+                    children: [
+                      Text(
+                        "AI가 판단한 오늘의 리액션",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
-                      pause: const Duration(milliseconds: 500),
-                      displayFullTextOnTap: false,
-                      stopPauseOnTap: false,
-                    ),
+                        child: Center(
+                          child: AnimatedTextKit(
+                            key: ValueKey(toto?.aiReaction),
+                            totalRepeatCount: 1,
+                            animatedTexts: [
+                              TypewriterAnimatedText(
+                                toto?.aiReaction ?? '투투를 기반으로 기분을 분석 중입니다.',
+                                textStyle: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                                speed: const Duration(milliseconds: 100),
+                              ),
+                            ],
+                            pause: const Duration(milliseconds: 500),
+                            displayFullTextOnTap: false,
+                            stopPauseOnTap: false,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                if (isEditMode)
+                  Column(
+                    children: [
+                      CustomTextFormField(
+                        hintText: "오늘은 어떤 날인가요?",
+                        controller: textController,
+                        maxLines: 4,
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),

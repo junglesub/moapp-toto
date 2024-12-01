@@ -144,7 +144,7 @@ class ToToEntity {
               location!.coordinates.latitude, location!.coordinates.longitude)
           : null,
       "location_name": location?.placeName,
-      "emotion": emotion?.name,
+     emotion": emotion?.name
       'taggedFriends': taggedFriends ?? [], // 기본값 빈 리스트
 
       // 'created': created,
