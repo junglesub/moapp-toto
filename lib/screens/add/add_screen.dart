@@ -47,15 +47,13 @@ class _AddPageState extends State<AddPage> {
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
       UserProvider up = Provider.of(context, listen: false);
-      currentToto =
-          args?['toto'] ?? ToToEntity.empty(creator: up.currentUser?.uid ?? "");
-
-      textController =
-          TextEditingController(text: currentToto?.description ?? "");
 
       if (args?['toto'] != null) {
         isAnalysisPage = true;
         isEditMode = true;
+        currentToto = args?['toto'];
+        textController =
+            TextEditingController(text: currentToto?.description ?? "");
       }
       _isStarted = true;
     }
