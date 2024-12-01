@@ -1,9 +1,13 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/models/toto_entity.dart';
 import 'package:moapp_toto/models/user_entity.dart';
+import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/profile/widgets/toto_card_widget.dart';
+import 'package:moapp_toto/utils/date_format.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -150,6 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     UserProvider up = context.watch();
+    TotoProvider tp = context.watch();
     return Scaffold(
       appBar: AppBar(
         title: _showAppBarTitle
@@ -289,20 +294,24 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                ListView.builder(
+                ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return const ToToCard(
-                      userName: 'Ryoo Jungsub',
-                      userImagePath: 'assets/images/profile.jpg',
-                      postDate: '2020년 4월 17일',
-                      postContent:
-                          '뒤에는 영화관에서 구매한 포스터 - 앞에는 코로나 때문에 영화관을 못 가는 나를 위해 구매한 블루레이',
-                      postImagePath: 'assets/images/toto.jpg',
-                    );
-                  },
+                  children: tp.t
+                      .where((item) =>
+                          item != null && item.creator == up.currentUser?.uid)
+                      .cast<ToToEntity>()
+                      .map((item) => ToToCard(
+                            userName:
+                                up.ue?.nickname ?? up.currentUser?.uid ?? "",
+                            userImagePath: 'assets/images/profile.jpg',
+                            postDate:
+                                convertTimestampToKoreanDate(item.created) ??
+                                    "",
+                            postContent: item.description,
+                            postImagePath: item.imageUrl,
+                          ))
+                      .toList(),
                 ),
               ],
             ),
