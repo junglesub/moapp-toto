@@ -19,7 +19,11 @@ class TotoProvider with ChangeNotifier {
   }
 
   ToToEntity? findId(String id) {
-    return _totos.firstWhere((element) => element != null && element.id == id);
+    return _totos
+            .where((element) => element != null && element.id == id)
+            .isNotEmpty
+        ? _totos.firstWhere((element) => element != null && element.id == id)
+        : null;
   }
 
   Future<void> init() async {

@@ -22,7 +22,7 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   final TextEditingController textController = TextEditingController();
-  bool isAnalysisPage = true;
+  bool isAnalysisPage = false;
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
@@ -41,7 +41,7 @@ class _AddPageState extends State<AddPage> {
     UserProvider up = context.watch();
     TotoProvider tp = context.watch();
 
-    ToToEntity? toto = tp.findId(currentToto?.id ?? "huVajBlVGuoXyEWbIyvi");
+    ToToEntity? toto = tp.findId(currentToto?.id ?? "AAAAAHHHHH");
 
     return Scaffold(
       appBar: AppBar(
@@ -165,7 +165,7 @@ class _AddPageState extends State<AddPage> {
 
   Widget _buildAnalysisPage(BuildContext context) {
     TotoProvider tp = context.watch<TotoProvider>();
-    ToToEntity? toto = tp.findId(currentToto?.id ?? "huVajBlVGuoXyEWbIyvi");
+    ToToEntity? toto = tp.findId(currentToto?.id ?? "AAAAAHHHHH");
     return Padding(
       key: const ValueKey(2),
       padding: const EdgeInsets.only(top: 16),
