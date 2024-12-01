@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
+import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/location_select_screen.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
@@ -21,7 +22,7 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   final TextEditingController textController = TextEditingController();
-  bool isAnalysisPage = false;
+  bool isAnalysisPage = true;
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
@@ -38,6 +39,10 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     UserProvider up = context.watch();
+    TotoProvider tp = context.watch();
+
+    ToToEntity? toto = tp.findId(currentToto?.id ?? "huVajBlVGuoXyEWbIyvi");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('오늘의 투투'),
@@ -45,8 +50,29 @@ class _AddPageState extends State<AddPage> {
             ? [
                 IconButton(
                   icon: const Icon(Icons.save),
-                  onPressed: () {
+                  onPressed: () async {
                     // 저장 버튼 클릭 시 동작 추가
+                    if (toto == null) {
+                      print("Save ToTo is null. Something wrong!");
+                      return;
+                    }
+                    ToToEntity t = ToToEntity(
+                      id: toto.id,
+                      name: toto.name,
+                      description: toto.description,
+                      creator: toto.creator,
+                      liked: toto.liked,
+                      created: toto.created,
+                      modified: toto.modified,
+                      imageUrl: toto.imageUrl,
+                      location: selectedLocation,
+                      emotion: selectedMood?.name,
+                    );
+                    await t.save();
+                    if (context.mounted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/", (Route<dynamic> route) => false);
+                    }
                   },
                 ),
               ]
@@ -56,7 +82,9 @@ class _AddPageState extends State<AddPage> {
         children: [
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 1000),
-            child: isAnalysisPage ? _buildAnalysisPage() : _buildWritingPage(),
+            child: isAnalysisPage
+                ? _buildAnalysisPage(context)
+                : _buildWritingPage(),
           ),
           Positioned(
             bottom: 40,
@@ -135,7 +163,9 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  Widget _buildAnalysisPage() {
+  Widget _buildAnalysisPage(BuildContext context) {
+    TotoProvider tp = context.watch<TotoProvider>();
+    ToToEntity? toto = tp.findId(currentToto?.id ?? "huVajBlVGuoXyEWbIyvi");
     return Padding(
       key: const ValueKey(2),
       padding: const EdgeInsets.only(top: 16),
@@ -224,7 +254,7 @@ class _AddPageState extends State<AddPage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Text(currentToto?.id ?? "Unknown ID"),
+                Text(toto?.id ?? "Unknown ID"),
                 Text(
                   "AI가 판단한 오늘의 리액션",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -238,9 +268,11 @@ class _AddPageState extends State<AddPage> {
                   ),
                   child: Center(
                     child: AnimatedTextKit(
+                      key: ValueKey(toto?.aiReaction),
+                      totalRepeatCount: 1,
                       animatedTexts: [
                         TypewriterAnimatedText(
-                          '투투를 기반으로 기분을 분석 중입니다.',
+                          toto?.aiReaction ?? '투투를 기반으로 기분을 분석 중입니다.',
                           textStyle: const TextStyle(
                             fontSize: 15,
                           ),
