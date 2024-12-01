@@ -113,7 +113,10 @@ class _HomePageState extends State<HomePage> {
         });
       },
       child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -121,9 +124,6 @@ class _HomePageState extends State<HomePage> {
             children: [
               Row(
                 children: [
-                  // const CircleAvatar(
-                  //   child: Icon(Icons.person),
-                  // ),
                   Container(
                     width: 40,
                     height: 40,
@@ -190,11 +190,14 @@ class _HomePageState extends State<HomePage> {
               Text(content),
               const SizedBox(height: 12.0),
               if (imageUrl != null)
-                Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 200,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 200,
+                  ),
                 ),
               const SizedBox(height: 12.0),
             ],

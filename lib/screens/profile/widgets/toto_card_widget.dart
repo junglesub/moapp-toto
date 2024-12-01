@@ -28,6 +28,26 @@ class ToToCard extends StatefulWidget {
 
 class _ToToCardState extends State<ToToCard> {
   bool isLiked = false;
+  List<String> hashtags = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 게시글에서 location_name과 emotion 값을 받아와 해시태그로 추가
+    hashtags = [];
+
+    if (widget.t.emotion?.name != null) {
+      hashtags.add("${widget.t.emotion?.emoji} ${widget.t.emotion?.name}");
+    }
+
+    if (widget.t.location?.placeName != null) {
+      hashtags.add("${widget.t.location?.placeName}");
+    }
+
+    // 다른 필요 항목도 추가 가능
+    // 함께한 사람 정보
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +146,26 @@ class _ToToCardState extends State<ToToCard> {
                 ),
               ),
             const SizedBox(height: 10),
+            Wrap(
+              spacing: 8.0, // 태그 사이 간격
+              runSpacing: 4.0, // 줄 간 간격
+              children: hashtags.map((tag) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 5.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[300]
+                        : Colors.grey[500],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    tag,
+                    style: const TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),

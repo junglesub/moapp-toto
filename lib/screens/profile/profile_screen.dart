@@ -243,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 : Container(
                                     width: 140,
                                     height: 140,
-                                    color: Colors.grey[300],
+                                    color: Colors.blue,
                                     child: const Icon(
                                       Icons.person,
                                       size: 50,
@@ -276,7 +276,7 @@ class _ProfilePageState extends State<ProfilePage> {
               IconButton(
                 icon: const Icon(
                   Icons.camera_alt,
-                  color: Colors.black,
+                  // color: Colors.black,
                 ),
                 onPressed: () async {
                   final ImagePicker picker = ImagePicker();
@@ -297,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 IconButton(
                   icon: const Icon(
                     Icons.save,
-                    color: Colors.black,
+                    // color: Colors.black,
                   ),
                   onPressed: () async {
                     if (_selectedImageBytes != null) {
