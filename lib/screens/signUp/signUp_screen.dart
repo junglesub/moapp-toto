@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/widgets/custom_full_button.dart';
+import 'package:moapp_toto/widgets/dicebear_avatar.dart';
 import 'package:moapp_toto/widgets/my_text_field.dart';
 import 'package:provider/provider.dart';
 
@@ -53,21 +54,9 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.grey.shade200,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.camera_alt,
-                      size: 32, color: Colors.black),
-                  onPressed: () {
-                    // TODO: Photo Button
-                  },
-                ),
-              ],
+            DiceBearAvatar(
+              seed: emailController.text,
+              radius: 60,
             ),
             const SizedBox(height: 32),
             // 이메일
@@ -143,7 +132,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 await userDocRef.set(ue.toMap());
 
                 // Simulate a delay and navigate
-                // await Future.delayed(const Duration(milliseconds: 500));
+                await Future.delayed(const Duration(milliseconds: 500));
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/',
