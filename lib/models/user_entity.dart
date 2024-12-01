@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UserEntry {
   String uid;
@@ -76,5 +79,28 @@ class UserEntry {
       following:
           data['following'] != null ? List<String>.from(data['following']) : [],
     );
+  }
+}
+
+extension UserEntryExtensions on UserEntry {
+  Future<void> uploadProfileImage(Uint8List imageBytes) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref();
+      final imageRef = storageRef.child("profile_images/$uid.jpg");
+
+      final uploadTask = await imageRef.putData(imageBytes);
+      final downloadUrl = await imageRef.getDownloadURL();
+
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'profileImageUrl': downloadUrl,
+      });
+
+      profileImageUrl = downloadUrl;
+
+      print("Profile image uploaded and Firestore updated successfully.");
+    } catch (e) {
+      print("Error uploading profile image: $e");
+      throw e;
+    }
   }
 }
