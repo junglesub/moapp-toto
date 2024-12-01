@@ -42,8 +42,8 @@ class UserProvider with ChangeNotifier {
             navigatorKey.currentState?.pushNamedAndRemoveUntil(
                 "/signup", (Route<dynamic> route) => false);
           } else {
-            // navigatorKey.currentState
-            //     ?.pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
+            navigatorKey.currentState
+                ?.pushNamedAndRemoveUntil("/", (Route<dynamic> route) => false);
           }
           // user entry
           _ueSub = userDocRef.snapshots().listen((snapshot) {
