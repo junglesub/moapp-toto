@@ -18,7 +18,9 @@ class TotoProvider with ChangeNotifier {
     init();
   }
 
-  ToToEntity? findId(String id) {
+  ToToEntity? findId(String? id) {
+    if (id == null) return null;
+
     return _totos
             .where((element) => element != null && element.id == id)
             .isNotEmpty

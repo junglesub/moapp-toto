@@ -11,7 +11,7 @@ class ToToEntity {
   String? id;
   final String name;
   final String description;
-  final String? emotion;
+  final MoodOption? emotion;
   final LocationResult? location;
   String? imageUrl;
   final String creator;
@@ -53,7 +53,7 @@ class ToToEntity {
 
   static Future<ToToEntity> createWithImageFile({
     String? id,
-    String? emotion,
+    MoodOption? emotion,
     LocationResult? location,
     required String name,
     required String description,
@@ -137,7 +137,7 @@ class ToToEntity {
               location!.coordinates.latitude, location!.coordinates.longitude)
           : null,
       "location_name": location?.placeName,
-      "emotion": emotion
+      "emotion": emotion?.name
       // 'created': created,
       // 'modified': modified,
     };
@@ -162,7 +162,7 @@ class ToToEntity {
       created: data['created'],
       modified: data['modified'],
       imageUrl: data['imageUrl'],
-      emotion: data["emotion"],
+      emotion: MoodOption.find(data["emotion"]),
       aiReaction: data["aiReaction"],
       location: gp != null
           ? LocationResult(

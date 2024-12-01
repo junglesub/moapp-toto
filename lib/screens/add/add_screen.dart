@@ -66,7 +66,7 @@ class _AddPageState extends State<AddPage> {
                       modified: toto.modified,
                       imageUrl: toto.imageUrl,
                       location: selectedLocation,
-                      emotion: selectedMood?.name,
+                      emotion: selectedMood ?? toto.emotion,
                     );
                     await t.save();
                     if (context.mounted) {
@@ -178,7 +178,7 @@ class _AddPageState extends State<AddPage> {
               children: [
                 Row(
                   children: [
-                    if (selectedMood != null)
+                    if (toto?.emotion != null || selectedMood != null)
                       Container(
                         margin: EdgeInsets.only(right: 4),
                         constraints: const BoxConstraints(
@@ -188,13 +188,16 @@ class _AddPageState extends State<AddPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                selectedMood?.emoji ?? "", // Display the emoji
+                                selectedMood?.emoji ??
+                                    toto?.emotion?.emoji ??
+                                    "", // Display the emoji
                                 style: const TextStyle(
                                     fontSize: 20), // Adjust the emoji size
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 selectedMood?.name ??
+                                    toto?.emotion?.name ??
                                     "", // Display the mood name
                                 style: const TextStyle(
                                   color: Colors.black,
