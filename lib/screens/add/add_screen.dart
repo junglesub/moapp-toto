@@ -22,7 +22,7 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   final TextEditingController textController = TextEditingController();
-  bool isAnalysisPage = false;
+  bool isAnalysisPage = true;
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
@@ -41,7 +41,7 @@ class _AddPageState extends State<AddPage> {
     UserProvider up = context.watch();
     TotoProvider tp = context.watch();
 
-    ToToEntity? toto = tp.findId(currentToto?.id ?? "AAAAAHHHHH");
+    ToToEntity? toto = tp.findId(currentToto?.id ?? "unknown ID");
 
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +66,7 @@ class _AddPageState extends State<AddPage> {
                       modified: toto.modified,
                       imageUrl: toto.imageUrl,
                       location: selectedLocation,
-                      emotion: selectedMood?.name,
+                      emotion: selectedMood ?? toto.emotion,
                     );
                     await t.save();
                     if (context.mounted) {
@@ -165,7 +165,7 @@ class _AddPageState extends State<AddPage> {
 
   Widget _buildAnalysisPage(BuildContext context) {
     TotoProvider tp = context.watch<TotoProvider>();
-    ToToEntity? toto = tp.findId(currentToto?.id ?? "AAAAAHHHHH");
+    ToToEntity? toto = tp.findId(currentToto?.id ?? "unknown ID");
     return Padding(
       key: const ValueKey(2),
       padding: const EdgeInsets.only(top: 16),
@@ -178,75 +178,88 @@ class _AddPageState extends State<AddPage> {
               children: [
                 Row(
                   children: [
-                    if (selectedMood != null)
-                      Container(
-                        margin: EdgeInsets.only(right: 4),
-                        constraints: const BoxConstraints(
-                            minHeight: 45), // Set a fixed height
-                        child: Chip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                selectedMood?.emoji ?? "", // Display the emoji
-                                style: const TextStyle(
-                                    fontSize: 20), // Adjust the emoji size
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                selectedMood?.name ??
-                                    "", // Display the mood name
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12, // Adjust the font size
+                    if (toto?.emotion != null || selectedMood != null)
+                      Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 4),
+                          child: Chip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  selectedMood?.emoji ??
+                                      toto?.emotion?.emoji ??
+                                      "",
+                                  style: const TextStyle(fontSize: 20),
                                 ),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    selectedMood?.name ??
+                                        toto?.emotion?.name ??
+                                        "",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Handle text overflow
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                )
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(
+                                color: Colors.grey[300]!,
+                                width: 1.5,
                               ),
-                              const SizedBox(width: 8),
-                            ],
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(
-                              color: Colors.grey[300]!,
-                              width: 1.5,
                             ),
                           ),
                         ),
                       ),
                     if (selectedLocation != null)
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(
-                            minHeight: 45), // Same height as above
-                        child: Chip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.location_on, // Use the location_on icon
-                                color: Colors.black, // Adjust icon color
-                                size: 16, // Adjust icon size
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                selectedLocation?.placeName ??
-                                    "", // Display the location name
-                                style: const TextStyle(
+                      Flexible(
+                        child: Container(
+                          child: Chip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12, // Adjust the font size
+                                  size: 16,
                                 ),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    selectedLocation?.placeName ?? "",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Handle text overflow
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                )
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(
+                                color: Colors.grey[300]!,
+                                width: 1.5,
                               ),
-                              const SizedBox(width: 8),
-                            ],
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(
-                              color: Colors.grey[300]!,
-                              width: 1.5,
                             ),
                           ),
                         ),
