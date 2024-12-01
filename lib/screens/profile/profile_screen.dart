@@ -389,6 +389,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           item != null && item.creator == up.currentUser?.uid)
                       .cast<ToToEntity>()
                       .map((item) => ToToCard(
+                            t: item,
                             userName:
                                 up.ue?.nickname ?? up.currentUser?.uid ?? "",
                             userImagePath: up.ue?.profileImageUrl ??

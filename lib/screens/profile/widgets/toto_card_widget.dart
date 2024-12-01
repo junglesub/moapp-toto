@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:moapp_toto/models/toto_entity.dart';
 
 class ToToCard extends StatefulWidget {
+  final ToToEntity t;
   final String userName;
   final String userImagePath;
   final String postDate;
@@ -11,6 +13,7 @@ class ToToCard extends StatefulWidget {
 
   const ToToCard({
     super.key,
+    required this.t,
     required this.userName,
     required this.userImagePath,
     required this.postDate,
@@ -224,9 +227,9 @@ class _ToToCardState extends State<ToToCard> {
     Navigator.pushNamed(context, '/edit');
   }
 
-  void _performDeleteAction() {
+  void _performDeleteAction() async {
     // 삭제 동작 로직 추가
-
+    await widget.t.delete();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('투투가 삭제되었습니다.'),
