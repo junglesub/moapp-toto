@@ -3,22 +3,34 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches:
-      - main # Change to your default branch if different
+      - main # Change to your default branch if necessary
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and the latest queued.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-deploy:
+  build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout repository
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Checkout source code
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-      # Set up Flutter (specific version)
-      - name: Set up Flutter 3.24.4
+      # Set up Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.24.4" # Specify Flutter 3.24.4 explicitly
+          flutter-version: "3.24.4" # Specify Flutter version
 
       # Install dependencies
       - name: Install dependencies
@@ -28,9 +40,13 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
+      # Upload build artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: build/web # Path to the Flutter web build directory
+
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
+        id: deployment
+        uses: actions/deploy-pages@v2
