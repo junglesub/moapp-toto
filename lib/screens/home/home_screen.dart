@@ -2,6 +2,7 @@ import 'package:floating_draggable_widget/floating_draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
+import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
@@ -21,6 +22,33 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   // final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장 (임시)
+  List<Map<String, dynamic>> postDataList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPostData();
+  }
+
+  Future<void> _loadPostData() async {
+    TotoProvider tp = context.read();
+    List<ToToEntity?> posts = tp.t.where((item) => item != null).toList();
+
+    List<Map<String, dynamic>> loadedPostData = [];
+    for (ToToEntity? post in posts) {
+      if (post != null) {
+        // 해시태그 초기화
+        List<String> hashtags = await _initializeHashtags(post);
+        loadedPostData.add({"post": post, "hashtags": hashtags});
+      }
+    }
+
+    setState(() {
+      postDataList = loadedPostData;
+      isLoading = false;
+    });
+  }
 
   void _selectDate(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
@@ -100,6 +128,31 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<List<String>> _initializeHashtags(ToToEntity t) async {
+    List<String> tempHashtags = [];
+
+    if (t.emotion?.name != null) {
+      tempHashtags.add("${t.emotion?.emoji} ${t.emotion?.name}");
+    }
+
+    if (t.location?.placeName != null) {
+      tempHashtags.add("# ${t.location!.placeName}");
+    }
+
+    if (t.taggedFriends != null && t.taggedFriends!.isNotEmpty) {
+      for (String? uid in t.taggedFriends!) {
+        if (uid != null) {
+          UserEntry? userEntry = await UserEntry.getUserByUid(uid);
+          if (userEntry != null && userEntry.nickname != null) {
+            tempHashtags.add("# ${userEntry.nickname!}");
+          }
+        }
+      }
+    }
+
+    return tempHashtags;
+  }
+
   Widget _buildPostCard({
     required BuildContext context,
     required ToToEntity t,
@@ -108,7 +161,8 @@ class _HomePageState extends State<HomePage> {
     required String content,
     String? imageUrl,
     String? userImagePath,
-    required int cardIndex, // 카드 인덱스를 받음
+    required int cardIndex,
+    required List<String> hashtags,
   }) {
     UserProvider up = context.watch();
     bool isLiked = up.ue?.likedToto.contains(t.id) ?? false;
@@ -205,6 +259,24 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               const SizedBox(height: 12.0),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: hashtags.map((tag) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      tag,
+                      style: const TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+              ),
             ],
           ),
         ),
@@ -236,23 +308,28 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: ListView(
-                  children: tp.t.where((item) => item != null).map((item) {
-                return _buildPostCard(
-                  context: context,
-                  t: item,
-                  authorName: aup.au
-                          .firstWhere((user) => user?.uid == item!.creator)
-                          ?.nickname ??
-                      item!.creator,
-                  userImagePath: aup.au
-                      .firstWhere((user) => user?.uid == item!.creator)
-                      ?.profileImageUrl,
-                  date: convertTimestampToKoreanDate(item!.created) ?? "",
-                  content: item!.description,
-                  imageUrl: item.imageUrl,
-                  cardIndex: 0,
-                );
-              }).toList()),
+                children: postDataList.map((postData) {
+                  ToToEntity t = postData["post"];
+                  List<String> hashtags = postData["hashtags"];
+
+                  return _buildPostCard(
+                    context: context,
+                    t: t,
+                    authorName: aup.au
+                            .firstWhere((user) => user?.uid == t.creator)
+                            ?.nickname ??
+                        t.creator,
+                    userImagePath: aup.au
+                        .firstWhere((user) => user?.uid == t.creator)
+                        ?.profileImageUrl,
+                    date: convertTimestampToKoreanDate(t.created) ?? "",
+                    content: t.description,
+                    imageUrl: t.imageUrl,
+                    cardIndex: 0,
+                    hashtags: hashtags,
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),

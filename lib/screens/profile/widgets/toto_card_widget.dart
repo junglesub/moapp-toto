@@ -167,16 +167,14 @@ class _ToToCardState extends State<ToToCard> {
               ),
             const SizedBox(height: 10),
             Wrap(
-              spacing: 8.0, // 태그 사이 간격
-              runSpacing: 4.0, // 줄 간 간격
+              spacing: 8.0,
+              runSpacing: 4.0,
               children: hashtags.map((tag) {
                 return Container(
                   padding: const EdgeInsets.symmetric(
                       vertical: 5.0, horizontal: 10.0),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.grey[300]
-                        : Colors.grey[500],
+                    color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
