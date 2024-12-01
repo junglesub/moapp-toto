@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dice_bear/dice_bear.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
@@ -111,12 +112,20 @@ class _SignUpPageState extends State<SignUpPage> {
               key: const ValueKey(2),
               text: "시작하기",
               onPressed: () async {
+                final Avatar avatar = DiceBearBuilder(
+                  sprite: DiceBearSprite.botttsNeutral,
+                  seed: emailController.text,
+                ).build();
+
+                final svgUrl = avatar.svgUri.toString();
+
                 // Print all text field values
                 print("Email: ${emailController.text}");
                 print("Nickname: ${nicknameController.text}");
                 print("Gender: ${genderController.text}");
                 print("Age: ${ageController.text}");
                 print("Terms Accepted: $isTermsAccepted");
+                print("SVG URL: $svgUrl"); // Debugging
 
                 UserEntry ue = UserEntry(
                   uid: up.currentUser?.uid ?? "error",
@@ -124,6 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   email: emailController.text,
                   nickname: nicknameController.text,
                   birthyear: int.tryParse(ageController.text),
+                  profileImageUrl: svgUrl,
                 );
 
                 final userDocRef = FirebaseFirestore.instance

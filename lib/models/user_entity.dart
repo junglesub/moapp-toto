@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserEntry {
   String uid;
+  String? profileImageUrl;
   String? email;
   String? nickname;
   String? gender;
@@ -12,6 +13,7 @@ class UserEntry {
   UserEntry({
     required this.uid,
     required this.gender,
+    this.profileImageUrl,
     this.email,
     this.nickname,
     this.birthyear,
@@ -37,6 +39,9 @@ class UserEntry {
     }
     if (birthyear != null) {
       data['birthyear'] = birthyear;
+    }
+    if (profileImageUrl != null) {
+      data['profileImageUrl'] = profileImageUrl;
     }
 
     return data;
@@ -65,6 +70,7 @@ class UserEntry {
       email: data['email'],
       nickname: data['nickname'],
       birthyear: data['birthyear'],
+      profileImageUrl: data['profileImageUrl'],
       // followers:
       //     data['followers'] != null ? List<String>.from(data['followers']) : [],
       following:
