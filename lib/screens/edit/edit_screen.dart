@@ -35,7 +35,7 @@ class _AddPageState extends State<EditPage> {
                   padding: const EdgeInsets.fromLTRB(30, 8, 30, 8),
                   child: Column(
                     children: [
-                      const ImagePickerWidget(),
+                      // const ImagePickerWidget(),
                       CustomTextFormField(
                         hintText: "작성된 기존 투투 내용",
                         controller: textController,

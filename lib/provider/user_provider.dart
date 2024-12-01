@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/main.dart';
 import 'package:moapp_toto/models/user_entity.dart';
+import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/toto_provider.dart';
+import 'package:provider/provider.dart';
 
 class UserProvider with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
@@ -47,6 +50,16 @@ class UserProvider with ChangeNotifier {
             ue = UserEntry.fromDocumentSnapshot(snapshot);
             notifyListeners();
           });
+          if (navigatorKey.currentContext != null) {
+            Provider.of<AllUsersProvider>(navigatorKey.currentContext!,
+                    listen: false)
+                .refresh();
+            Provider.of<TotoProvider>(navigatorKey.currentContext!,
+                    listen: false)
+                .refresh();
+          } else {
+            print("navigatorKey.currentContext. unable to autoRefresh");
+          }
         } catch (error) {
           print('Error fetching user document: $error');
         }

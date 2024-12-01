@@ -11,6 +11,7 @@ import 'package:moapp_toto/screens/friend/friend_screen.dart';
 import 'package:moapp_toto/screens/home/home_screen.dart';
 import 'package:moapp_toto/screens/landing/landing_screen.dart';
 import 'package:moapp_toto/screens/mission/mission_screen.dart';
+import 'package:moapp_toto/screens/mission_ads/ads_screen.dart';
 import 'package:moapp_toto/screens/mission_game/game_screen.dart';
 import 'package:moapp_toto/screens/notification/notification_screen.dart';
 import 'package:moapp_toto/screens/profile/profile_screen.dart';
@@ -111,7 +112,7 @@ class MyApp extends StatelessWidget {
         initial: savedThemeMode ?? AdaptiveThemeMode.light,
         builder: (theme, darkTheme) => MaterialApp(
           title: '투데이투게더',
-          initialRoute: '/signup',
+          initialRoute: '/landing',
           navigatorKey: navigatorKey,
           routes: {
             '/landing': (BuildContext context) => LandingPage(),
@@ -123,6 +124,7 @@ class MyApp extends StatelessWidget {
             '/notification': (BuildContext context) => NotificationPage(),
             '/mission': (BuildContext context) => const MissionPage(),
             '/game': (BuildContext context) => const GamePage(),
+            '/reward': (BuildContext context) => RewardAdPage(),
             '/profile': (BuildContext context) => const ProfilePage(),
           },
           theme: theme,

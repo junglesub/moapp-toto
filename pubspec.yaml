@@ -58,6 +58,7 @@ dependencies:
   flame: ^1.22.0
   floating_draggable_widget: ^2.3.0
   adaptive_theme: ^3.6.0
+  youtube_player_flutter: ^9.1.1
   badges: ^3.1.2
   dice_bear: ^0.1.5
   flutter_svg: ^1.1.6

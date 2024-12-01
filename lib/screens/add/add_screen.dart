@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:moapp_toto/models/toto_entity.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/location_select_screen.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:moapp_toto/utils/emotions.dart';
+import 'package:provider/provider.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -19,9 +24,20 @@ class _AddPageState extends State<AddPage> {
   bool isAnalysisPage = false;
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
+  ToToEntity? currentToto;
+
+  dynamic _selectedImage;
+  void _pickImage(dynamic image) async {
+    if (image != null) {
+      setState(() {
+        _selectedImage = image;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.watch();
     return Scaffold(
       appBar: AppBar(
         title: const Text('오늘의 투투'),
@@ -54,9 +70,35 @@ class _AddPageState extends State<AddPage> {
                     : CustomAnimatedButton(
                         key: const ValueKey(2),
                         text: "투두 등록하기",
-                        onPressed: () {
+                        onPressed: () async {
+                          ToToEntity? newT;
+                          ToToEntity toto = ToToEntity.empty(
+                              creator: up.currentUser?.uid ?? "");
+                          if (_selectedImage == null) {
+                            newT = ToToEntity(
+                                // id: product.id,
+                                name: "",
+                                description: textController.text,
+                                creator: toto.creator,
+                                created: toto.created,
+                                modified: toto.modified,
+                                imageUrl: toto.imageUrl,
+                                liked: toto.liked);
+                            await newT.save();
+                          } else {
+                            newT = await ToToEntity.createWithImageFile(
+                                id: toto.id,
+                                name: "",
+                                description: textController.text,
+                                creator: toto.creator,
+                                created: toto.created,
+                                modified: toto.modified,
+                                imageFile: _selectedImage!,
+                                liked: toto.liked);
+                          }
                           setState(() {
                             isAnalysisPage = true;
+                            currentToto = newT;
                           });
                         },
                       ),
@@ -79,7 +121,7 @@ class _AddPageState extends State<AddPage> {
             padding: const EdgeInsets.fromLTRB(30, 8, 30, 8),
             child: Column(
               children: [
-                const ImagePickerWidget(),
+                ImagePickerWidget(parentPickImage: _pickImage),
                 CustomTextFormField(
                   hintText: "오늘은 어떤 날인가요?",
                   controller: textController,
@@ -182,7 +224,8 @@ class _AddPageState extends State<AddPage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                Text(currentToto?.id ?? "Unknown ID"),
+                Text(
                   "AI가 판단한 오늘의 리액션",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),

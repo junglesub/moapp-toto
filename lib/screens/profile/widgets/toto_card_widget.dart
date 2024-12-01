@@ -6,7 +6,7 @@ class ToToCard extends StatefulWidget {
   final String userImagePath;
   final String postDate;
   final String postContent;
-  final String postImagePath;
+  final String? postImagePath;
 
   const ToToCard({
     super.key,
@@ -93,15 +93,16 @@ class _ToToCardState extends State<ToToCard> {
               style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 10),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(
-                widget.postImagePath,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 200,
+            if (widget.postImagePath != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  widget.postImagePath!,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 200,
+                ),
               ),
-            ),
             const SizedBox(height: 10),
           ],
         ),

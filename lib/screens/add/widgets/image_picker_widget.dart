@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerWidget extends StatefulWidget {
-  const ImagePickerWidget({super.key});
+  final Function parentPickImage;
+  ImagePickerWidget({required this.parentPickImage});
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -15,11 +19,25 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   Future<void> getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
+
     if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes();
-      setState(() {
-        _imageBytes = bytes;
-      });
+      if (kIsWeb) {
+        // Web: Use bytes directly
+        final bytes = await pickedFile.readAsBytes();
+        widget.parentPickImage(bytes); // Pass bytes to the parent
+        setState(() {
+          _imageBytes = bytes;
+        });
+      } else {
+        // Non-Web: Use File
+        widget.parentPickImage(File(pickedFile.path));
+        final bytes = await pickedFile.readAsBytes();
+        setState(() {
+          _imageBytes = bytes;
+        });
+      }
+    } else {
+      widget.parentPickImage(null);
     }
   }
 
