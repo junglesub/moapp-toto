@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:moapp_toto/screens/mission/widgets/roulette.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
@@ -59,11 +60,14 @@ class _MissionPageState extends State<MissionPage> {
           Container(
             width: double.infinity,
             height: 30,
-            color: Colors.yellow[100],
+            // color: Colors.yellow[100],
+            color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark
+                ? Colors.blue
+                : Colors.yellow[100],
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: const Text(
-              "🔥 누적 일기 16개째...",
+              "🔥 누적 투투 16개째...",
               style: TextStyle(fontSize: 14),
             ),
           ),

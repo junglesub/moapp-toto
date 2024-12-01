@@ -1,8 +1,12 @@
 import 'package:floating_draggable_widget/floating_draggable_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/toto_provider.dart';
+import 'package:moapp_toto/utils/date_format.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:moapp_toto/widgets/custom_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildAccumulativeDiary() {
     return Container(
-      color: Colors.white,
+      // color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +53,7 @@ class _HomePageState extends State<HomePage> {
               "🔥 누적 투투 16개째...",
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black,
+                // color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -157,7 +161,7 @@ class _HomePageState extends State<HomePage> {
               Text(content),
               const SizedBox(height: 12.0),
               if (imageUrl != null)
-                Image.asset(
+                Image.network(
                   imageUrl,
                   fit: BoxFit.cover,
                   width: double.infinity,
@@ -176,6 +180,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    TotoProvider tp = context.watch();
+    AllUsersProvider aup = context.watch();
     return FloatingDraggableWidget(
       mainScreenWidget: Scaffold(
         appBar: AppBar(
@@ -186,35 +192,25 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildAccumulativeDiary(),
-            const Divider(
+            Divider(
               thickness: 2,
-              color: Color.fromARGB(255, 245, 245, 245),
+              // color: Color.fromARGB(255, 245, 245, 245),
+              color: Theme.of(context).dividerColor,
             ),
             Expanded(
               child: ListView(
-                children: [
-                  _buildPostCard(
-                    authorName: "Author A",
-                    date: "2024년 11월 12일",
-                    content: "오늘은 날씨가 너무 좋았다!!",
-                    imageUrl: "assets/images/toto.jpg",
-                    cardIndex: 0, // 카드 인덱스를 전달
-                  ),
-                  _buildPostCard(
-                    authorName: "Author B",
-                    date: "2024년 11월 11일",
-                    content: "플러터로 앱 개발을 함. 굿",
-                    imageUrl: "assets/images/toto.jpg",
-                    cardIndex: 1, // 카드 인덱스를 전달
-                  ),
-                  _buildPostCard(
-                    authorName: "Author C",
-                    date: "2024년 11월 10일",
-                    content: "드라이브해서 바다 보고옴",
-                    cardIndex: 2, // 카드 인덱스를 전달
-                  ),
-                ],
-              ),
+                  children: tp.t.where((item) => item != null).map((item) {
+                return _buildPostCard(
+                  authorName: aup.au
+                          .firstWhere((user) => user?.uid == item!.creator)
+                          ?.nickname ??
+                      item!.creator,
+                  date: convertTimestampToKoreanDate(item!.created) ?? "",
+                  content: item!.description,
+                  imageUrl: item.imageUrl,
+                  cardIndex: 0, // 카드 인덱스를 전달
+                );
+              }).toList()),
             ),
           ],
         ),

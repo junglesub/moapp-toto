@@ -59,6 +59,7 @@ dependencies:
   floating_draggable_widget: ^2.3.0
   adaptive_theme: ^3.6.0
   youtube_player_flutter: ^9.1.1
+  badges: ^3.1.2
 
 dev_dependencies:
   flutter_test:

@@ -50,13 +50,12 @@ class _ProfilePageState extends State<ProfilePage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      // backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Container(
               decoration: const BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
               ),
               padding: const EdgeInsets.all(16.0),

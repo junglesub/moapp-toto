@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/models/user_entity.dart';
+import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/friend/widgets/current_friend_list.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:moapp_toto/screens/friend/widgets/recommand_friend_row.dart';
+import 'package:moapp_toto/screens/signUp/signUp_screen.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 int _selectedIndex = 2;
 
@@ -16,21 +21,21 @@ class FriendPage extends StatefulWidget {
 class _FriendPageState extends State<FriendPage> {
   @override
   Widget build(BuildContext context) {
-    final List<String> friends = [
-      'Friend 1',
-      'Friend 2',
-      'Friend 3',
-      'Friend 4',
-      'Friend 5',
-    ];
+    AllUsersProvider aup = context.watch();
+    UserProvider up = context.watch();
+    print(aup.au);
+    final List<UserEntry?> recommendFriend = aup.au
+        .where((user) =>
+            (user?.following.contains(up.currentUser?.uid) ?? false) &&
+            (up.ue?.following.contains(user?.uid) == false))
+        .toList();
 
-    final List<String> currentFriends = [
-      'Alice',
-      'Bob',
-      'Charlie',
-      'Diana',
-      'Eva',
-    ];
+    final List<UserEntry?> currentFriends = up.ue?.following.map((uid) {
+          final user = aup.au.firstWhere((u) => uid == u?.uid);
+
+          return user;
+        }).toList() ??
+        [];
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +58,7 @@ class _FriendPageState extends State<FriendPage> {
           Expanded(
             flex: 2,
             child: RecommandFriendRow(
-              friends: friends,
+              friends: recommendFriend,
             ),
           ),
           const Padding(

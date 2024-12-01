@@ -6,6 +6,8 @@ class UserEntry {
   String? nickname;
   String? gender;
   int? birthyear;
+  // List<String> followers = [];
+  List<String> following = [];
 
   UserEntry({
     required this.uid,
@@ -13,11 +15,15 @@ class UserEntry {
     this.email,
     this.nickname,
     this.birthyear,
+    // this.followers = const [],
+    this.following = const [],
   });
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {
       'uid': uid,
+      // "followers": followers,
+      "followings": following
     };
 
     if (email != null) {
@@ -36,6 +42,20 @@ class UserEntry {
     return data;
   }
 
+  Future<bool> addFollowing(String targetId) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'following': FieldValue.arrayUnion([targetId])
+    });
+    return true;
+  }
+
+  Future<bool> removeFollowing(String targetId) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'following': FieldValue.arrayRemove([targetId])
+    });
+    return true;
+  }
+
   static UserEntry? fromDocumentSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) return null;
     final data = snapshot.data() as Map<String, dynamic>;
@@ -45,6 +65,10 @@ class UserEntry {
       email: data['email'],
       nickname: data['nickname'],
       birthyear: data['birthyear'],
+      // followers:
+      //     data['followers'] != null ? List<String>.from(data['followers']) : [],
+      following:
+          data['following'] != null ? List<String>.from(data['following']) : [],
     );
   }
 }
