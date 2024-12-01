@@ -26,7 +26,12 @@ class _MissionPageState extends State<MissionPage> {
       "text": "새로운 장소 인증하고 티켓받기 (누적 장소 00곳)",
       "onPressed": () => print("장소 인증 클릭됨")
     },
-    {"text": "광고 보고 티켓 받기", "onPressed": () => print("광고 클릭됨")},
+    {
+      "text": "광고 보고 티켓 받기",
+      "onPressed": (BuildContext context) {
+        Navigator.pushNamed(context, '/reward'); // 게임 페이지로 이동
+      },
+    },
     {"text": "친구 공유하고 티켓받기", "onPressed": () => print("친구 공유 클릭됨")},
   ];
 
