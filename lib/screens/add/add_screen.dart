@@ -21,8 +21,9 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  final TextEditingController textController = TextEditingController();
+  TextEditingController textController = TextEditingController();
   bool isAnalysisPage = false;
+  bool isEditMode = false;
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
@@ -33,6 +34,30 @@ class _AddPageState extends State<AddPage> {
       setState(() {
         _selectedImage = image;
       });
+    }
+  }
+
+  bool _isStarted = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isStarted) {
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+      UserProvider up = Provider.of(context, listen: false);
+      currentToto =
+          args?['toto'] ?? ToToEntity.empty(creator: up.currentUser?.uid ?? "");
+
+      textController =
+          TextEditingController(text: currentToto?.description ?? "");
+
+      if (args?['toto'] != null) {
+        isAnalysisPage = true;
+        isEditMode = true;
+      }
+      _isStarted = true;
     }
   }
 
@@ -59,7 +84,8 @@ class _AddPageState extends State<AddPage> {
                     ToToEntity t = ToToEntity(
                       id: toto.id,
                       name: toto.name,
-                      description: toto.description,
+                      description:
+                          isEditMode ? textController.text : toto.description,
                       creator: toto.creator,
                       liked: toto.liked,
                       created: toto.created,
@@ -268,36 +294,52 @@ class _AddPageState extends State<AddPage> {
                 ),
                 const SizedBox(height: 16),
                 Text(toto?.id ?? "Unknown ID"),
-                Text(
-                  "AI가 판단한 오늘의 리액션",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
-                    child: AnimatedTextKit(
-                      key: ValueKey(toto?.aiReaction),
-                      totalRepeatCount: 1,
-                      animatedTexts: [
-                        TypewriterAnimatedText(
-                          toto?.aiReaction ?? '투투를 기반으로 기분을 분석 중입니다.',
-                          textStyle: const TextStyle(
-                            fontSize: 15,
-                          ),
-                          speed: const Duration(milliseconds: 100),
+                if (!isEditMode)
+                  Column(
+                    children: [
+                      Text(
+                        "AI가 판단한 오늘의 리액션",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
-                      pause: const Duration(milliseconds: 500),
-                      displayFullTextOnTap: false,
-                      stopPauseOnTap: false,
-                    ),
+                        child: Center(
+                          child: AnimatedTextKit(
+                            key: ValueKey(toto?.aiReaction),
+                            totalRepeatCount: 1,
+                            animatedTexts: [
+                              TypewriterAnimatedText(
+                                toto?.aiReaction ?? '투투를 기반으로 기분을 분석 중입니다.',
+                                textStyle: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                                speed: const Duration(milliseconds: 100),
+                              ),
+                            ],
+                            pause: const Duration(milliseconds: 500),
+                            displayFullTextOnTap: false,
+                            stopPauseOnTap: false,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                if (isEditMode)
+                  Column(
+                    children: [
+                      CustomTextFormField(
+                        hintText: "오늘은 어떤 날인가요?",
+                        controller: textController,
+                        maxLines: 4,
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),

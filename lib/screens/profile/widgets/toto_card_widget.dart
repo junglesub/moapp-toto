@@ -224,7 +224,8 @@ class _ToToCardState extends State<ToToCard> {
 
   void _performEditAction() {
     // 수정 동작 로직 추가
-    Navigator.pushNamed(context, '/edit');
+    Navigator.pushNamed(context, "/add", arguments: {"toto": widget.t});
+    // Navigator.pushNamed(context, '/edit');
   }
 
   void _performDeleteAction() async {
