@@ -19,21 +19,24 @@ class ToToEntity {
   final Timestamp? modified;
   final List<String> liked;
   final String? aiReaction;
+  List<String?>? taggedFriends; // 태그된 친구들 UID 리스트
 
   String? get imageUrlLink => imageUrl;
 
-  ToToEntity(
-      {this.id,
-      required this.name,
-      required this.description,
-      required this.creator,
-      required this.liked,
-      this.created,
-      this.modified,
-      this.imageUrl,
-      this.location,
-      this.emotion,
-      this.aiReaction});
+  ToToEntity({
+    this.id,
+    required this.name,
+    required this.description,
+    required this.creator,
+    required this.liked,
+    this.created,
+    this.modified,
+    this.imageUrl,
+    this.location,
+    this.emotion,
+    this.aiReaction,
+    this.taggedFriends,
+  });
 
   ToToEntity.withImageFile({
     this.id,
@@ -47,6 +50,7 @@ class ToToEntity {
     required this.modified,
     required this.liked,
     required dynamic imageFile,
+    required this.taggedFriends,
   }) : imageUrl = null {
     // _uploadImageAndSetUrl(imageFile);
   }
@@ -55,6 +59,7 @@ class ToToEntity {
     String? id,
     MoodOption? emotion,
     LocationResult? location,
+    List<String>? taggedFriends,
     required String name,
     required String description,
     required String creator,
@@ -67,6 +72,7 @@ class ToToEntity {
       id: id,
       emotion: emotion,
       location: location,
+      taggedFriends: taggedFriends,
       name: name,
       description: description,
       creator: creator,
@@ -123,6 +129,7 @@ class ToToEntity {
         imageUrl = null,
         emotion = null,
         location = null,
+        taggedFriends = [],
         aiReaction = null;
 
   Map<String, dynamic> toMap() {
@@ -137,7 +144,9 @@ class ToToEntity {
               location!.coordinates.latitude, location!.coordinates.longitude)
           : null,
       "location_name": location?.placeName,
-      "emotion": emotion?.name
+     emotion": emotion?.name
+      'taggedFriends': taggedFriends ?? [], // 기본값 빈 리스트
+
       // 'created': created,
       // 'modified': modified,
     };
@@ -163,6 +172,9 @@ class ToToEntity {
       modified: data['modified'],
       imageUrl: data['imageUrl'],
       emotion: MoodOption.find(data["emotion"]),
+      taggedFriends: data['taggedFriends'] != null
+          ? List<String>.from(data['taggedFriends'])
+          : [], // 기본값 빈 리스트
       aiReaction: data["aiReaction"],
       location: gp != null
           ? LocationResult(
@@ -211,5 +223,13 @@ class ToToEntity {
 
     // Delete Item
     await FirebaseFirestore.instance.collection('toto').doc(id).delete();
+  }
+
+  Future<void> addTaggedFriend(String uid) async {
+    taggedFriends ??= []; // null인 경우 빈 리스트로 초기화
+    if (!taggedFriends!.contains(uid)) {
+      taggedFriends!.add(uid);
+      await save(markModified: true); // 변경된 데이터 저장
+    }
   }
 }

@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/location_select_screen.dart';
+import 'package:moapp_toto/screens/add/tag_friends_screen.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
@@ -27,8 +29,24 @@ class _AddPageState extends State<AddPage> {
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
-
   dynamic _selectedImage;
+  List<Map<String, String>> selectedFriends = []; // 닉네임과 UID를 함께 저장
+
+  void navigateToTagFriendsPage() async {
+    // TagFriendsPage에서 선택된 친구의 UID와 nickname 리스트를 가져옴
+    final selectedFriendDetails =
+        await Navigator.push<List<Map<String, String>>>(
+      context,
+      MaterialPageRoute(builder: (context) => const TagFriendsPage()),
+    );
+
+    if (selectedFriendDetails != null) {
+      setState(() {
+        selectedFriends = selectedFriendDetails; // 선택된 친구의 닉네임 및 UID 목록
+      });
+    }
+  }
+
   void _pickImage(dynamic image) async {
     if (image != null) {
       setState(() {
@@ -79,6 +97,8 @@ class _AddPageState extends State<AddPage> {
                       print("Save ToTo is null. Something wrong!");
                       return;
                     }
+                    final taggedFriendUids =
+                        selectedFriends.map((friend) => friend['uid']).toList();
                     ToToEntity t = ToToEntity(
                       id: toto.id,
                       name: toto.name,
@@ -90,7 +110,8 @@ class _AddPageState extends State<AddPage> {
                       modified: toto.modified,
                       imageUrl: toto.imageUrl,
                       location: selectedLocation,
-                      emotion: selectedMood ?? toto.emotion,
+                       emotion: selectedMood ?? toto.emotion,
+                      taggedFriends: taggedFriendUids,
                     );
                     await t.save();
                     if (context.mounted) {
@@ -200,6 +221,7 @@ class _AddPageState extends State<AddPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Mood와 Location 정보
                 Row(
                   children: [
                     if (toto?.emotion != null || selectedMood != null)
@@ -243,6 +265,13 @@ class _AddPageState extends State<AddPage> {
                                 color: Colors.grey[300]!,
                                 width: 1.5,
                               ),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
                             ),
                           ),
                         ),
@@ -284,11 +313,95 @@ class _AddPageState extends State<AddPage> {
                                 color: Colors.grey[300]!,
                                 width: 1.5,
                               ),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
                             ),
                           ),
                         ),
                       ),
                   ],
+                ),
+
+                // 태그된 친구들 (Mood와 Location 아래로 이동)
+                if (selectedFriends.isNotEmpty)
+                  Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 45,
+                              maxHeight: 45, // Height 고정
+                              maxWidth: 200, // Width 제한
+                            ),
+                            // child: Chip(
+                            //   avatar: Icon(
+                            //     Icons.tag,
+                            //     color: Colors.grey[700],
+                            //     size: 16,
+                            //   ),
+                            //   label: Text(
+                            //     selectedFriends.join(', '),
+                            //     style: const TextStyle(
+                            //       color: Colors.black,
+                            //       fontWeight: FontWeight.bold,
+                            //       fontSize: 12,
+                            //     ),
+                            //     overflow: TextOverflow.ellipsis,
+                            //     maxLines: 1,
+                            //   ),
+                            //   shape: RoundedRectangleBorder(
+                            //     borderRadius: BorderRadius.circular(12),
+                            //     side: BorderSide(
+                            //       color: Colors.grey[300]!,
+                            //       width: 1.5,
+                            //     ),
+                            //   ),
+                            // ),
+
+                            child: Chip(
+                              avatar: Icon(
+                                Icons.tag,
+                                color: Colors.grey[700],
+                                size: 16,
+                              ),
+                              label: Text(
+                                // nickname만 추출하여 표시
+                                selectedFriends
+                                    .map((friend) =>
+                                        friend['nickname']) // nickname 추출
+                                    .join(', '), // 콤마로 구분
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
+                                  color: Colors.grey[300]!,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+
+                const SizedBox(height: 16),
+
+                // AI 분석 결과
+                Text(
+                  currentToto?.id ?? "Unknown ID",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 Text(toto?.id ?? "Unknown ID"),
@@ -397,9 +510,14 @@ class _AddPageState extends State<AddPage> {
                   }
                 },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.person),
                 title: Text('사람 태그'),
+                onTap: () {
+                  navigateToTagFriendsPage();
+                  // print('Returning selectedFriends: $selectedFriends');
+                  // Navigator.pop(context, selectedFriends);
+                },
               ),
             ],
           ),
@@ -425,6 +543,32 @@ class _AddPageState extends State<AddPage> {
       ),
     );
   }
+
+  // void navigateToTagFriendsPage() async {
+  //   // TagFriendsPage에서 선택된 친구들의 UID 리스트를 가져옴
+  //   final selectedUids = await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const TagFriendsPage()),
+  //   );
+
+  //   if (selectedUids != null && selectedUids is List<String>) {
+  //     // 친구들의 UID를 기반으로 닉네임을 가져옴
+  //     List<String> selectedFriendNames = [];
+  //     for (var uid in selectedUids) {
+  //       DocumentSnapshot friendDoc =
+  //           await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+  //       if (friendDoc.exists) {
+  //         selectedFriendNames.add(friendDoc['nickname']); // 닉네임 추가
+  //       }
+  //     }
+
+  //     // 상태 업데이트
+  //     setState(() {
+  //       this.selectedFriends = selectedFriendNames; // 선택된 친구의 닉네임 목록
+  //     });
+  //   }
+  // }
 }
 
 class MoodSelectionPage extends StatelessWidget {
