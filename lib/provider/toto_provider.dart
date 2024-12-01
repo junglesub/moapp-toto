@@ -9,21 +9,22 @@ class TotoProvider with ChangeNotifier {
   List<ToToEntity?> get t => _totos;
 
   TotoProvider() {
-    print("allUserProvider()");
+    print("totoProvider()");
     init();
   }
 
   Future<void> init() async {
     // document entry
     FirebaseFirestore.instance
-        .collection('users')
+        .collection('toto')
+        .orderBy("created", descending: true)
         .snapshots()
         .listen((snapshot) {
       _totos = snapshot.docs
           .map((doc) => ToToEntity.fromDocumentSnapshot(doc))
           .where((doc) => doc != null)
           .toList();
-      print('Products updated, notifying listeners...');
+      print('totos updated, notifying listeners...');
       notifyListeners();
     });
   }

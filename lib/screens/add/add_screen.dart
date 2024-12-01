@@ -26,11 +26,11 @@ class _AddPageState extends State<AddPage> {
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
 
-  File? _selectedImage;
-  void _pickImage(File? image) async {
+  dynamic _selectedImage;
+  void _pickImage(dynamic image) async {
     if (image != null) {
       setState(() {
-        _selectedImage = File(image.path);
+        _selectedImage = image;
       });
     }
   }
@@ -86,7 +86,7 @@ class _AddPageState extends State<AddPage> {
                                 liked: toto.liked);
                             await newT.save();
                           } else {
-                            newT = ToToEntity.withImageFile(
+                            newT = await ToToEntity.createWithImageFile(
                                 id: toto.id,
                                 name: "",
                                 description: textController.text,
