@@ -1,8 +1,10 @@
 import 'package:floating_draggable_widget/floating_draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:moapp_toto/models/toto_entity.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/utils/date_format.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:moapp_toto/widgets/custom_button.dart';
@@ -18,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장 (임시)
+  // final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장 (임시)
 
   void _selectDate(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
@@ -99,6 +101,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildPostCard({
+    required BuildContext context,
+    required ToToEntity t,
     required String authorName,
     required String date,
     required String content,
@@ -106,14 +110,21 @@ class _HomePageState extends State<HomePage> {
     String? userImagePath,
     required int cardIndex, // 카드 인덱스를 받음
   }) {
+    UserProvider up = context.watch();
+    bool isLiked = up.ue?.likedToto.contains(t.id) ?? false;
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isFavorited[cardIndex] = !_isFavorited[cardIndex]; // 하트 상태 토글
-        });
+      onDoubleTap: () {
+        if (isLiked) {
+          // up.ue?.removeLike(t.id);
+        } else {
+          up.ue?.addLike(t.id);
+        }
       },
       child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -121,9 +132,6 @@ class _HomePageState extends State<HomePage> {
             children: [
               Row(
                 children: [
-                  // const CircleAvatar(
-                  //   child: Icon(Icons.person),
-                  // ),
                   Container(
                     width: 40,
                     height: 40,
@@ -170,18 +178,15 @@ class _HomePageState extends State<HomePage> {
                   // 하트 아이콘 수정 부분
                   IconButton(
                     icon: Icon(
-                      _isFavorited[cardIndex]
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: _isFavorited[cardIndex]
-                          ? Colors.red
-                          : null, // 하트 색상 변경
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: isLiked ? Colors.red : null, // 하트 색상 변경
                     ),
                     onPressed: () {
-                      setState(() {
-                        _isFavorited[cardIndex] =
-                            !_isFavorited[cardIndex]; // 하트 상태 변경
-                      });
+                      if (isLiked) {
+                        up.ue?.removeLike(t.id);
+                      } else {
+                        up.ue?.addLike(t.id);
+                      }
                     },
                   ),
                 ],
@@ -190,11 +195,14 @@ class _HomePageState extends State<HomePage> {
               Text(content),
               const SizedBox(height: 12.0),
               if (imageUrl != null)
-                Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 200,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 200,
+                  ),
                 ),
               const SizedBox(height: 12.0),
             ],
@@ -230,6 +238,8 @@ class _HomePageState extends State<HomePage> {
               child: ListView(
                   children: tp.t.where((item) => item != null).map((item) {
                 return _buildPostCard(
+                  context: context,
+                  t: item,
                   authorName: aup.au
                           .firstWhere((user) => user?.uid == item!.creator)
                           ?.nickname ??

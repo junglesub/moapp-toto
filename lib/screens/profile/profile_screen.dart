@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
@@ -26,6 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool _taggedPosts = false;
   bool _likedPosts = false;
+  Uint8List? _selectedImageBytes;
+  bool _isImageChanged = false;
 
   final _auth = FirebaseAuth.instance;
 
@@ -199,65 +204,116 @@ class _ProfilePageState extends State<ProfilePage> {
               Positioned(
                 bottom: -60,
                 left: MediaQuery.of(context).size.width / 2 - 70,
-                child: GestureDetector(
-                  onTap: () {
-                    // 프로필 사진 변경 동작
-                    Navigator.pushNamed(context, '/');
-                  },
-                  child: Container(
-                    width: 140,
-                    height: 140,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[300],
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // SVG Image or Placeholder
-                        if (up.ue?.profileImageUrl != null &&
-                            up.ue!.profileImageUrl!.isNotEmpty)
-                          ClipOval(
-                            child: SizedBox(
-                              width: 140,
-                              height: 140,
-                              child: SvgPicture.network(
-                                up.ue!.profileImageUrl!,
-                                placeholderBuilder: (context) =>
-                                    const CircularProgressIndicator(),
+                child: Container(
+                  width: 140,
+                  height: 140,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[300],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClipOval(
+                        child: _selectedImageBytes != null
+                            ? Image.memory(
+                                _selectedImageBytes!,
                                 fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        // Always show the icon on top
-                        Positioned(
-                          bottom: 8,
-                          right: 8,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black.withOpacity(0.7),
-                            ),
-                            padding: const EdgeInsets.all(6),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                                width: 140,
+                                height: 140,
+                              )
+                            : (up.ue?.profileImageUrl != null &&
+                                    up.ue!.profileImageUrl!.isNotEmpty
+                                ? up.ue!.profileImageUrl!.contains('/svg')
+                                    ? SizedBox(
+                                        width: 140,
+                                        height: 140,
+                                        child: SvgPicture.network(
+                                          up.ue!.profileImageUrl!,
+                                          placeholderBuilder: (context) =>
+                                              const CircularProgressIndicator(),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 70,
+                                        backgroundImage: NetworkImage(
+                                            up.ue!.profileImageUrl!),
+                                      )
+                                : Container(
+                                    width: 140,
+                                    height: 140,
+                                    color: Colors.blue,
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.white,
+                                    ),
+                                  )),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 70),
-          Text(
-            up.ue?.nickname ?? up.ue?.uid ?? "Unknown User",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Text(
+                  up.ue?.nickname ?? up.ue?.uid ?? "Unknown User",
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.camera_alt,
+                  // color: Colors.black,
+                ),
+                onPressed: () async {
+                  final ImagePicker picker = ImagePicker();
+                  final XFile? pickedFile =
+                      await picker.pickImage(source: ImageSource.gallery);
+
+                  if (pickedFile != null) {
+                    final Uint8List imageBytes = await pickedFile.readAsBytes();
+                    setState(() {
+                      _selectedImageBytes = imageBytes;
+                      _isImageChanged = true;
+                    });
+                    print("Image selected from gallery.");
+                  }
+                },
+              ),
+              if (_isImageChanged)
+                IconButton(
+                  icon: const Icon(
+                    Icons.save,
+                    // color: Colors.black,
+                  ),
+                  onPressed: () async {
+                    if (_selectedImageBytes != null) {
+                      try {
+                        await up.ue!.uploadProfileImage(_selectedImageBytes!);
+                        setState(() {
+                          _isImageChanged = false;
+                        });
+                        print("Profile image updated successfully.");
+                      } catch (e) {
+                        print("Failed to upload image: $e");
+                      }
+                    }
+                  },
+                ),
+            ],
           ),
           const SizedBox(height: 16),
           const Row(
@@ -298,11 +354,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      '누적 투투 15개째',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    const SizedBox(height: 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -338,6 +389,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           item != null && item.creator == up.currentUser?.uid)
                       .cast<ToToEntity>()
                       .map((item) => ToToCard(
+                            t: item,
                             userName:
                                 up.ue?.nickname ?? up.currentUser?.uid ?? "",
                             userImagePath: up.ue?.profileImageUrl ??

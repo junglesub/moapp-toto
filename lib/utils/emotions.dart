@@ -46,4 +46,11 @@ class MoodOption {
       MoodOption(name: "상처 입었어요", category: "부정", emoji: "😢"),
     ];
   }
+
+  static MoodOption? find(String? name) {
+    if (name == null) return null;
+    return moodOptions.where((item) => item.name == name).isNotEmpty
+        ? moodOptions.firstWhere((item) => item.name == name)
+        : null;
+  }
 }

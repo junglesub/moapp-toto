@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:moapp_toto/models/toto_entity.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ToToCard extends StatefulWidget {
+  final ToToEntity t;
   final String userName;
   final String userImagePath;
   final String postDate;
@@ -11,6 +15,7 @@ class ToToCard extends StatefulWidget {
 
   const ToToCard({
     super.key,
+    required this.t,
     required this.userName,
     required this.userImagePath,
     required this.postDate,
@@ -25,9 +30,31 @@ class ToToCard extends StatefulWidget {
 
 class _ToToCardState extends State<ToToCard> {
   bool isLiked = false;
+  List<String> hashtags = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 게시글에서 location_name과 emotion 값을 받아와 해시태그로 추가
+    hashtags = [];
+
+    if (widget.t.emotion?.name != null) {
+      hashtags.add("${widget.t.emotion?.emoji} ${widget.t.emotion?.name}");
+    }
+
+    if (widget.t.location?.placeName != null) {
+      hashtags.add("${widget.t.location?.placeName}");
+    }
+
+    // 다른 필요 항목도 추가 가능
+    // 함께한 사람 정보
+  }
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.watch();
+    bool isLiked = up.ue?.likedToto.contains(widget.t.id) ?? false;
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
       shape: RoundedRectangleBorder(
@@ -91,9 +118,11 @@ class _ToToCardState extends State<ToToCard> {
                         color: isLiked ? Colors.red : null,
                       ),
                       onPressed: () {
-                        setState(() {
-                          isLiked = !isLiked;
-                        });
+                        if (isLiked) {
+                          up.ue?.removeLike(widget.t.id);
+                        } else {
+                          up.ue?.addLike(widget.t.id);
+                        }
                       },
                     ),
                     IconButton(
@@ -123,6 +152,26 @@ class _ToToCardState extends State<ToToCard> {
                 ),
               ),
             const SizedBox(height: 10),
+            Wrap(
+              spacing: 8.0, // 태그 사이 간격
+              runSpacing: 4.0, // 줄 간 간격
+              children: hashtags.map((tag) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 5.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[300]
+                        : Colors.grey[500],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    tag,
+                    style: const TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
@@ -221,12 +270,13 @@ class _ToToCardState extends State<ToToCard> {
 
   void _performEditAction() {
     // 수정 동작 로직 추가
-    Navigator.pushNamed(context, '/edit');
+    Navigator.pushNamed(context, "/add", arguments: {"toto": widget.t});
+    // Navigator.pushNamed(context, '/edit');
   }
 
-  void _performDeleteAction() {
+  void _performDeleteAction() async {
     // 삭제 동작 로직 추가
-
+    await widget.t.delete();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('투투가 삭제되었습니다.'),

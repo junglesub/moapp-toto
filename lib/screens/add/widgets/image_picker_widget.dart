@@ -82,13 +82,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         IconButton(
           icon: const Icon(Icons.camera_alt),
           onPressed: () => getImage(ImageSource.camera),
-          color: Colors.black,
+          // color: Colors.black,
         ),
         const SizedBox(width: 2),
         IconButton(
           icon: const Icon(Icons.collections),
           onPressed: () => getImage(ImageSource.gallery),
-          color: Colors.black,
+          // color: Colors.black,
         ),
       ],
     );

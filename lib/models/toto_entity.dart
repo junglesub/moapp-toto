@@ -11,7 +11,7 @@ class ToToEntity {
   String? id;
   final String name;
   final String description;
-  final String? emotion;
+  final MoodOption? emotion;
   final LocationResult? location;
   String? imageUrl;
   final String creator;
@@ -57,7 +57,7 @@ class ToToEntity {
 
   static Future<ToToEntity> createWithImageFile({
     String? id,
-    String? emotion,
+    MoodOption? emotion,
     LocationResult? location,
     List<String>? taggedFriends,
     required String name,
@@ -144,8 +144,9 @@ class ToToEntity {
               location!.coordinates.latitude, location!.coordinates.longitude)
           : null,
       "location_name": location?.placeName,
-      "emotion": emotion,
+     emotion": emotion?.name
       'taggedFriends': taggedFriends ?? [], // 기본값 빈 리스트
+
       // 'created': created,
       // 'modified': modified,
     };
@@ -170,7 +171,7 @@ class ToToEntity {
       created: data['created'],
       modified: data['modified'],
       imageUrl: data['imageUrl'],
-      emotion: data["emotion"],
+      emotion: MoodOption.find(data["emotion"]),
       taggedFriends: data['taggedFriends'] != null
           ? List<String>.from(data['taggedFriends'])
           : [], // 기본값 빈 리스트
