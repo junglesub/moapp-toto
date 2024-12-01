@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ToToCard extends StatefulWidget {
   final ToToEntity t;
@@ -51,6 +53,8 @@ class _ToToCardState extends State<ToToCard> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.watch();
+    bool isLiked = up.ue?.likedToto.contains(widget.t.id) ?? false;
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
       shape: RoundedRectangleBorder(
@@ -114,9 +118,11 @@ class _ToToCardState extends State<ToToCard> {
                         color: isLiked ? Colors.red : null,
                       ),
                       onPressed: () {
-                        setState(() {
-                          isLiked = !isLiked;
-                        });
+                        if (isLiked) {
+                          up.ue?.removeLike(widget.t.id);
+                        } else {
+                          up.ue?.addLike(widget.t.id);
+                        }
                       },
                     ),
                     IconButton(
