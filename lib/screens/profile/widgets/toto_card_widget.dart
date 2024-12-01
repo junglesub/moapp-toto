@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ToToCard extends StatefulWidget {
   final String userName;
@@ -42,9 +43,27 @@ class _ToToCardState extends State<ToToCard> {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: AssetImage(widget.userImagePath),
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[300],
+                      ),
+                      child: widget.userImagePath.contains('/svg')
+                          ? ClipOval(
+                              child: SvgPicture.network(
+                                widget.userImagePath,
+                                placeholderBuilder: (context) =>
+                                    const CircularProgressIndicator(),
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : CircleAvatar(
+                              radius: 20,
+                              backgroundImage:
+                                  NetworkImage(widget.userImagePath),
+                            ),
                     ),
                     const SizedBox(width: 10),
                     Column(

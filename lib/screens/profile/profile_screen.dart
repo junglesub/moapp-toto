@@ -340,7 +340,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       .map((item) => ToToCard(
                             userName:
                                 up.ue?.nickname ?? up.currentUser?.uid ?? "",
-                            userImagePath: 'assets/images/profile.jpg',
+                            userImagePath: up.ue?.profileImageUrl ??
+                                'assets/images/default_profile.jpg',
                             postDate:
                                 convertTimestampToKoreanDate(item.created) ??
                                     "",

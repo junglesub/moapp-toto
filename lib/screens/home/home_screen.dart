@@ -1,5 +1,6 @@
 import 'package:floating_draggable_widget/floating_draggable_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/utils/date_format.dart';
@@ -102,6 +103,7 @@ class _HomePageState extends State<HomePage> {
     required String date,
     required String content,
     String? imageUrl,
+    String? userImagePath,
     required int cardIndex, // 카드 인덱스를 받음
   }) {
     return GestureDetector(
@@ -119,8 +121,35 @@ class _HomePageState extends State<HomePage> {
             children: [
               Row(
                 children: [
-                  const CircleAvatar(
-                    child: Icon(Icons.person),
+                  // const CircleAvatar(
+                  //   child: Icon(Icons.person),
+                  // ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[300],
+                    ),
+                    child:
+                        userImagePath != null && userImagePath.contains('/svg')
+                            ? ClipOval(
+                                child: SvgPicture.network(
+                                  userImagePath,
+                                  placeholderBuilder: (context) =>
+                                      const CircularProgressIndicator(),
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : CircleAvatar(
+                                radius: 20,
+                                backgroundImage: userImagePath != null
+                                    ? NetworkImage(userImagePath)
+                                    : null,
+                                child: userImagePath == null
+                                    ? const Icon(Icons.person)
+                                    : null,
+                              ),
                   ),
                   const SizedBox(width: 8.0),
                   Column(
@@ -205,10 +234,13 @@ class _HomePageState extends State<HomePage> {
                           .firstWhere((user) => user?.uid == item!.creator)
                           ?.nickname ??
                       item!.creator,
+                  userImagePath: aup.au
+                      .firstWhere((user) => user?.uid == item!.creator)
+                      ?.profileImageUrl,
                   date: convertTimestampToKoreanDate(item!.created) ?? "",
                   content: item!.description,
                   imageUrl: item.imageUrl,
-                  cardIndex: 0, // 카드 인덱스를 전달
+                  cardIndex: 0,
                 );
               }).toList()),
             ),
