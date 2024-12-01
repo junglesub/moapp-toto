@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildAccumulativeDiary() {
     return Container(
-      color: Colors.white,
+      // color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
               "🔥 누적 투투 16개째...",
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black,
+                // color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -186,9 +186,10 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildAccumulativeDiary(),
-            const Divider(
+            Divider(
               thickness: 2,
-              color: Color.fromARGB(255, 245, 245, 245),
+              // color: Color.fromARGB(255, 245, 245, 245),
+              color: Theme.of(context).dividerColor,
             ),
             Expanded(
               child: ListView(
