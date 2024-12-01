@@ -289,7 +289,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.22.0"
-
   floating_draggable_widget:
     dependency: "direct main"
     description:
