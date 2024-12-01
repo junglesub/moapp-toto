@@ -146,7 +146,6 @@ class ToToEntity {
       "location_name": location?.placeName,
       "emotion": emotion?.name,
       'taggedFriends': taggedFriends ?? [], // 기본값 빈 리스트
-
       // 'created': created,
       // 'modified': modified,
     };
