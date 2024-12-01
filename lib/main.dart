@@ -47,7 +47,6 @@ class MyApp extends StatelessWidget {
           lazy: false,
         ),
       ],
-
       child: AdaptiveTheme(
         light: ThemeData(
           useMaterial3: true,
@@ -112,7 +111,7 @@ class MyApp extends StatelessWidget {
         initial: savedThemeMode ?? AdaptiveThemeMode.light,
         builder: (theme, darkTheme) => MaterialApp(
           title: '투데이투게더',
-          initialRoute: '/landing',
+          initialRoute: '/signup',
           navigatorKey: navigatorKey,
           routes: {
             '/landing': (BuildContext context) => LandingPage(),
@@ -123,7 +122,7 @@ class MyApp extends StatelessWidget {
             '/friend': (BuildContext context) => const FriendPage(),
             '/notification': (BuildContext context) => NotificationPage(),
             '/mission': (BuildContext context) => const MissionPage(),
-             '/game': (BuildContext context) => const GamePage(),
+            '/game': (BuildContext context) => const GamePage(),
             '/profile': (BuildContext context) => const ProfilePage(),
           },
           theme: theme,
