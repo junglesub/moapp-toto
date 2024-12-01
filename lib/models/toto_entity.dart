@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:moapp_toto/screens/add/location_select_screen.dart';
 import 'package:moapp_toto/utils/emotions.dart';
@@ -42,18 +43,63 @@ class ToToEntity {
     required this.created,
     required this.modified,
     required this.liked,
-    required File imageFile,
+    required dynamic imageFile,
   }) : imageUrl = null {
-    _uploadImageAndSetUrl(imageFile);
+    // _uploadImageAndSetUrl(imageFile);
   }
 
-  Future<ToToEntity?> _uploadImageAndSetUrl(File imageFile) async {
+  static Future<ToToEntity> createWithImageFile({
+    String? id,
+    String? emotion,
+    LocationResult? location,
+    required String name,
+    required String description,
+    required String creator,
+    required Timestamp? created,
+    required Timestamp? modified,
+    required List<String> liked,
+    required dynamic imageFile,
+  }) async {
+    final entity = ToToEntity(
+      id: id,
+      emotion: emotion,
+      location: location,
+      name: name,
+      description: description,
+      creator: creator,
+      created: created,
+      modified: modified,
+      liked: liked,
+    );
+
+    await entity._uploadImageAndSetUrl(imageFile);
+    return entity;
+  }
+
+  Future<ToToEntity?> _uploadImageAndSetUrl(dynamic imageFile) async {
     id = await save();
+    print("Uploading Image with ID $id");
+
     try {
       final ref = FirebaseStorage.instance.ref().child('toto/$id');
-      await ref.putFile(imageFile);
-      final url = await ref.getDownloadURL();
 
+      if (kIsWeb) {
+        // Web-specific: Ensure `imageFile` is `Uint8List`
+        if (imageFile is Uint8List) {
+          await ref.putData(imageFile);
+        } else {
+          throw 'Invalid file format for web. Expected Uint8List.';
+        }
+      } else {
+        // Non-web: Use File
+        if (imageFile is File) {
+          await ref.putFile(imageFile);
+        } else {
+          throw 'Invalid file format for non-web. Expected File.';
+        }
+      }
+
+      final url = await ref.getDownloadURL();
       imageUrl = url;
 
       await save(markModified: false);
