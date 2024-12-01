@@ -1,6 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
@@ -198,19 +199,54 @@ class _ProfilePageState extends State<ProfilePage> {
               Positioned(
                 bottom: -60,
                 left: MediaQuery.of(context).size.width / 2 - 70,
-                child: CircleAvatar(
-                  radius: 70,
-                  backgroundColor: Colors.grey[300],
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.camera_alt,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      onPressed: () {
-                        // 프로필 사진 변경
-                      },
+                child: GestureDetector(
+                  onTap: () {
+                    // 프로필 사진 변경 동작
+                    Navigator.pushNamed(context, '/');
+                  },
+                  child: Container(
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[300],
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // SVG Image or Placeholder
+                        if (up.ue?.profileImageUrl != null &&
+                            up.ue!.profileImageUrl!.isNotEmpty)
+                          ClipOval(
+                            child: SizedBox(
+                              width: 140,
+                              height: 140,
+                              child: SvgPicture.network(
+                                up.ue!.profileImageUrl!,
+                                placeholderBuilder: (context) =>
+                                    const CircularProgressIndicator(),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        // Always show the icon on top
+                        Positioned(
+                          bottom: 8,
+                          right: 8,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black.withOpacity(0.7),
+                            ),
+                            padding: const EdgeInsets.all(6),
+                            child: const Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

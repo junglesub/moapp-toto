@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dice_bear/dice_bear.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/widgets/custom_full_button.dart';
+import 'package:moapp_toto/widgets/dicebear_avatar.dart';
 import 'package:moapp_toto/widgets/my_text_field.dart';
 import 'package:provider/provider.dart';
 
@@ -53,21 +55,9 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.grey.shade200,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.camera_alt,
-                      size: 32, color: Colors.black),
-                  onPressed: () {
-                    // TODO: Photo Button
-                  },
-                ),
-              ],
+            DiceBearAvatar(
+              seed: emailController.text,
+              radius: 60,
             ),
             const SizedBox(height: 32),
             // 이메일
@@ -122,12 +112,20 @@ class _SignUpPageState extends State<SignUpPage> {
               key: const ValueKey(2),
               text: "시작하기",
               onPressed: () async {
+                final Avatar avatar = DiceBearBuilder(
+                  sprite: DiceBearSprite.botttsNeutral,
+                  seed: emailController.text,
+                ).build();
+
+                final svgUrl = avatar.svgUri.toString();
+
                 // Print all text field values
                 print("Email: ${emailController.text}");
                 print("Nickname: ${nicknameController.text}");
                 print("Gender: ${genderController.text}");
                 print("Age: ${ageController.text}");
                 print("Terms Accepted: $isTermsAccepted");
+                print("SVG URL: $svgUrl"); // Debugging
 
                 UserEntry ue = UserEntry(
                   uid: up.currentUser?.uid ?? "error",
@@ -135,6 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   email: emailController.text,
                   nickname: nicknameController.text,
                   birthyear: int.tryParse(ageController.text),
+                  profileImageUrl: svgUrl,
                 );
 
                 final userDocRef = FirebaseFirestore.instance
@@ -143,7 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 await userDocRef.set(ue.toMap());
 
                 // Simulate a delay and navigate
-                // await Future.delayed(const Duration(milliseconds: 500));
+                await Future.delayed(const Duration(milliseconds: 500));
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/',
