@@ -8,13 +8,18 @@ import 'package:moapp_toto/models/user_entity.dart';
 class TotoProvider with ChangeNotifier {
   List<ToToEntity?> _totos = [];
 
-  List<ToToEntity?> get t => _totos;
+  List<ToToEntity> get t =>
+      _totos.where((t) => t != null).cast<ToToEntity>().toList();
 
   StreamSubscription<QuerySnapshot>? _totoSub;
 
   TotoProvider() {
     print("totoProvider()");
     init();
+  }
+
+  ToToEntity? findId(String id) {
+    return _totos.firstWhere((element) => element != null && element.id == id);
   }
 
   Future<void> init() async {
@@ -26,7 +31,6 @@ class TotoProvider with ChangeNotifier {
         .listen((snapshot) {
       _totos = snapshot.docs
           .map((doc) => ToToEntity.fromDocumentSnapshot(doc))
-          .where((doc) => doc != null)
           .toList();
       print('totos updated, notifying listeners...');
       notifyListeners();
@@ -42,7 +46,6 @@ class TotoProvider with ChangeNotifier {
         .listen((snapshot) {
       _totos = snapshot.docs
           .map((doc) => ToToEntity.fromDocumentSnapshot(doc))
-          .where((doc) => doc != null)
           .toList();
       print('totos updated, notifying listeners...');
       notifyListeners();
