@@ -12,6 +12,7 @@ import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:moapp_toto/utils/date_format.dart';
 import 'package:moapp_toto/utils/emotions.dart';
 import 'package:provider/provider.dart';
 
@@ -81,6 +82,120 @@ class _AddPageState extends State<AddPage> {
   Widget build(BuildContext context) {
     UserProvider up = context.watch();
     TotoProvider tp = context.watch();
+
+    if (!isEditMode && !isAnalysisPage) {
+      ToToEntity? todayToto = tp.t
+              .where((element) =>
+                  element.creator == up.currentUser?.uid &&
+                  isToday(element.created?.toDate()))
+              .isNotEmpty
+          ? tp.t.firstWhere((element) =>
+              element.creator == up.currentUser?.uid &&
+              isToday(element.created?.toDate()))
+          : null;
+      if (todayToto != null) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('오늘의 투투'),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 400,
+                  child: Column(
+                    children: [
+                      if (todayToto.imageUrlLink != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            todayToto.imageUrlLink!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 200,
+                          ),
+                        ),
+                      SizedBox(height: 24),
+                      Text(
+                        "오늘의 AI 리액션",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              todayToto.aiReaction ?? '투투를 기반으로 기분을 분석 중입니다.',
+                              style: const TextStyle(
+                                fontSize: 15,
+                              )),
+                        )),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 48),
+                CustomAnimatedButton(
+                  key: const ValueKey(2),
+                  text: "투투 수정하러가기",
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            "투투 수정",
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                          content: Text('투투를 수정하시겠습니까?\n티켓 포인트 ***p가 소모됩니다.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('취소',
+                                  style: TextStyle(
+                                      color:
+                                          Color.fromARGB(255, 133, 133, 133))),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.popAndPushNamed(context, "/add",
+                                    arguments: {"toto": todayToto});
+                              },
+                              child: Text("수정",
+                                  style: TextStyle(color: Colors.blue)),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                SizedBox(height: 16),
+                Text(
+                  "투투는 하루에 한번만 작성할 수 있습니다",
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 8),
+                Text(
+                    "마지막 작성: ${convertTimestampToKoreanDateTime(todayToto.created)}")
+              ],
+            ),
+          ),
+        );
+      }
+    }
 
     ToToEntity? toto = tp.findId(currentToto?.id ?? "unknown ID");
 
