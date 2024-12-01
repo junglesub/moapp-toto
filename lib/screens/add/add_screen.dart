@@ -22,7 +22,7 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   final TextEditingController textController = TextEditingController();
-  bool isAnalysisPage = true;
+  bool isAnalysisPage = false;
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
