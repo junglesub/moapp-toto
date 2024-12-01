@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/location_select_screen.dart';
+import 'package:moapp_toto/screens/add/tag_friends_screen.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
@@ -25,8 +26,9 @@ class _AddPageState extends State<AddPage> {
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
-
   dynamic _selectedImage;
+  List<String> selectedFriends = []; // 추가된 변수: 태그된 사람들
+
   void _pickImage(dynamic image) async {
     if (image != null) {
       setState(() {
@@ -146,36 +148,35 @@ class _AddPageState extends State<AddPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Mood와 Location 정보
                 Row(
                   children: [
                     if (selectedMood != null)
                       Container(
-                        margin: EdgeInsets.only(right: 4),
+                        margin: const EdgeInsets.only(right: 4),
                         constraints: const BoxConstraints(
-                            minHeight: 45), // Set a fixed height
+                          minHeight: 45,
+                          // maxHeight: 45, // Height 고정
+                        ),
                         child: Chip(
                           label: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                selectedMood?.emoji ?? "", // Display the emoji
-                                style: const TextStyle(
-                                    fontSize: 20), // Adjust the emoji size
+                                selectedMood?.emoji ?? "",
+                                style: const TextStyle(fontSize: 20),
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                selectedMood?.name ??
-                                    "", // Display the mood name
+                                selectedMood?.name ?? "",
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12, // Adjust the font size
+                                  fontSize: 12,
                                 ),
                               ),
-                              const SizedBox(width: 8),
                             ],
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                             side: BorderSide(
@@ -186,32 +187,32 @@ class _AddPageState extends State<AddPage> {
                         ),
                       ),
                     if (selectedLocation != null)
-                      ConstrainedBox(
+                      Container(
+                        margin: const EdgeInsets.only(left: 4),
                         constraints: const BoxConstraints(
-                            minHeight: 45), // Same height as above
+                          minHeight: 45,
+                          maxHeight: 45, // Height 고정
+                        ),
                         child: Chip(
                           label: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.location_on, // Use the location_on icon
-                                color: Colors.black, // Adjust icon color
-                                size: 16, // Adjust icon size
+                                Icons.location_on,
+                                color: Colors.black,
+                                size: 16,
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                selectedLocation?.placeName ??
-                                    "", // Display the location name
+                                selectedLocation?.placeName ?? "",
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12, // Adjust the font size
+                                  fontSize: 12,
                                 ),
                               ),
-                              const SizedBox(width: 8),
                             ],
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                             side: BorderSide(
@@ -223,11 +224,59 @@ class _AddPageState extends State<AddPage> {
                       ),
                   ],
                 ),
+
+                // 태그된 친구들 (Mood와 Location 아래로 이동)
+                if (selectedFriends != null && selectedFriends.isNotEmpty)
+                  Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 45,
+                              maxHeight: 45, // Height 고정
+                              maxWidth: 200, // Width 제한
+                            ),
+                            child: Chip(
+                              avatar: Icon(
+                                Icons.tag,
+                                color: Colors.grey[700],
+                                size: 16,
+                              ),
+                              label: Text(
+                                selectedFriends.join(', '),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
+                                  color: Colors.grey[300]!,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+
                 const SizedBox(height: 16),
-                Text(currentToto?.id ?? "Unknown ID"),
+
+                // AI 분석 결과
+                Text(
+                  currentToto?.id ?? "Unknown ID",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
                 Text(
                   "AI가 판단한 오늘의 리액션",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -241,9 +290,7 @@ class _AddPageState extends State<AddPage> {
                       animatedTexts: [
                         TypewriterAnimatedText(
                           '투투를 기반으로 기분을 분석 중입니다.',
-                          textStyle: const TextStyle(
-                            fontSize: 15,
-                          ),
+                          textStyle: const TextStyle(fontSize: 15),
                           speed: const Duration(milliseconds: 100),
                         ),
                       ],
@@ -312,9 +359,14 @@ class _AddPageState extends State<AddPage> {
                   }
                 },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.person),
                 title: Text('사람 태그'),
+                onTap: () {
+                  navigateToTagFriendsPage();
+                  // print('Returning selectedFriends: $selectedFriends');
+                  // Navigator.pop(context, selectedFriends);
+                },
               ),
             ],
           ),
@@ -339,6 +391,19 @@ class _AddPageState extends State<AddPage> {
         builder: (context) => const LocationSelectionPage(),
       ),
     );
+  }
+
+  void navigateToTagFriendsPage() async {
+    final selectedFriends = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TagFriendsPage()),
+    );
+
+    if (selectedFriends != null && selectedFriends is List<String>) {
+      setState(() {
+        this.selectedFriends = selectedFriends; // 선택된 친구 업데이트
+      });
+    }
   }
 }
 

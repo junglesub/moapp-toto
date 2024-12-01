@@ -1045,7 +1045,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-
   xml:
     dependency: transitive
     description:
@@ -1054,7 +1053,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
-
   youtube_player_flutter:
     dependency: "direct main"
     description:
@@ -1063,7 +1061,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "9.1.1"
-
 sdks:
   dart: ">=3.5.1 <4.0.0"
   flutter: ">=3.24.0"
