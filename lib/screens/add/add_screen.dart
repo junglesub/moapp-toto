@@ -6,6 +6,7 @@ import 'package:moapp_toto/models/toto_entity.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/location_select_screen.dart';
+import 'package:moapp_toto/screens/add/tag_friends_screen.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/text_form_filed_widget.dart';
 import 'package:moapp_toto/screens/add/widgets/image_picker_widget.dart';
@@ -27,8 +28,9 @@ class _AddPageState extends State<AddPage> {
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
   ToToEntity? currentToto;
-
   dynamic _selectedImage;
+  List<String> selectedFriends = []; // 추가된 변수: 태그된 사람들
+
   void _pickImage(dynamic image) async {
     if (image != null) {
       setState(() {
@@ -200,6 +202,7 @@ class _AddPageState extends State<AddPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Mood와 Location 정보
                 Row(
                   children: [
                     if (toto?.emotion != null || selectedMood != null)
@@ -290,6 +293,48 @@ class _AddPageState extends State<AddPage> {
                       ),
                   ],
                 ),
+
+                // 태그된 친구들 (Mood와 Location 아래로 이동)
+                if (selectedFriends != null && selectedFriends.isNotEmpty)
+                  Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 45,
+                              maxHeight: 45, // Height 고정
+                              maxWidth: 200, // Width 제한
+                            ),
+                            child: Chip(
+                              avatar: Icon(
+                                Icons.tag,
+                                color: Colors.grey[700],
+                                size: 16,
+                              ),
+                              label: Text(
+                                selectedFriends.join(', '),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
+                                  color: Colors.grey[300]!,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+
+                // AI 분석 결과
                 const SizedBox(height: 16),
                 Text(toto?.id ?? "Unknown ID"),
                 if (!isEditMode)
@@ -397,9 +442,14 @@ class _AddPageState extends State<AddPage> {
                   }
                 },
               ),
-              const ListTile(
+              ListTile(
                 leading: Icon(Icons.person),
                 title: Text('사람 태그'),
+                onTap: () {
+                  navigateToTagFriendsPage();
+                  // print('Returning selectedFriends: $selectedFriends');
+                  // Navigator.pop(context, selectedFriends);
+                },
               ),
             ],
           ),
@@ -424,6 +474,19 @@ class _AddPageState extends State<AddPage> {
         builder: (context) => const LocationSelectionPage(),
       ),
     );
+  }
+
+  void navigateToTagFriendsPage() async {
+    final selectedFriends = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TagFriendsPage()),
+    );
+
+    if (selectedFriends != null && selectedFriends is List<String>) {
+      setState(() {
+        this.selectedFriends = selectedFriends; // 선택된 친구 업데이트
+      });
+    }
   }
 }
 
