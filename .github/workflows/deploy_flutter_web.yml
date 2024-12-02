@@ -38,7 +38,7 @@ jobs:
 
       # Build Flutter web
       - name: Build Flutter Web
-        run: flutter build web --release
+        run: flutter build web --release --base-href "/moapp_toto/"
 
       # Upload build artifact
       - name: Upload artifact
