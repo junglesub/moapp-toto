@@ -28,6 +28,14 @@ class TotoProvider with ChangeNotifier {
         : null;
   }
 
+  List<ToToEntity> findByCreator(String? id) {
+    if (id == null) return [];
+    return _totos
+        .where((element) => element != null && element.creator == id)
+        .toList()
+        .cast<ToToEntity>();
+  }
+
   Future<void> init() async {
     // document entry
     _totoSub = FirebaseFirestore.instance

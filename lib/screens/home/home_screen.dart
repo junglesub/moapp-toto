@@ -62,7 +62,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget _buildAccumulativeDiary() {
+  Widget _buildAccumulativeDiary(BuildContext context) {
+    UserProvider up = context.read();
+    TotoProvider tp = context.read();
     return Container(
       // color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
@@ -80,8 +82,8 @@ class _HomePageState extends State<HomePage> {
             ),
             padding:
                 const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-            child: const Text(
-              "🔥 누적 투투 16개째...",
+            child: Text(
+              "🔥 누적 투투 ${tp.findByCreator(up.currentUser?.uid).length}개째...",
               style: TextStyle(
                 fontSize: 14,
                 // color: Colors.black,
@@ -300,7 +302,7 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildAccumulativeDiary(),
+            _buildAccumulativeDiary(context),
             Divider(
               thickness: 2,
               // color: Color.fromARGB(255, 245, 245, 245),

@@ -316,7 +316,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           const SizedBox(height: 16),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
@@ -324,7 +324,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text('함께한 투투', style: TextStyle(fontSize: 16)),
                   SizedBox(width: 8),
                   Text(
-                    '45일',
+                    '${tp.findByCreator(up.currentUser?.uid).length}개',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
