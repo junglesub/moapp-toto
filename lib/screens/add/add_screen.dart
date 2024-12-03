@@ -506,34 +506,37 @@ class _AddPageState extends State<AddPage> {
                 if (!isEditMode)
                   Column(
                     children: [
-                      Text(
-                        "AI가 판단한 오늘의 리액션",
+                      const Text(
+                        "오늘의 AI 리액션",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       Container(
-                        height: 100,
+                        height: 120,
                         decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
-                          child: AnimatedTextKit(
-                            key: ValueKey(toto?.aiReaction),
-                            totalRepeatCount: 1,
-                            animatedTexts: [
-                              TypewriterAnimatedText(
-                                toto?.aiReaction ?? '투투를 기반으로 기분을 분석 중입니다.',
-                                textStyle: const TextStyle(
-                                  fontSize: 15,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AnimatedTextKit(
+                              key: ValueKey(toto?.aiReaction),
+                              totalRepeatCount: 1,
+                              animatedTexts: [
+                                TypewriterAnimatedText(
+                                  toto?.aiReaction ?? '투투를 기반으로 기분을 분석 중입니다.',
+                                  textStyle: const TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                  speed: const Duration(milliseconds: 100),
                                 ),
-                                speed: const Duration(milliseconds: 100),
-                              ),
-                            ],
-                            pause: const Duration(milliseconds: 500),
-                            displayFullTextOnTap: false,
-                            stopPauseOnTap: false,
+                              ],
+                              pause: const Duration(milliseconds: 500),
+                              displayFullTextOnTap: false,
+                              stopPauseOnTap: false,
+                            ),
                           ),
                         ),
                       ),
