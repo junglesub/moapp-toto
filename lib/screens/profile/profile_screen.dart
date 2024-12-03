@@ -161,6 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     UserProvider up = context.watch();
     TotoProvider tp = context.watch();
+    AllUsersProvider aup = context.watch();
     return Scaffold(
       appBar: AppBar(
         title: _showAppBarTitle
@@ -357,8 +358,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          '내가 작성한 투투',
+                        Text(
+                          !_taggedPosts && !_likedPosts
+                              ? '내가 작성한 투투'
+                              : "필터링한 투투",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
@@ -385,14 +388,29 @@ class _ProfilePageState extends State<ProfilePage> {
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   children: tp.t
-                      .where((item) =>
-                          item != null && item.creator == up.currentUser?.uid)
+                      .where((item) => !_taggedPosts && !_likedPosts
+                          ? (item != null &&
+                              item.creator == up.currentUser?.uid)
+                          : (item != null &&
+                              (!_taggedPosts ||
+                                  (item.taggedFriends
+                                          ?.contains(up.currentUser?.uid) ??
+                                      false)) &&
+                              (!_likedPosts ||
+                                  (up.ue?.likedToto.contains(item.id) ??
+                                      false))))
                       .cast<ToToEntity>()
                       .map((item) => ToToCard(
                             t: item,
-                            userName:
-                                up.ue?.nickname ?? up.currentUser?.uid ?? "",
-                            userImagePath: up.ue?.profileImageUrl ??
+                            userName: aup.au
+                                    .firstWhere(
+                                        (user) => user?.uid == item.creator)
+                                    ?.nickname ??
+                                item.creator,
+                            userImagePath: aup.au
+                                    .firstWhere(
+                                        (user) => user?.uid == item.creator)
+                                    ?.profileImageUrl ??
                                 'assets/images/default_profile.jpg',
                             postDate:
                                 convertTimestampToKoreanDate(item.created) ??
