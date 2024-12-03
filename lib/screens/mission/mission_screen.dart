@@ -1,8 +1,11 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:moapp_toto/provider/toto_provider.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/mission/widgets/roulette.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 class MissionPage extends StatefulWidget {
   const MissionPage({Key? key}) : super(key: key);
@@ -38,6 +41,8 @@ class _MissionPageState extends State<MissionPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.read();
+    TotoProvider tp = context.read();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Today, Together"),
@@ -66,8 +71,8 @@ class _MissionPageState extends State<MissionPage> {
                 : Colors.yellow[100],
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: const Text(
-              "🔥 누적 투투 16개째...",
+            child: Text(
+              "🔥 누적 투투 ${tp.findByCreator(up.currentUser?.uid).length}개째...",
               style: TextStyle(fontSize: 14),
             ),
           ),
