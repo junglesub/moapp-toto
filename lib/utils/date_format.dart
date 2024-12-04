@@ -40,3 +40,7 @@ int daysPassed(DateTime? startDate) {
       today.difference(startDate).inDays + 1; // Including the start day
   return difference;
 }
+
+String formatDateToYYYYMMDD(DateTime date) {
+  return "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+}

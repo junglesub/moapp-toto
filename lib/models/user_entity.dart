@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:moapp_toto/utils/date_format.dart';
 
 class UserEntry {
   String uid;
@@ -15,6 +16,7 @@ class UserEntry {
   // List<String> followers = [];
   List<String> following = [];
   List<String> likedToto = [];
+  List<String> attendance = [];
 
   UserEntry(
       {required this.uid,
@@ -26,6 +28,7 @@ class UserEntry {
       // this.followers = const [],
       this.following = const [],
       this.likedToto = const [],
+      this.attendance = const [],
       this.point = 0,
       this.ticket = 0});
 
@@ -35,6 +38,7 @@ class UserEntry {
       // "followers": followers,
       "followings": following,
       "likedToto": likedToto,
+      "attendance": attendance,
       "ticket": ticket,
       "point": point
     };
@@ -151,6 +155,20 @@ class UserEntry {
     }
   }
 
+  Future<bool> addAttendance(DateTime date) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'attendance': FieldValue.arrayUnion([formatDateToYYYYMMDD(date)])
+    });
+    return true;
+  }
+
+  Future<bool> removeAttendance(DateTime date) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'attendance': FieldValue.arrayRemove([formatDateToYYYYMMDD(date)])
+    });
+    return true;
+  }
+
   static UserEntry? fromDocumentSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) return null;
     final data = snapshot.data() as Map<String, dynamic>;
@@ -169,6 +187,9 @@ class UserEntry {
           data['following'] != null ? List<String>.from(data['following']) : [],
       likedToto:
           data['likedToto'] != null ? List<String>.from(data['likedToto']) : [],
+      attendance: data['attendance'] != null
+          ? List<String>.from(data['attendance'])
+          : [],
     );
   }
 }
