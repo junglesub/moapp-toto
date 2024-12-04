@@ -4,6 +4,7 @@ import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/mission/widgets/roulette.dart';
 import 'package:flutter/material.dart';
 import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
+import 'package:moapp_toto/utils/date_format.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,31 @@ class _MissionPageState extends State<MissionPage> {
 
   // 각 미션 버튼, onPressed 정의
   final List<Map<String, dynamic>> _buttonData = [
-    {"text": "출석체크 하고 티켓 ( 00일째 )", "onPressed": () => print("출석체크 클릭됨")},
+    {
+      "text": "출석체크 하고 티켓 받기",
+      "onPressed": (BuildContext context) {
+        UserProvider up = Provider.of(context, listen: false);
+        if (up.ue?.attendance.contains(formatDateToYYYYMMDD(DateTime.now())) ??
+            true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("이미 오늘 출석체크를 했습니다."),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        } else {
+          up.ue?.addAttendance(DateTime.now());
+          up.ue?.addTicket(1);
+          up.ue?.addPoint(100);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("출석체크를 완료했습니다."),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    },
     {
       "text": "랜덤 게임하고 티켓받기",
       "onPressed": (BuildContext context) {
