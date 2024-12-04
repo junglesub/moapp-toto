@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:confetti/confetti.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/mission/widgets/roulette.dart';
@@ -17,12 +18,21 @@ class MissionPage extends StatefulWidget {
 
 class _MissionPageState extends State<MissionPage> {
   int _currentIndex = 1;
+  late ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 2));
+  }
 
   // 각 미션 버튼, onPressed 정의
   final List<Map<String, dynamic>> _buttonData = [
     {
       "text": "출석체크 하고 티켓 받기",
-      "onPressed": (BuildContext context) {
+      "onPressed":
+          (BuildContext context, ConfettiController? confettiController) {
         UserProvider up = Provider.of(context, listen: false);
         if (up.ue?.attendance.contains(formatDateToYYYYMMDD(DateTime.now())) ??
             true) {
@@ -36,12 +46,16 @@ class _MissionPageState extends State<MissionPage> {
           up.ue?.addAttendance(DateTime.now());
           up.ue?.addTicket(1);
           up.ue?.addPoint(100);
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("출석체크를 완료했습니다."),
               duration: Duration(seconds: 2),
             ),
           );
+
+          // Trigger confetti
+          confettiController?.play();
         }
       }
     },
@@ -168,96 +182,120 @@ class _MissionPageState extends State<MissionPage> {
         title: const Text("Today, Together"),
         centerTitle: false,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          _buildAccumulativeDiary(context),
-          Divider(
-            thickness: 2,
-            // color: Color.fromARGB(255, 245, 245, 245),
-            color: Theme.of(context).dividerColor,
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                // 첫 번째 섹션: 룰렛 돌리기
-                GestureDetector(
-                  onTap: () {
-                    // 룰렛 페이지로 이동
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RoulettePage(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildAccumulativeDiary(context),
+              Divider(
+                thickness: 2,
+                // color: Color.fromARGB(255, 245, 245, 245),
+                color: Theme.of(context).dividerColor,
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    // 첫 번째 섹션: 룰렛 돌리기
+                    GestureDetector(
+                      onTap: () {
+                        // 룰렛 페이지로 이동
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RoulettePage(),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        child: Stack(
+                          alignment: Alignment.center, // 텍스트를 정중앙에 배치
+                          children: [
+                            // GIF 이미지
+                            Container(
+                              height: 150,
+                              alignment: Alignment.center,
+                              child: Image.asset(
+                                'images/spinwheel.gif', // assets 폴더 내 GIF 경로
+                                fit: BoxFit.fitWidth, // 이미지를 공간에 맞게 채움
+                              ),
+                            ),
+                            // 텍스트 오버레이
+                            Container(
+                              color: Colors.amber
+                                  .withOpacity(0.25), // 배경색을 25% 투명도로 설정
+                              alignment: Alignment.center,
+                              child: const Text(
+                                "룰렛 돌리러가기",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                  child: Card(
-                    child: Stack(
-                      alignment: Alignment.center, // 텍스트를 정중앙에 배치
-                      children: [
-                        // GIF 이미지
-                        Container(
-                          height: 150,
-                          alignment: Alignment.center,
-                          child: Image.asset(
-                            'images/spinwheel.gif', // assets 폴더 내 GIF 경로
-                            fit: BoxFit.fitWidth, // 이미지를 공간에 맞게 채움
-                          ),
-                        ),
-                        // 텍스트 오버레이
-                        Container(
-                          color: Colors.amber
-                              .withOpacity(0.25), // 배경색을 25% 투명도로 설정
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "룰렛 돌리러가기",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                ),
 
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "남은 티켓: 3장",
-                    style: TextStyle(fontSize: 16),
-                  ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        "남은 티켓: 3장",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // 두 번째 섹션: 티켓 받기
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        "티켓 받기 (수령 가능 티켓수 10장)",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: Column(
+                        children: [
+                          ..._buttonData.map((button) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
+                                child: ElevatedButton(
+                                  onPressed: () => button["onPressed"](
+                                      context, _confettiController), // 컨텍스트 전달
+                                  child: Text(button["text"]),
+                                  // text: button["text"],
+                                  // onPressed: button["onPressed"],
+                                ),
+                              )),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                const SizedBox(height: 20),
-                // 두 번째 섹션: 티켓 받기
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "티켓 받기 (수령 가능 티켓수 10장)",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Center(
-                  child: Column(
-                    children: [
-                      ..._buttonData.map((button) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: ElevatedButton(
-                              onPressed: () =>
-                                  button["onPressed"](context), // 컨텍스트 전달
-                              child: Text(button["text"]),
-                              // text: button["text"],
-                              // onPressed: button["onPressed"],
-                            ),
-                          )),
-                    ],
-                  ),
-                )
-              ],
+              ),
+            ],
+          ),
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.topCenter, // Adjust as needed
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality:
+                    BlastDirectionality.explosive, // Random directions
+                shouldLoop: false,
+                emissionFrequency: 0.05,
+                numberOfParticles: 20,
+                colors: [
+                  Colors.blue,
+                  Colors.pink,
+                  Colors.orange,
+                  Colors.green
+                ], // Customize colors
+              ),
             ),
           ),
         ],
