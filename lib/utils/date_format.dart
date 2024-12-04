@@ -32,3 +32,11 @@ bool isToday(DateTime? date) {
       date.month == now.month &&
       date.day == now.day;
 }
+
+int daysPassed(DateTime? startDate) {
+  if (startDate == null) return 0;
+  final today = DateTime.now();
+  final difference =
+      today.difference(startDate).inDays + 1; // Including the start day
+  return difference;
+}
