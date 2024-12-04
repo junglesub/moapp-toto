@@ -26,8 +26,15 @@ class CustomAnimatedButton extends StatelessWidget {
       selectedTextColor: Colors.black,
       transitionType: TransitionType.LEFT_BOTTOM_ROUNDER,
       textStyle: submitTextStyle,
-      backgroundColor: Colors.black,
-      borderColor: Colors.black,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.grey[800]!
+          : Colors.black,
+      selectedBackgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.grey[300]!
+          : Colors.white,
+      borderColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.grey[800]!
+          : Colors.black,
       borderRadius: 30,
       borderWidth: 2,
       onPress: () async {
