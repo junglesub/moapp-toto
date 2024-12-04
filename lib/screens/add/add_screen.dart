@@ -126,7 +126,11 @@ class _AddPageState extends State<AddPage> {
                           padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey[300],
+                              // color: Colors.grey[300],
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.grey[800]!
+                                  : Colors.grey[300],
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
@@ -363,7 +367,7 @@ class _AddPageState extends State<AddPage> {
                                         toto?.emotion?.name ??
                                         "",
                                     style: const TextStyle(
-                                      color: Colors.black,
+                                      // color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                     ),
@@ -396,7 +400,7 @@ class _AddPageState extends State<AddPage> {
                               children: [
                                 const Icon(
                                   Icons.location_on,
-                                  color: Colors.black,
+                                  // color: Colors.black,
                                   size: 16,
                                 ),
                                 const SizedBox(width: 8),
@@ -404,7 +408,7 @@ class _AddPageState extends State<AddPage> {
                                   child: Text(
                                     selectedLocation?.placeName ?? "",
                                     style: const TextStyle(
-                                      color: Colors.black,
+                                      // color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                     ),
@@ -443,35 +447,14 @@ class _AddPageState extends State<AddPage> {
                               maxHeight: 45, // Height 고정
                               maxWidth: 200, // Width 제한
                             ),
-                            // child: Chip(
-                            //   avatar: Icon(
-                            //     Icons.tag,
-                            //     color: Colors.grey[700],
-                            //     size: 16,
-                            //   ),
-                            //   label: Text(
-                            //     selectedFriends.join(', '),
-                            //     style: const TextStyle(
-                            //       color: Colors.black,
-                            //       fontWeight: FontWeight.bold,
-                            //       fontSize: 12,
-                            //     ),
-                            //     overflow: TextOverflow.ellipsis,
-                            //     maxLines: 1,
-                            //   ),
-                            //   shape: RoundedRectangleBorder(
-                            //     borderRadius: BorderRadius.circular(12),
-                            //     side: BorderSide(
-                            //       color: Colors.grey[300]!,
-                            //       width: 1.5,
-                            //     ),
-                            //   ),
-                            // ),
-
                             child: Chip(
                               avatar: Icon(
                                 Icons.tag,
-                                color: Colors.grey[700],
+                                // color: Colors.grey[700],
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white!
+                                    : Colors.grey[700],
                                 size: 16,
                               ),
                               label: Text(
@@ -481,7 +464,7 @@ class _AddPageState extends State<AddPage> {
                                         friend['nickname']) // nickname 추출
                                     .join(', '), // 콤마로 구분
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  // color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
                                 ),
@@ -513,9 +496,12 @@ class _AddPageState extends State<AddPage> {
                       ),
                       const SizedBox(height: 16),
                       Container(
-                        height: 120,
+                        // height: 140,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          // color: Colors.grey[300],
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]!
+                              : Colors.grey[300],
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
@@ -561,6 +547,8 @@ class _AddPageState extends State<AddPage> {
   }
 
   Widget _buildPersistentBottomSheet(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
       minChildSize: 0,
@@ -568,7 +556,7 @@ class _AddPageState extends State<AddPage> {
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDarkTheme ? Colors.grey[900] : Colors.white,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
