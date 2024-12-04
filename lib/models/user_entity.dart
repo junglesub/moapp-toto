@@ -10,28 +10,33 @@ class UserEntry {
   String? nickname;
   String? gender;
   int? birthyear;
+  int point;
+  int ticket;
   // List<String> followers = [];
   List<String> following = [];
   List<String> likedToto = [];
 
-  UserEntry({
-    required this.uid,
-    required this.gender,
-    this.profileImageUrl,
-    this.email,
-    this.nickname,
-    this.birthyear,
-    // this.followers = const [],
-    this.following = const [],
-    this.likedToto = const [],
-  });
+  UserEntry(
+      {required this.uid,
+      required this.gender,
+      this.profileImageUrl,
+      this.email,
+      this.nickname,
+      this.birthyear,
+      // this.followers = const [],
+      this.following = const [],
+      this.likedToto = const [],
+      this.point = 0,
+      this.ticket = 0});
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {
       'uid': uid,
       // "followers": followers,
       "followings": following,
-      "likedToto": likedToto
+      "likedToto": likedToto,
+      "ticket": ticket,
+      "point": point
     };
 
     if (email != null) {
@@ -94,6 +99,36 @@ class UserEntry {
     return true;
   }
 
+  Future<bool> addTicket(int ticket) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'ticket': FieldValue.increment(ticket)});
+    return true;
+  }
+
+  Future<bool> removeTicket(int ticket) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'ticket': FieldValue.increment(-ticket),
+    });
+    return true;
+  }
+
+  Future<bool> addPoint(int point) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'point': FieldValue.increment(point)});
+    return true;
+  }
+
+  Future<bool> removePoint(int point) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'point': FieldValue.increment(-point),
+    });
+    return true;
+  }
+
   static UserEntry? fromDocumentSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) return null;
     final data = snapshot.data() as Map<String, dynamic>;
@@ -104,6 +139,8 @@ class UserEntry {
       nickname: data['nickname'],
       birthyear: data['birthyear'],
       profileImageUrl: data['profileImageUrl'],
+      ticket: data['ticket'] ?? 0,
+      point: data['point'] ?? 0,
       // followers:
       //     data['followers'] != null ? List<String>.from(data['followers']) : [],
       following:
