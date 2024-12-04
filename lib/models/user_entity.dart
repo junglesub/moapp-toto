@@ -100,33 +100,55 @@ class UserEntry {
   }
 
   Future<bool> addTicket(int ticket) async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'ticket': FieldValue.increment(ticket)});
-    return true;
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'ticket': FieldValue.increment(ticket)});
+      return true;
+    } catch (e) {
+      print('Error adding ticket: $e');
+      return false;
+    }
   }
 
   Future<bool> removeTicket(int ticket) async {
-    await FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'ticket': FieldValue.increment(-ticket),
-    });
-    return true;
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'ticket': FieldValue.increment(-ticket)});
+      return true;
+    } catch (e) {
+      print('Error removing ticket: $e');
+      return false;
+    }
   }
 
   Future<bool> addPoint(int point) async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'point': FieldValue.increment(point)});
-    return true;
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'point': FieldValue.increment(point)});
+      return true;
+    } catch (e) {
+      print('Error adding point: $e');
+      return false;
+    }
   }
 
   Future<bool> removePoint(int point) async {
-    await FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'point': FieldValue.increment(-point),
-    });
-    return true;
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'point': FieldValue.increment(-point)});
+      return true;
+    } catch (e) {
+      print('Error removing point: $e');
+      return false;
+    }
   }
 
   static UserEntry? fromDocumentSnapshot(DocumentSnapshot snapshot) {
