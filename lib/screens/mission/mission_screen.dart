@@ -43,8 +43,8 @@ class _MissionPageState extends State<MissionPage> {
     UserProvider up = context.read();
     TotoProvider tp = context.read();
 
-    int ticketCount = 5; //파이어베이스랑 티켓정보 연결
-    int pointCount = 100; //
+    int ticketCount = up.ue?.ticket ?? 0; //파이어베이스랑 티켓정보 연결
+    int pointCount = up.ue?.point ?? 0; //
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
