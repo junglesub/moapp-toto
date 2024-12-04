@@ -65,10 +65,10 @@ class _MissionPageState extends State<MissionPage> {
         Navigator.pushNamed(context, '/game'); // 게임 페이지로 이동
       },
     },
-    {
-      "text": "새로운 장소 인증하고 티켓받기 (누적 장소 00곳)",
-      "onPressed": () => print("장소 인증 클릭됨")
-    },
+    // {
+    //   "text": "새로운 장소 인증하고 티켓받기 (누적 장소 00곳)",
+    //   "onPressed": () => print("장소 인증 클릭됨")
+    // },
     {
       "text": "광고 보고 티켓 받기",
       "onPressed": (BuildContext context) {
@@ -239,19 +239,19 @@ class _MissionPageState extends State<MissionPage> {
                       ),
                     ),
 
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        "남은 티켓: 3장",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
+                    // const Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    //   child: Text(
+                    //     "남은 티켓: 3장",
+                    //     style: TextStyle(fontSize: 16),
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                     // 두 번째 섹션: 티켓 받기
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
-                        "티켓 받기 (수령 가능 티켓수 10장)",
+                        "티켓 받기",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
