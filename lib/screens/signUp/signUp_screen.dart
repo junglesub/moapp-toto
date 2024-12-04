@@ -38,6 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final UserProvider up = Provider.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     if (emailController.text.isEmpty) {
       emailController.text = up.currentUser?.email ?? "";
@@ -70,25 +71,6 @@ class _SignUpPageState extends State<SignUpPage> {
             MyTextField(
               label: '닉네임',
               controller: nicknameController,
-            ),
-            const SizedBox(height: 16),
-            // 성별 및 나이
-            Row(
-              children: [
-                Expanded(
-                  child: MyTextField(
-                    label: '성별',
-                    controller: genderController,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: MyTextField(
-                    label: '나이',
-                    controller: ageController,
-                  ),
-                ),
-              ],
             ),
             const SizedBox(height: 24),
             Row(
@@ -152,6 +134,40 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MyTextField extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+
+  const MyTextField({
+    required this.label,
+    required this.controller,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide.none,
+        ),
+        labelStyle: TextStyle(
+          color: isDarkMode ? Colors.white : Colors.black,
+        ),
+      ),
+      style: TextStyle(
+        color: isDarkMode ? Colors.white : Colors.black,
       ),
     );
   }
