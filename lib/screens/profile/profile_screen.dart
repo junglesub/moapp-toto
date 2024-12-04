@@ -332,10 +332,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               Row(
                 children: [
-                  Text('성공한 미션'),
+                  Text('함께한지', style: TextStyle(fontSize: 16)),
                   SizedBox(width: 8),
                   Text(
-                    '13개',
+                    '${daysPassed(up.currentUser?.metadata.creationTime)}일',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
