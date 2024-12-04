@@ -39,6 +39,98 @@ class _MissionPageState extends State<MissionPage> {
     {"text": "친구 공유하고 티켓받기", "onPressed": () => print("친구 공유 클릭됨")},
   ];
 
+  Widget _buildAccumulativeDiary(BuildContext context) {
+    UserProvider up = context.read();
+    TotoProvider tp = context.read();
+
+    int ticketCount = 5; //파이어베이스랑 티켓정보 연결
+    int pointCount = 100; //
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left: Accumulative diary text
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 2,
+                color: Colors.amber,
+              ),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+            child: Text(
+              "🔥 누적 투투 ${tp.findByCreator(up.currentUser?.uid).length}개째...",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              // Ticket and Point box
+              Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromRGBO(255, 143, 0, 1),
+                      Colors.yellow,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.confirmation_number,
+                      size: 16,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$ticketCount", // <<< 나중에 티켓 숫자 집어넣기>>>
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Coin icon and count
+                    const Icon(
+                      Icons.stars, // Use coin-like icon
+                      size: 16,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$pointCount", // Point count
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Calendar icon
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     UserProvider up = context.read();
@@ -48,34 +140,15 @@ class _MissionPageState extends State<MissionPage> {
         automaticallyImplyLeading: false,
         title: const Text("Today, Together"),
         centerTitle: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                "T 5 P 100",
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: double.infinity,
-            height: 30,
-            // color: Colors.yellow[100],
-            color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark
-                ? Colors.blue
-                : Colors.yellow[100],
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              "🔥 누적 투투 ${tp.findByCreator(up.currentUser?.uid).length}개째...",
-              style: TextStyle(fontSize: 14),
-            ),
+          _buildAccumulativeDiary(context),
+          Divider(
+            thickness: 2,
+            // color: Color.fromARGB(255, 245, 245, 245),
+            color: Theme.of(context).dividerColor,
           ),
           Expanded(
             child: ListView(
@@ -92,20 +165,37 @@ class _MissionPageState extends State<MissionPage> {
                     );
                   },
                   child: Card(
-                    margin: const EdgeInsets.all(16.0),
-                    child: Container(
-                      height: 150,
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "룰렛 돌리기",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                    child: Stack(
+                      alignment: Alignment.center, // 텍스트를 정중앙에 배치
+                      children: [
+                        // GIF 이미지
+                        Container(
+                          height: 150,
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            'images/spinwheel.gif', // assets 폴더 내 GIF 경로
+                            fit: BoxFit.fitWidth, // 이미지를 공간에 맞게 채움
+                          ),
                         ),
-                      ),
+                        // 텍스트 오버레이
+                        Container(
+                          color: Colors.amber
+                              .withOpacity(0.25), // 배경색을 25% 투명도로 설정
+                          alignment: Alignment.center,
+                          child: const Text(
+                            "룰렛 돌리러가기",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(

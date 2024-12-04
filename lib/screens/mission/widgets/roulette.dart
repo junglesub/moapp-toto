@@ -16,12 +16,12 @@ class _RoulettePageState extends State<RoulettePage> {
 
   // Define the options for the roulette
   final options = [
-    "티켓 3개 제공",
-    "티켓 5개 제공",
-    "글자 5개 추가 제공",
-    "글자 10개 추가 제공",
-    "추가 기회 제공",
-    "꽝 😢",
+    "포인트 1개",
+    "포인트 3개",
+    "티켓 1개",
+    "포인트 5개",
+    "포인트 10개",
+    "포인트 1개",
   ];
 
   late final RouletteGroup group = RouletteGroup.uniform(
