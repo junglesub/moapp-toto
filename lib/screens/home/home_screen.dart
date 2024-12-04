@@ -65,8 +65,11 @@ class _HomePageState extends State<HomePage> {
   Widget _buildAccumulativeDiary(BuildContext context) {
     UserProvider up = context.read();
     TotoProvider tp = context.read();
+
+    int ticketCount = 5; //파이어베이스랑 연결
+    int pointCount = 100; //
+
     return Container(
-      // color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,9 +87,8 @@ class _HomePageState extends State<HomePage> {
                 const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
             child: Text(
               "🔥 누적 투투 ${tp.findByCreator(up.currentUser?.uid).length}개째...",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
-                // color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -96,11 +98,11 @@ class _HomePageState extends State<HomePage> {
               // Ticket and Point box
               Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      const Color.fromRGBO(255, 143, 0, 1),
+                      Color.fromRGBO(255, 143, 0, 1),
                       Colors.yellow,
                     ],
                   ),
@@ -108,13 +110,40 @@ class _HomePageState extends State<HomePage> {
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                child: const Text(
-                  "T 5 P 100",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  children: [
+                    // Ticket icon and count
+                    const Icon(
+                      Icons.confirmation_number, // Use ticket-like icon
+                      size: 16,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$ticketCount", // Ticket count
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Coin icon and count
+                    const Icon(
+                      Icons.stars, // Use coin-like icon
+                      size: 16,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$pointCount", // Point count
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 8),
