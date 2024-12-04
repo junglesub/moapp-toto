@@ -65,94 +65,96 @@ class _MissionPageState extends State<MissionPage> {
   ];
 
   Widget _buildAccumulativeDiary(BuildContext context) {
-    UserProvider up = context.read();
-    TotoProvider tp = context.read();
+    return Consumer2<UserProvider, TotoProvider>(
+      builder: (context, up, tp, child) {
+        int ticketCount = up.ue?.ticket ?? 0; // Reactive ticket count
+        int pointCount = up.ue?.point ?? 0; // Reactive point count
+        int diaryCount = tp.findByCreator(up.currentUser?.uid).length;
 
-    int ticketCount = up.ue?.ticket ?? 0; //파이어베이스랑 티켓정보 연결
-    int pointCount = up.ue?.point ?? 0; //
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Left: Accumulative diary text
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 2,
-                color: Colors.amber,
-              ),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-            child: Text(
-              "🔥 누적 투투 ${tp.findByCreator(up.currentUser?.uid).length}개째...",
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Row(
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Ticket and Point box
+              // Left: Accumulative diary text
               Container(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromRGBO(255, 143, 0, 1),
-                      Colors.yellow,
-                    ],
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.amber,
                   ),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.confirmation_number,
-                      size: 16,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      "$ticketCount", // <<< 나중에 티켓 숫자 집어넣기>>>
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Coin icon and count
-                    const Icon(
-                      Icons.stars, // Use coin-like icon
-                      size: 16,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      "$pointCount", // Point count
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  "🔥 누적 투투 $diaryCount개째...",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
-              // Calendar icon
+              Row(
+                children: [
+                  // Ticket and Point box
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color.fromRGBO(255, 143, 0, 1),
+                          Colors.yellow,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 6.0),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.confirmation_number,
+                          size: 16,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          "$ticketCount", // Reactive ticket count
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Coin icon and count
+                        const Icon(
+                          Icons.stars, // Use coin-like icon
+                          size: 16,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          "$pointCount", // Reactive point count
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Calendar icon
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
