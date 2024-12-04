@@ -316,6 +316,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     TotoProvider tp = context.watch();
+    UserProvider up = context.watch();
     AllUsersProvider aup = context.watch();
     return FloatingDraggableWidget(
       mainScreenWidget: Scaffold(
@@ -335,6 +336,12 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: ListView(
                 children: tp.t.where((toto) {
+                  // 자기가 팔로우중 사람 아니면 무조건 숨기기
+                  if (toto.creator != up.currentUser?.uid &&
+                      !(up.ue?.following.contains(toto.creator) ?? false)) {
+                    return false;
+                  }
+                  // 날짜 확인
                   if (_selectedDate == null) return true;
                   DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
                     (toto.created as Timestamp).millisecondsSinceEpoch,
