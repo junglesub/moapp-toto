@@ -139,12 +139,13 @@ class _ToToCardState extends State<ToToCard> {
                         }
                       },
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.more_horiz),
-                      onPressed: () {
-                        _showOptionsModal();
-                      },
-                    ),
+                    if (widget.t.creator == up.currentUser?.uid)
+                      IconButton(
+                        icon: const Icon(Icons.more_horiz),
+                        onPressed: () {
+                          _showOptionsModal();
+                        },
+                      ),
                   ],
                 ),
               ],

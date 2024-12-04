@@ -401,6 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       false))))
                       .cast<ToToEntity>()
                       .map((item) => ToToCard(
+                            key: ValueKey(item.id),
                             t: item,
                             userName: aup.au
                                     .firstWhere(
