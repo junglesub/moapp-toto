@@ -177,6 +177,7 @@ class _HomePageState extends State<HomePage> {
     UserProvider up = context.watch();
     bool isLiked = up.ue?.likedToto.contains(t.id) ?? false;
     return GestureDetector(
+      key: ValueKey(t.id),
       onDoubleTap: () {
         if (isLiked) {
           // up.ue?.removeLike(t.id);
