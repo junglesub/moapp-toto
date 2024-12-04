@@ -164,20 +164,37 @@ class _MissionPageState extends State<MissionPage> {
                     );
                   },
                   child: Card(
-                    margin: const EdgeInsets.all(16.0),
-                    child: Container(
-                      height: 150,
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "룰렛 돌리기",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                    child: Stack(
+                      alignment: Alignment.center, // 텍스트를 정중앙에 배치
+                      children: [
+                        // GIF 이미지
+                        Container(
+                          height: 150,
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            'images/spinwheel.gif', // assets 폴더 내 GIF 경로
+                            fit: BoxFit.fitWidth, // 이미지를 공간에 맞게 채움
+                          ),
                         ),
-                      ),
+                        // 텍스트 오버레이
+                        Container(
+                          color: Colors.amber
+                              .withOpacity(0.25), // 배경색을 25% 투명도로 설정
+                          alignment: Alignment.center,
+                          child: const Text(
+                            "룰렛 돌리러가기",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
