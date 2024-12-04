@@ -63,6 +63,7 @@ dependencies:
   dice_bear: ^0.1.5
   flutter_svg: ^1.1.6
   flutter_tags: ^1.0.0-nullsafety.1
+  confetti: ^0.8.0
 
 dev_dependencies:
   flutter_test:
