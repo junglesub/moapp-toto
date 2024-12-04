@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floating_draggable_widget/floating_draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   // final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장 (임시)
   List<Map<String, dynamic>> postDataList = [];
   bool isLoading = true;
-
+  DateTime? _selectedDate; // 날짜 필터링용
   @override
   void initState() {
     super.initState();
@@ -58,15 +59,36 @@ class _HomePageState extends State<HomePage> {
       lastDate: DateTime(2100),
     );
     if (selectedDate != null) {
+      setState(() {
+        _selectedDate = selectedDate;
+      });
       print("Selected date: $selectedDate");
     }
+  }
+
+  List<Map<String, dynamic>> _buildFilteredPosts() {
+    if (_selectedDate == null) {
+      return postDataList; // 날짜가 선택되지 않았으면 모든 게시물 반환
+    }
+
+    return postDataList.where((postData) {
+      ToToEntity post = postData["post"];
+      DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
+        (post.created as Timestamp).millisecondsSinceEpoch,
+      );
+
+      // 선택된 날짜와 게시물 날짜 비교 (연, 월, 일만 확인)
+      return postDate.year == _selectedDate!.year &&
+          postDate.month == _selectedDate!.month &&
+          postDate.day == _selectedDate!.day;
+    }).toList();
   }
 
   Widget _buildAccumulativeDiary(BuildContext context) {
     UserProvider up = context.read();
     TotoProvider tp = context.read();
 
-    int ticketCount = 5; //파이어베이스랑 연결
+    int ticketCount = 5; //파이어베이스랑 티켓정보 연결
     int pointCount = 100; //
 
     return Container(
@@ -112,15 +134,14 @@ class _HomePageState extends State<HomePage> {
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                 child: Row(
                   children: [
-                    // Ticket icon and count
                     const Icon(
-                      Icons.confirmation_number, // Use ticket-like icon
+                      Icons.confirmation_number,
                       size: 16,
                       color: Colors.black,
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "$ticketCount", // Ticket count
+                      "$ticketCount", // <<< 나중에 티켓 숫자 집어넣기>>>
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -339,7 +360,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: ListView(
-                children: postDataList.map((postData) {
+                children: _buildFilteredPosts().map((postData) {
                   ToToEntity t = postData["post"];
                   List<String> hashtags = postData["hashtags"];
 
