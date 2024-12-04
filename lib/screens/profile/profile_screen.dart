@@ -335,7 +335,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text('함께한지', style: TextStyle(fontSize: 16)),
                   SizedBox(width: 8),
                   Text(
-                    '${daysPassed(up.currentUser?.metadata.creationTime)}일',
+                    '${daysPassed(up.currentUser?.metadata.creationTime)}일째',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
