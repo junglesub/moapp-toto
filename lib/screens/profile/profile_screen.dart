@@ -164,6 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
     AllUsersProvider aup = context.watch();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: _showAppBarTitle
             ? Center(
                 child: Text(up.ue?.nickname ?? up.ue?.uid ?? "Unknown User"))

@@ -346,6 +346,7 @@ class _HomePageState extends State<HomePage> {
     return FloatingDraggableWidget(
       mainScreenWidget: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text("Today, Together"),
           centerTitle: false,
         ),

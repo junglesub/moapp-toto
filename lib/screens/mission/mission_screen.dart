@@ -45,6 +45,7 @@ class _MissionPageState extends State<MissionPage> {
     TotoProvider tp = context.read();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("Today, Together"),
         centerTitle: false,
         actions: [
