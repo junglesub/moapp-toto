@@ -9,7 +9,6 @@ import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/utils/date_format.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
-import 'package:moapp_toto/widgets/custom_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
@@ -23,32 +22,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   // final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장 (임시)
-  List<Map<String, dynamic>> postDataList = [];
-  bool isLoading = true;
   DateTime? _selectedDate; // 날짜 필터링용
   @override
   void initState() {
     super.initState();
-    _loadPostData();
-  }
-
-  Future<void> _loadPostData() async {
-    TotoProvider tp = context.read();
-    List<ToToEntity?> posts = tp.t.where((item) => item != null).toList();
-
-    List<Map<String, dynamic>> loadedPostData = [];
-    for (ToToEntity? post in posts) {
-      if (post != null) {
-        // 해시태그 초기화
-        List<String> hashtags = await _initializeHashtags(post);
-        loadedPostData.add({"post": post, "hashtags": hashtags});
-      }
-    }
-
-    setState(() {
-      postDataList = loadedPostData;
-      isLoading = false;
-    });
   }
 
   void _selectDate(BuildContext context) async {
@@ -64,24 +41,6 @@ class _HomePageState extends State<HomePage> {
       });
       print("Selected date: $selectedDate");
     }
-  }
-
-  List<Map<String, dynamic>> _buildFilteredPosts() {
-    if (_selectedDate == null) {
-      return postDataList; // 날짜가 선택되지 않았으면 모든 게시물 반환
-    }
-
-    return postDataList.where((postData) {
-      ToToEntity post = postData["post"];
-      DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
-        (post.created as Timestamp).millisecondsSinceEpoch,
-      );
-
-      // 선택된 날짜와 게시물 날짜 비교 (연, 월, 일만 확인)
-      return postDate.year == _selectedDate!.year &&
-          postDate.month == _selectedDate!.month &&
-          postDate.day == _selectedDate!.day;
-    }).toList();
   }
 
   Widget _buildAccumulativeDiary(BuildContext context) {
@@ -214,11 +173,11 @@ class _HomePageState extends State<HomePage> {
     String? imageUrl,
     String? userImagePath,
     required int cardIndex,
-    required List<String> hashtags,
   }) {
     UserProvider up = context.watch();
     bool isLiked = up.ue?.likedToto.contains(t.id) ?? false;
     return GestureDetector(
+      key: ValueKey(t.id),
       onDoubleTap: () {
         if (isLiked) {
           // up.ue?.removeLike(t.id);
@@ -311,23 +270,38 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               const SizedBox(height: 12.0),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 4.0,
-                children: hashtags.map((tag) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0, horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      tag,
-                      style: const TextStyle(color: Colors.black, fontSize: 12),
-                    ),
-                  );
-                }).toList(),
+              FutureBuilder<List<String>>(
+                future: _initializeHashtags(t),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (snapshot.hasData) {
+                    final hashtags = snapshot.data!;
+                    return Wrap(
+                      spacing: 8.0,
+                      runSpacing: 4.0,
+                      children: hashtags.map((tag) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            tag,
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 12),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  } else {
+                    return Center(child: Text('No hashtags found.'));
+                  }
+                },
               ),
             ],
           ),
@@ -342,6 +316,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     TotoProvider tp = context.watch();
+    UserProvider up = context.watch();
     AllUsersProvider aup = context.watch();
     return FloatingDraggableWidget(
       mainScreenWidget: Scaffold(
@@ -361,10 +336,23 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: ListView(
-                children: _buildFilteredPosts().map((postData) {
-                  ToToEntity t = postData["post"];
-                  List<String> hashtags = postData["hashtags"];
+                children: tp.t.where((toto) {
+                  // 자기가 팔로우중 사람 아니면 무조건 숨기기
+                  if (toto.creator != up.currentUser?.uid &&
+                      !(up.ue?.following.contains(toto.creator) ?? false)) {
+                    return false;
+                  }
+                  // 날짜 확인
+                  if (_selectedDate == null) return true;
+                  DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
+                    (toto.created as Timestamp).millisecondsSinceEpoch,
+                  );
 
+                  // 선택된 날짜와 게시물 날짜 비교 (연, 월, 일만 확인)
+                  return postDate.year == _selectedDate!.year &&
+                      postDate.month == _selectedDate!.month &&
+                      postDate.day == _selectedDate!.day;
+                }).map((t) {
                   return _buildPostCard(
                     context: context,
                     t: t,
@@ -379,7 +367,6 @@ class _HomePageState extends State<HomePage> {
                     content: t.description,
                     imageUrl: t.imageUrl,
                     cardIndex: 0,
-                    hashtags: hashtags,
                   );
                 }).toList(),
               ),
