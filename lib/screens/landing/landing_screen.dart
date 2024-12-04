@@ -39,7 +39,10 @@ class LandingPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: whiteBackgroundColor,
+      // backgroundColor: whiteBackgroundColor,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.black!
+          : whiteBackgroundColor,
       body: Stack(
         children: [
           // Background Ellipse
@@ -52,7 +55,10 @@ class LandingPage extends StatelessWidget {
                 width: 662,
                 height: 750,
                 decoration: BoxDecoration(
-                  color: Color(0xFF363536),
+                  // color: Color(0xFF363536),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[800]!
+                      : Color(0xFF363536),
                   borderRadius: BorderRadius.all(
                     Radius.elliptical(662 / 2, 750 / 2),
                   ),
@@ -80,16 +86,22 @@ class LandingPage extends StatelessWidget {
               ],
             ),
           ),
-          const Center(
+          Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'TODAY,\nTOGETHER',
-                  style: TextStyle(fontSize: 48),
+                  style: TextStyle(
+                    fontSize: 48,
+                    // color: Colors.black,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[100]!
+                        : Colors.black,
+                  ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 400)
+                const SizedBox(height: 400)
               ],
             ),
           ),
