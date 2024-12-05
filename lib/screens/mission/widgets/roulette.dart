@@ -19,19 +19,19 @@ class _RoulettePageState extends State<RoulettePage> {
 
   // Define the options for the roulette
   final options = [
-    "포인트 1개",
-    "포인트 3개",
-    "티켓 1개",
-    "포인트 5개",
-    "포인트 10개",
-    "포인트 1개",
+    {"text": "100 포인트", "type": "point", "value": 100, "weight": 1},
+    {"text": "50 포인트", "type": "point", "value": 50, "weight": 2},
+    {"text": "티켓 2개", "type": "ticket", "value": 2, "weight": 1},
+    {"text": "200 포인트", "type": "point", "value": 200, "weight": 0.5},
+    {"text": "20 포인트", "type": "point", "value": 20, "weight": 3},
+    {"text": "250 포인트", "type": "point", "value": 250, "weight": 0.2},
   ];
 
   late final RouletteGroup group = RouletteGroup.uniform(
     options.length,
     colorBuilder: (index) =>
         index % 2 == 0 ? Colors.yellow[100]! : Colors.orange[100]!,
-    textBuilder: (index) => options[index],
+    textBuilder: (index) => options[index]["text"] as String,
     textStyleBuilder: (index) => const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.bold,
@@ -40,7 +40,8 @@ class _RoulettePageState extends State<RoulettePage> {
   );
 
   void _onResult(int selectedIndex) {
-    final selectedOption = options[selectedIndex];
+    final selectedOption = options[selectedIndex]["text"];
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('결과: $selectedOption')),
     );
@@ -49,15 +50,17 @@ class _RoulettePageState extends State<RoulettePage> {
   @override
   Widget build(BuildContext context) {
     UserProvider up = context.read();
-    TotoProvider tp = context.read();
-    int ticketCount = up.ue?.ticket ?? 0; // Reactive ticket count
-    int pointCount = up.ue?.point ?? 0; // Reactive point count
+    // int ticketCount = up.ue?.ticket ?? 0; // Reactive ticket count
+    // int pointCount = up.ue?.point ?? 0; // Reactive point count
     return Scaffold(
       appBar: AppBar(
         title: const Text('룰렛 돌리기'),
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -79,40 +82,46 @@ class _RoulettePageState extends State<RoulettePage> {
                   ),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12.0, vertical: 6.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.confirmation_number,
-                        size: 16,
-                        color: Colors.black,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "$ticketCount", // Reactive ticket count
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // Coin icon and count
-                      const Icon(
-                        Icons.stars, // Use coin-like icon
-                        size: 16,
-                        color: Colors.black,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "$pointCount", // Reactive point count
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  child: Consumer<UserProvider>(
+                    builder: (context, up, child) {
+                      final ticketCount = up.ue?.ticket ?? 0;
+                      final pointCount = up.ue?.point ?? 0;
+
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.confirmation_number,
+                            size: 16,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            "$ticketCount",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.stars,
+                            size: 16,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            "$pointCount",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -125,7 +134,15 @@ class _RoulettePageState extends State<RoulettePage> {
               // ROLL 버튼
               FilledButton(
                 onPressed: () async {
-                  final selectedIndex = _random.nextInt(options.length);
+                  if ((up.ue?.ticket ?? 0) <= 0) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('티켓이 없습니다!')),
+                    );
+                    return;
+                  }
+                  up.ue?.removeTicket(1);
+
+                  final selectedIndex = getWeightedRandomIndex(options);
                   final completed = await _controller.rollTo(
                     selectedIndex,
                     clockwise: _clockwise,
@@ -134,6 +151,15 @@ class _RoulettePageState extends State<RoulettePage> {
 
                   if (completed) {
                     _onResult(selectedIndex);
+
+                    final selectedOption = options[selectedIndex]["type"];
+                    final selectedValue =
+                        options[selectedIndex]["value"] as int;
+                    if (selectedOption == "point") {
+                      up.ue?.addPoint(selectedValue);
+                    } else if (selectedOption == "ticket") {
+                      up.ue?.addTicket(selectedValue);
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Animation cancelled')),
@@ -162,9 +188,6 @@ class _RoulettePageState extends State<RoulettePage> {
               ),
             ],
           ),
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
         ),
       ),
     );
@@ -212,4 +235,23 @@ class MyRoulette extends StatelessWidget {
       ],
     );
   }
+}
+
+int getWeightedRandomIndex(List<Map<String, dynamic>> options) {
+  final totalWeight = options.fold<double>(
+    0,
+    (sum, option) => sum + (option["weight"] as num).toDouble(),
+  );
+
+  final randomValue = Random().nextDouble() * totalWeight;
+
+  double cumulativeWeight = 0;
+  for (int i = 0; i < options.length; i++) {
+    cumulativeWeight += (options[i]["weight"] as num).toDouble();
+    if (randomValue <= cumulativeWeight) {
+      return i;
+    }
+  }
+
+  return options.length - 1; // Fallback in case of rounding issues
 }
