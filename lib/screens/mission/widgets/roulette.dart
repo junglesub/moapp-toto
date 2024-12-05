@@ -1,5 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/provider/toto_provider.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:roulette/roulette.dart';
 
 class RoulettePage extends StatefulWidget {
@@ -45,9 +48,13 @@ class _RoulettePageState extends State<RoulettePage> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.read();
+    TotoProvider tp = context.read();
+    int ticketCount = up.ue?.ticket ?? 0; // Reactive ticket count
+    int pointCount = up.ue?.point ?? 0; // Reactive point count
     return Scaffold(
       appBar: AppBar(
-        title: const Text('텍스트 룰렛'),
+        title: const Text('룰렛 돌리기'),
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
@@ -57,6 +64,58 @@ class _RoulettePageState extends State<RoulettePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color.fromRGBO(255, 143, 0, 1),
+                        Colors.yellow,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0, vertical: 6.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.confirmation_number,
+                        size: 16,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "$ticketCount", // Reactive ticket count
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Coin icon and count
+                      const Icon(
+                        Icons.stars, // Use coin-like icon
+                        size: 16,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "$pointCount", // Reactive point count
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               // 룰렛 위젯
               MyRoulette(
                 group: group,
