@@ -73,8 +73,36 @@ class _AddPageState extends State<AddPage> {
         currentToto = args?['toto'];
         textController =
             TextEditingController(text: currentToto?.description ?? "");
+
+        _initializeTaggedFriends();
       }
       _isStarted = true;
+    }
+  }
+
+  Future<void> _initializeTaggedFriends() async {
+    if (currentToto?.taggedFriends != null) {
+      selectedFriends = await Future.wait(
+        currentToto!.taggedFriends!.map((friendId) async {
+          if (friendId != null && friendId.isNotEmpty) {
+            DocumentSnapshot friendDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(friendId)
+                .get();
+            if (friendDoc.exists) {
+              return {
+                'uid': friendId,
+                'nickname': friendDoc['nickname'] ?? "",
+                'email': friendDoc['email'] ?? "",
+              };
+            }
+          }
+          return {
+            'nickname': friendId ?? "",
+          };
+        }),
+      );
+      setState(() {});
     }
   }
 
@@ -231,7 +259,7 @@ class _AddPageState extends State<AddPage> {
                       created: toto.created,
                       modified: toto.modified,
                       imageUrl: toto.imageUrl,
-                      location: selectedLocation,
+                      location: selectedLocation ?? toto.location,
                       emotion: selectedMood ?? toto.emotion,
                       taggedFriends: taggedFriendUids,
                     );
