@@ -391,7 +391,8 @@ class _AddPageState extends State<AddPage> {
                           ),
                         ),
                       ),
-                    if (selectedLocation != null)
+                    if (toto?.location?.placeName != null ||
+                        selectedLocation != null)
                       Flexible(
                         child: Container(
                           child: Chip(
@@ -406,7 +407,9 @@ class _AddPageState extends State<AddPage> {
                                 const SizedBox(width: 8),
                                 Flexible(
                                   child: Text(
-                                    selectedLocation?.placeName ?? "",
+                                    selectedLocation?.placeName ??
+                                        toto?.location?.placeName ??
+                                        "",
                                     style: const TextStyle(
                                       // color: Colors.black,
                                       fontWeight: FontWeight.bold,
