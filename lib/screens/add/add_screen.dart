@@ -263,21 +263,20 @@ class _AddPageState extends State<AddPage> {
                     final taggedFriendUids =
                         selectedFriends.map((friend) => friend['uid']).toList();
                     ToToEntity t = ToToEntity(
-                      id: toto.id,
-                      name: toto.name,
-                      description:
-                          isEditMode ? textController.text : toto.description,
-                      creator: toto.creator,
-                      liked: toto.liked,
-                      created: toto.created,
-                      modified: toto.modified,
-                      imageUrl: toto.imageUrl,
-                      location: selectedLocation ?? toto.location,
-                      emotion: selectedMood ?? toto.emotion,
-                      taggedFriends: taggedFriendUids,
-                      pointUsed:
-                            max(textController.text.length, toto.pointUsed)
-                    );
+                        id: toto.id,
+                        name: toto.name,
+                        description:
+                            isEditMode ? textController.text : toto.description,
+                        creator: toto.creator,
+                        liked: toto.liked,
+                        created: toto.created,
+                        modified: toto.modified,
+                        imageUrl: toto.imageUrl,
+                        location: selectedLocation ?? toto.location,
+                        emotion: selectedMood ?? toto.emotion,
+                        taggedFriends: taggedFriendUids,
+                        pointUsed:
+                            max(textController.text.length, toto.pointUsed));
                     await t.save();
                     if (context.mounted) {
                       Navigator.pushNamedAndRemoveUntil(
@@ -318,6 +317,28 @@ class _AddPageState extends State<AddPage> {
 
                           // 포인트 차감
                           up.ue?.removePoint(pointUsed);
+
+                          if ((_selectedImage == null) &&
+                              (textController.text.trim().isEmpty)) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('알림'),
+                                  content: const Text('이미지 또는 설명이 필요합니다.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('확인'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            return;
+                          }
 
                           // Save Logic
                           if (_selectedImage == null) {
