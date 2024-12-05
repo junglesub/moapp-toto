@@ -21,65 +21,68 @@ class ToToEntity {
   final String? aiReaction;
   List<String?>? taggedFriends; // 태그된 친구들 UID 리스트
 
+  final int pointUsed;
+
   String? get imageUrlLink => imageUrl;
 
-  ToToEntity({
-    this.id,
-    required this.name,
-    required this.description,
-    required this.creator,
-    required this.liked,
-    this.created,
-    this.modified,
-    this.imageUrl,
-    this.location,
-    this.emotion,
-    this.aiReaction,
-    this.taggedFriends,
-  });
+  ToToEntity(
+      {this.id,
+      required this.name,
+      required this.description,
+      required this.creator,
+      required this.liked,
+      this.created,
+      this.modified,
+      this.imageUrl,
+      this.location,
+      this.emotion,
+      this.aiReaction,
+      this.taggedFriends,
+      this.pointUsed = 0});
 
-  ToToEntity.withImageFile({
-    this.id,
-    this.emotion,
-    this.location,
-    this.aiReaction,
-    required this.name,
-    required this.description,
-    required this.creator,
-    required this.created,
-    required this.modified,
-    required this.liked,
-    required dynamic imageFile,
-    required this.taggedFriends,
-  }) : imageUrl = null {
+  ToToEntity.withImageFile(
+      {this.id,
+      this.emotion,
+      this.location,
+      this.aiReaction,
+      required this.name,
+      required this.description,
+      required this.creator,
+      required this.created,
+      required this.modified,
+      required this.liked,
+      required dynamic imageFile,
+      required this.taggedFriends,
+      this.pointUsed = 0})
+      : imageUrl = null {
     // _uploadImageAndSetUrl(imageFile);
   }
 
-  static Future<ToToEntity> createWithImageFile({
-    String? id,
-    MoodOption? emotion,
-    LocationResult? location,
-    List<String>? taggedFriends,
-    required String name,
-    required String description,
-    required String creator,
-    required Timestamp? created,
-    required Timestamp? modified,
-    required List<String> liked,
-    required dynamic imageFile,
-  }) async {
+  static Future<ToToEntity> createWithImageFile(
+      {String? id,
+      MoodOption? emotion,
+      LocationResult? location,
+      List<String>? taggedFriends,
+      required String name,
+      required String description,
+      required String creator,
+      required Timestamp? created,
+      required Timestamp? modified,
+      required List<String> liked,
+      required dynamic imageFile,
+      int pointUsed = 0}) async {
     final entity = ToToEntity(
-      id: id,
-      emotion: emotion,
-      location: location,
-      taggedFriends: taggedFriends,
-      name: name,
-      description: description,
-      creator: creator,
-      created: created,
-      modified: modified,
-      liked: liked,
-    );
+        id: id,
+        emotion: emotion,
+        location: location,
+        taggedFriends: taggedFriends,
+        name: name,
+        description: description,
+        creator: creator,
+        created: created,
+        modified: modified,
+        liked: liked,
+        pointUsed: pointUsed);
 
     await entity._uploadImageAndSetUrl(imageFile);
     return entity;
@@ -130,7 +133,8 @@ class ToToEntity {
         emotion = null,
         location = null,
         taggedFriends = [],
-        aiReaction = null;
+        aiReaction = null,
+        pointUsed = 0;
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {
@@ -145,6 +149,7 @@ class ToToEntity {
           : null,
       "location_name": location?.placeName,
       "emotion": emotion?.name,
+      "pointUsed": pointUsed,
       'taggedFriends': taggedFriends ?? [], // 기본값 빈 리스트
       // 'created': created,
       // 'modified': modified,
@@ -181,6 +186,7 @@ class ToToEntity {
               coordinates: LatLng(gp.latitude, gp.longitude))
           : null,
       liked: data['liked'] != null ? List<String>.from(data['liked']) : [],
+      pointUsed: data['pointUsed'] ?? 0,
     );
   }
 

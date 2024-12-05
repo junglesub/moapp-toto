@@ -207,43 +207,65 @@ class _MissionPageState extends State<MissionPage> {
                           ),
                         );
                       },
-                      child: MouseRegion(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            // Lottie 애니메이션
-                            Container(
-                              height: 150,
-                              child: Lottie.asset(
-                                'assets/animations/spinningWheel.json',
-                                fit: BoxFit.fitWidth,
-                                repeat: true,
-                                animate: !_isHovered, // Hover 시 애니메이션 멈춤
-                              ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0), // 양쪽 패딩으로 너비 줄이기
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color.fromRGBO(255, 143, 0, 1),
+                                Colors.yellow,
+                              ],
                             ),
-                            // 텍스트 오버레이
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 6.0,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.withOpacity(0.75),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Text(
-                                "룰렛 돌리러가기",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                            borderRadius: BorderRadius.circular(14), // 테두리 둥글게
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              // Lottie 애니메이션
+                              Container(
+                                height: 200,
+                                child: Lottie.asset(
+                                  'assets/animations/spinningWheel.json',
+                                  fit: BoxFit.fitWidth,
+                                  repeat: true,
+                                  animate: !_isHovered, // Hover 시 애니메이션 멈춤
                                 ),
                               ),
-                            ),
-                          ],
+                              // 텍스트 오버레이
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 6.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.amber, // 테두리 색상
+                                    width: 2, // 테두리 두께
+                                  ),
+                                  color: Colors.white
+                                      .withOpacity(0.75), // 흰색 투명 배경
+                                  borderRadius:
+                                      BorderRadius.circular(8), // 컨테이너 모서리 둥글게
+                                ),
+                                child: const Text(
+                                  "룰렛 돌리러가기",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 20),
                     // 두 번째 섹션: 티켓 받기
                     const Padding(
