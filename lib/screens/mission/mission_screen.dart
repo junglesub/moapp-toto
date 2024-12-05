@@ -1,5 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:confetti/confetti.dart';
+import 'package:lottie/lottie.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/mission/widgets/roulette.dart';
@@ -19,7 +20,7 @@ class MissionPage extends StatefulWidget {
 class _MissionPageState extends State<MissionPage> {
   int _currentIndex = 1;
   late ConfettiController _confettiController;
-
+  bool _isHovered = false; // 마우스 hover 상태를 추적
   @override
   void initState() {
     super.initState();
@@ -196,8 +197,7 @@ class _MissionPageState extends State<MissionPage> {
               Expanded(
                 child: ListView(
                   children: [
-                    // 첫 번째 섹션: 룰렛 돌리기
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         // 룰렛 페이지로 이동
                         Navigator.push(
@@ -207,45 +207,65 @@ class _MissionPageState extends State<MissionPage> {
                           ),
                         );
                       },
-                      child: Card(
-                        child: Stack(
-                          alignment: Alignment.center, // 텍스트를 정중앙에 배치
-                          children: [
-                            // GIF 이미지
-                            Container(
-                              height: 150,
-                              alignment: Alignment.center,
-                              child: Image.asset(
-                                'images/spinwheel.gif', // assets 폴더 내 GIF 경로
-                                fit: BoxFit.fitWidth, // 이미지를 공간에 맞게 채움
-                              ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0), // 양쪽 패딩으로 너비 줄이기
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color.fromRGBO(255, 143, 0, 1),
+                                Colors.yellow,
+                              ],
                             ),
-                            // 텍스트 오버레이
-                            Container(
-                              color: Colors.amber
-                                  .withOpacity(0.25), // 배경색을 25% 투명도로 설정
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "룰렛 돌리러가기",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                            borderRadius: BorderRadius.circular(14), // 테두리 둥글게
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              // Lottie 애니메이션
+                              Container(
+                                height: 200,
+                                child: Lottie.asset(
+                                  'assets/animations/spinningWheel.json',
+                                  fit: BoxFit.fitWidth,
+                                  repeat: true,
+                                  animate: !_isHovered, // Hover 시 애니메이션 멈춤
                                 ),
                               ),
-                            ),
-                          ],
+                              // 텍스트 오버레이
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 6.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.amber, // 테두리 색상
+                                    width: 2, // 테두리 두께
+                                  ),
+                                  color: Colors.white
+                                      .withOpacity(0.75), // 흰색 투명 배경
+                                  borderRadius:
+                                      BorderRadius.circular(8), // 컨테이너 모서리 둥글게
+                                ),
+                                child: const Text(
+                                  "룰렛 돌리러가기",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
 
-                    // const Padding(
-                    //   padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    //   child: Text(
-                    //     "남은 티켓: 3장",
-                    //     style: TextStyle(fontSize: 16),
-                    //   ),
-                    // ),
                     const SizedBox(height: 20),
                     // 두 번째 섹션: 티켓 받기
                     const Padding(
