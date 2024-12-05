@@ -154,39 +154,41 @@ class _AddPageState extends State<AddPage> {
                     key: const ValueKey(2),
                     text: "투투 수정하러가기",
                     onPressed: () async {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              "투투 수정",
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
-                            ),
-                            content: Text('투투를 수정하시겠습니까?\n티켓 포인트 ***p가 소모됩니다.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('취소',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 133, 133, 133))),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.popAndPushNamed(context, "/add",
-                                      arguments: {"toto": todayToto});
-                                },
-                                child: Text("수정",
-                                    style: TextStyle(color: Colors.blue)),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      Navigator.popAndPushNamed(context, "/add",
+                          arguments: {"toto": todayToto});
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (BuildContext context) {
+                      //     return AlertDialog(
+                      //       title: Text(
+                      //         "투투 수정",
+                      //         style: const TextStyle(
+                      //             fontSize: 20, fontWeight: FontWeight.w500),
+                      //       ),
+                      //       content: Text('투투를 수정하시겠습니까?\n티켓 포인트 ***p가 소모됩니다.'),
+                      //       actions: [
+                      //         TextButton(
+                      //           onPressed: () {
+                      //             Navigator.pop(context);
+                      //           },
+                      //           child: const Text('취소',
+                      //               style: TextStyle(
+                      //                   color: Color.fromARGB(
+                      //                       255, 133, 133, 133))),
+                      //         ),
+                      //         TextButton(
+                      //           onPressed: () {
+                      //             Navigator.pop(context);
+                      //             Navigator.popAndPushNamed(context, "/add",
+                      //                 arguments: {"toto": todayToto});
+                      //           },
+                      //           child: Text("수정",
+                      //               style: TextStyle(color: Colors.blue)),
+                      //         ),
+                      //       ],
+                      //     );
+                      //   },
+                      // );
                     },
                   ),
                   SizedBox(height: 16),
