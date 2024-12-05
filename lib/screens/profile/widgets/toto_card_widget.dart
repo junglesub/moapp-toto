@@ -217,6 +217,7 @@ class _ToToCardState extends State<ToToCard> {
                 onTap: () {
                   Navigator.pop(context);
                   // _showConfirmationDialog('edit');
+                  _performEditAction();
                 },
               ),
               ListTile(
