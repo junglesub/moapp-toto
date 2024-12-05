@@ -59,11 +59,13 @@ dependencies:
   floating_draggable_widget: ^2.3.0
   adaptive_theme: ^3.6.0
   youtube_player_flutter: ^9.1.1
+  youtube_player_iframe: ^3.0.0
   badges: ^3.1.2
   dice_bear: ^0.1.5
   flutter_svg: ^1.1.6
   flutter_tags: ^1.0.0-nullsafety.1
   confetti: ^0.8.0
+  lottie: ^2.3.2
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +89,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/animations/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
