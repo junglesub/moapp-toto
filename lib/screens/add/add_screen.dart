@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -181,39 +182,41 @@ class _AddPageState extends State<AddPage> {
                     key: const ValueKey(2),
                     text: "투투 수정하러가기",
                     onPressed: () async {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              "투투 수정",
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
-                            ),
-                            content: Text('투투를 수정하시겠습니까?\n티켓 포인트 ***p가 소모됩니다.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('취소',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 133, 133, 133))),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.popAndPushNamed(context, "/add",
-                                      arguments: {"toto": todayToto});
-                                },
-                                child: Text("수정",
-                                    style: TextStyle(color: Colors.blue)),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      Navigator.popAndPushNamed(context, "/add",
+                          arguments: {"toto": todayToto});
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (BuildContext context) {
+                      //     return AlertDialog(
+                      //       title: Text(
+                      //         "투투 수정",
+                      //         style: const TextStyle(
+                      //             fontSize: 20, fontWeight: FontWeight.w500),
+                      //       ),
+                      //       content: Text('투투를 수정하시겠습니까?\n티켓 포인트 ***p가 소모됩니다.'),
+                      //       actions: [
+                      //         TextButton(
+                      //           onPressed: () {
+                      //             Navigator.pop(context);
+                      //           },
+                      //           child: const Text('취소',
+                      //               style: TextStyle(
+                      //                   color: Color.fromARGB(
+                      //                       255, 133, 133, 133))),
+                      //         ),
+                      //         TextButton(
+                      //           onPressed: () {
+                      //             Navigator.pop(context);
+                      //             Navigator.popAndPushNamed(context, "/add",
+                      //                 arguments: {"toto": todayToto});
+                      //           },
+                      //           child: Text("수정",
+                      //               style: TextStyle(color: Colors.blue)),
+                      //         ),
+                      //       ],
+                      //     );
+                      //   },
+                      // );
                     },
                   ),
                   SizedBox(height: 16),
@@ -247,6 +250,16 @@ class _AddPageState extends State<AddPage> {
                       print("Save ToTo is null. Something wrong!");
                       return;
                     }
+
+                    // Calculate New Point used
+                    if (isEditMode) {
+                      final pointNeeded = textController.text.length;
+                      final pointNeedToTakeAway =
+                          max(pointNeeded - toto.pointUsed, 0);
+                      print("Need $pointNeedToTakeAway more points");
+                      up.ue?.removePoint(pointNeedToTakeAway);
+                    }
+
                     final taggedFriendUids =
                         selectedFriends.map((friend) => friend['uid']).toList();
                     ToToEntity t = ToToEntity(
@@ -262,6 +275,8 @@ class _AddPageState extends State<AddPage> {
                       location: selectedLocation ?? toto.location,
                       emotion: selectedMood ?? toto.emotion,
                       taggedFriends: taggedFriendUids,
+                      pointUsed:
+                            max(textController.text.length, toto.pointUsed)
                     );
                     await t.save();
                     if (context.mounted) {
@@ -279,7 +294,7 @@ class _AddPageState extends State<AddPage> {
             duration: const Duration(milliseconds: 1000),
             child: isAnalysisPage
                 ? _buildAnalysisPage(context)
-                : _buildWritingPage(),
+                : _buildWritingPage(context),
           ),
           Positioned(
             bottom: 40,
@@ -292,11 +307,19 @@ class _AddPageState extends State<AddPage> {
                     ? null
                     : CustomAnimatedButton(
                         key: const ValueKey(2),
-                        text: "투두 등록하기",
+                        text: "투투 등록하기",
                         onPressed: () async {
                           ToToEntity? newT;
                           ToToEntity toto = ToToEntity.empty(
                               creator: up.currentUser?.uid ?? "");
+
+                          // Point used
+                          final pointUsed = textController.text.length;
+
+                          // 포인트 차감
+                          up.ue?.removePoint(pointUsed);
+
+                          // Save Logic
                           if (_selectedImage == null) {
                             newT = ToToEntity(
                                 // id: product.id,
@@ -306,7 +329,8 @@ class _AddPageState extends State<AddPage> {
                                 created: toto.created,
                                 modified: toto.modified,
                                 imageUrl: toto.imageUrl,
-                                liked: toto.liked);
+                                liked: toto.liked,
+                                pointUsed: pointUsed);
                             await newT.save();
                           } else {
                             newT = await ToToEntity.createWithImageFile(
@@ -317,8 +341,11 @@ class _AddPageState extends State<AddPage> {
                                 created: toto.created,
                                 modified: toto.modified,
                                 imageFile: _selectedImage!,
-                                liked: toto.liked);
+                                liked: toto.liked,
+                                pointUsed: pointUsed);
                           }
+
+                          // 페이지 state 변경
                           setState(() {
                             isAnalysisPage = true;
                             currentToto = newT;
@@ -334,7 +361,8 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  Widget _buildWritingPage() {
+  Widget _buildWritingPage(BuildContext context) {
+    UserProvider up = context.watch();
     return Padding(
       key: const ValueKey(1),
       padding: const EdgeInsets.only(top: 50),
@@ -348,6 +376,7 @@ class _AddPageState extends State<AddPage> {
                 CustomTextFormField(
                   hintText: "오늘은 어떤 날인가요?",
                   controller: textController,
+                  maxLength: up.ue?.point ?? 0,
                   maxLines: 4,
                 ),
               ],
@@ -360,6 +389,8 @@ class _AddPageState extends State<AddPage> {
 
   Widget _buildAnalysisPage(BuildContext context) {
     TotoProvider tp = context.watch<TotoProvider>();
+    UserProvider up = context.watch();
+
     ToToEntity? toto = tp.findId(currentToto?.id ?? "unknown ID");
     return Padding(
       key: const ValueKey(2),
@@ -566,6 +597,7 @@ class _AddPageState extends State<AddPage> {
                         hintText: "오늘은 어떤 날인가요?",
                         controller: textController,
                         maxLines: 4,
+                        maxLength: (toto?.pointUsed ?? 0) + (up.ue?.point ?? 0),
                       ),
                     ],
                   ),
