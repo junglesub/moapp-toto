@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -219,22 +220,33 @@ class _AddPageState extends State<AddPage> {
                       print("Save ToTo is null. Something wrong!");
                       return;
                     }
+
+                    // Calculate New Point used
+                    if (isEditMode) {
+                      final pointNeeded = textController.text.length;
+                      final pointNeedToTakeAway =
+                          max(pointNeeded - toto.pointUsed, 0);
+                      print("Need $pointNeedToTakeAway more points");
+                      up.ue?.removePoint(pointNeedToTakeAway);
+                    }
+
                     final taggedFriendUids =
                         selectedFriends.map((friend) => friend['uid']).toList();
                     ToToEntity t = ToToEntity(
-                      id: toto.id,
-                      name: toto.name,
-                      description:
-                          isEditMode ? textController.text : toto.description,
-                      creator: toto.creator,
-                      liked: toto.liked,
-                      created: toto.created,
-                      modified: toto.modified,
-                      imageUrl: toto.imageUrl,
-                      location: selectedLocation,
-                      emotion: selectedMood ?? toto.emotion,
-                      taggedFriends: taggedFriendUids,
-                    );
+                        id: toto.id,
+                        name: toto.name,
+                        description:
+                            isEditMode ? textController.text : toto.description,
+                        creator: toto.creator,
+                        liked: toto.liked,
+                        created: toto.created,
+                        modified: toto.modified,
+                        imageUrl: toto.imageUrl,
+                        location: selectedLocation,
+                        emotion: selectedMood ?? toto.emotion,
+                        taggedFriends: taggedFriendUids,
+                        pointUsed:
+                            max(textController.text.length, toto.pointUsed));
                     await t.save();
                     if (context.mounted) {
                       Navigator.pushNamedAndRemoveUntil(
@@ -346,6 +358,8 @@ class _AddPageState extends State<AddPage> {
 
   Widget _buildAnalysisPage(BuildContext context) {
     TotoProvider tp = context.watch<TotoProvider>();
+    UserProvider up = context.watch();
+
     ToToEntity? toto = tp.findId(currentToto?.id ?? "unknown ID");
     return Padding(
       key: const ValueKey(2),
@@ -549,6 +563,7 @@ class _AddPageState extends State<AddPage> {
                         hintText: "오늘은 어떤 날인가요?",
                         controller: textController,
                         maxLines: 4,
+                        maxLength: (toto?.pointUsed ?? 0) + (up.ue?.point ?? 0),
                       ),
                     ],
                   ),
