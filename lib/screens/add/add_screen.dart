@@ -251,7 +251,7 @@ class _AddPageState extends State<AddPage> {
             duration: const Duration(milliseconds: 1000),
             child: isAnalysisPage
                 ? _buildAnalysisPage(context)
-                : _buildWritingPage(),
+                : _buildWritingPage(context),
           ),
           Positioned(
             bottom: 40,
@@ -264,11 +264,19 @@ class _AddPageState extends State<AddPage> {
                     ? null
                     : CustomAnimatedButton(
                         key: const ValueKey(2),
-                        text: "투두 등록하기",
+                        text: "투투 등록하기",
                         onPressed: () async {
                           ToToEntity? newT;
                           ToToEntity toto = ToToEntity.empty(
                               creator: up.currentUser?.uid ?? "");
+
+                          // Point used
+                          final pointUsed = textController.text.length;
+
+                          // 포인트 차감
+                          up.ue?.removePoint(pointUsed);
+
+                          // Save Logic
                           if (_selectedImage == null) {
                             newT = ToToEntity(
                                 // id: product.id,
@@ -278,7 +286,8 @@ class _AddPageState extends State<AddPage> {
                                 created: toto.created,
                                 modified: toto.modified,
                                 imageUrl: toto.imageUrl,
-                                liked: toto.liked);
+                                liked: toto.liked,
+                                pointUsed: pointUsed);
                             await newT.save();
                           } else {
                             newT = await ToToEntity.createWithImageFile(
@@ -289,8 +298,11 @@ class _AddPageState extends State<AddPage> {
                                 created: toto.created,
                                 modified: toto.modified,
                                 imageFile: _selectedImage!,
-                                liked: toto.liked);
+                                liked: toto.liked,
+                                pointUsed: pointUsed);
                           }
+
+                          // 페이지 state 변경
                           setState(() {
                             isAnalysisPage = true;
                             currentToto = newT;
@@ -306,7 +318,8 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  Widget _buildWritingPage() {
+  Widget _buildWritingPage(BuildContext context) {
+    UserProvider up = context.watch();
     return Padding(
       key: const ValueKey(1),
       padding: const EdgeInsets.only(top: 50),
@@ -320,6 +333,7 @@ class _AddPageState extends State<AddPage> {
                 CustomTextFormField(
                   hintText: "오늘은 어떤 날인가요?",
                   controller: textController,
+                  maxLength: up.ue?.point ?? 0,
                   maxLines: 4,
                 ),
               ],
