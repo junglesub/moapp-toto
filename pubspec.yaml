@@ -66,6 +66,7 @@ dependencies:
   flutter_tags: ^1.0.0-nullsafety.1
   confetti: ^0.8.0
   lottie: ^2.3.2
+  rive: ^0.13.20
 
 dev_dependencies:
   flutter_test:
