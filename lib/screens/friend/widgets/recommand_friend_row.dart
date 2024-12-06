@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:moapp_toto/models/notification_entity.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
@@ -30,6 +31,14 @@ class _RecommandFriendRowState extends State<RecommandFriendRow> {
                 return GestureDetector(
                   onTap: () {
                     up.ue?.addFollowing(friend.uid);
+                    NotificationEntity(
+                            id: null,
+                            code: "addFriend",
+                            from: up.ue,
+                            to: friend,
+                            title: "새로운 팔로워가 있습니다.",
+                            message: "${up.ue?.nickname}님이 당신을 팔로우 합니다.")
+                        .save();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content:
