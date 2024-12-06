@@ -27,7 +27,7 @@ class _NotificationPageState extends State<NotificationPage> {
       body: np.n.isEmpty
           ? const Center(
               child: Text(
-                '알림이 없습니다.',
+                '알림이 없습니다',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             )
