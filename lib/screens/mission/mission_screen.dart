@@ -62,7 +62,8 @@ class _MissionPageState extends State<MissionPage> {
     },
     {
       "text": "랜덤 게임하고 티켓받기",
-      "onPressed": (BuildContext context) {
+      "onPressed":
+          (BuildContext context, ConfettiController? confettiController) {
         Navigator.pushNamed(context, '/game'); // 게임 페이지로 이동
       },
     },
@@ -72,7 +73,8 @@ class _MissionPageState extends State<MissionPage> {
     // },
     {
       "text": "광고 보고 티켓 받기",
-      "onPressed": (BuildContext context) {
+      "onPressed":
+          (BuildContext context, ConfettiController? confettiController) {
         Navigator.pushNamed(context, '/reward'); // 게임 페이지로 이동
       },
     },
