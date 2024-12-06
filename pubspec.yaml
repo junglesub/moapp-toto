@@ -67,6 +67,7 @@ dependencies:
   rive: ^0.13.20
   webview_flutter: ^4.8.0
   share_plus: ^10.1.2
+  firebase_messaging: ^15.1.6
 
 dev_dependencies:
   flutter_test:

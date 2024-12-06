@@ -83,6 +83,15 @@
       }
     </script>
 
+    <script>
+      // For web notification
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        });
+      }
+    </script>
+
     <script src="flutter_bootstrap.js" async></script>
   </body>
 </html>

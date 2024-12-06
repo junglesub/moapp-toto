@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:moapp_toto/firebase_options.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/firebase_notification_provider.dart';
 import 'package:moapp_toto/provider/notification_provider.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
@@ -45,6 +47,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TotoProvider()),
         ChangeNotifierProvider(create: (context) => AllUsersProvider()),
         ChangeNotifierProvider(create: (context) => NotificationProvider()),
+        ChangeNotifierProvider(
+            create: (context) => FirebaseNotificationProvider()),
         ChangeNotifierProvider(
           create: (context) =>
               UserProvider(context.read<NotificationProvider>()),
