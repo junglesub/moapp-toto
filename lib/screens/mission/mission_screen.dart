@@ -9,6 +9,7 @@ import 'package:moapp_toto/screens/add/widgets/animated_btn_widget.dart';
 import 'package:moapp_toto/utils/date_format.dart';
 import 'package:moapp_toto/widgets/botttom_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MissionPage extends StatefulWidget {
   const MissionPage({Key? key}) : super(key: key);
@@ -78,7 +79,30 @@ class _MissionPageState extends State<MissionPage> {
         Navigator.pushNamed(context, '/reward'); // 게임 페이지로 이동
       },
     },
-    {"text": "친구 공유하고 티켓받기", "onPressed": () => print("친구 공유 클릭됨")},
+    {
+      "text": "친구 공유하고 티켓받기",
+      "onPressed":
+          (BuildContext context, ConfettiController? confettiController) {
+        (() async {
+          final result = await Share.share(
+              '일상 기록 서비스에 초대합니다!\nhttps://junglesub.github.io/moapp_toto');
+
+          debugPrint("Share Done - ${result.status.toString()}");
+
+          if (result.status == ShareResultStatus.success ||
+              result.status == ShareResultStatus.unavailable) {
+            debugPrint("Share Success");
+            if (context.mounted) {
+              UserProvider up = Provider.of(context, listen: false);
+              up.ue?.addTicket(1);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('초대해주셔서 감사합니다. 티켓 1개 추가!')),
+              );
+            }
+          }
+        })();
+      }
+    },
   ];
 
   Widget _buildAccumulativeDiary(BuildContext context) {
