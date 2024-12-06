@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:moapp_toto/main.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/notification_provider.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,9 @@ class UserProvider with ChangeNotifier {
   UserEntry? ue;
   StreamSubscription<DocumentSnapshot>? _ueSub;
 
-  UserProvider() {
+  final NotificationProvider _notificationProvider;
+
+  UserProvider(this._notificationProvider) {
     print("UserProvider()");
     init();
   }
@@ -28,6 +31,11 @@ class UserProvider with ChangeNotifier {
       currentUser = user;
 
       if (user != null) {
+        // Update notification DEST
+        _notificationProvider.refresh(user.uid);
+
+        // Do REST
+
         final userDocRef =
             FirebaseFirestore.instance.collection('users').doc(user.uid);
 
@@ -67,6 +75,7 @@ class UserProvider with ChangeNotifier {
         // user is null. Cancel subscription? 유저 관련된 subsciption 만
         navigatorKey.currentState?.pushNamedAndRemoveUntil(
             "/landing", (Route<dynamic> route) => false);
+        _notificationProvider.unsub();
         _ueSub?.cancel();
       }
     });

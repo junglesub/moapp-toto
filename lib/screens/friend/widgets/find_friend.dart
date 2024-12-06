@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/models/notification_entity.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
@@ -76,6 +77,14 @@ class FindFriend extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         up.ue?.addFollowing(person.uid);
+                        NotificationEntity(
+                                id: null,
+                                code: "addFriend",
+                                from: up.ue,
+                                to: person,
+                                title: "새로운 팔로워가 있습니다.",
+                                message: "${up.ue?.nickname}님이 당신을 팔로우 합니다.")
+                            .save();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content: Text(

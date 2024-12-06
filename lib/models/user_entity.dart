@@ -215,4 +215,17 @@ extension UserEntryExtensions on UserEntry {
       throw e;
     }
   }
+
+  static Future<UserEntry?> getUserById(String id) async {
+    try {
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(id).get();
+      if (doc.exists) {
+        return UserEntry.fromDocumentSnapshot(doc);
+      }
+    } catch (e) {
+      print('Error retrieving user: $e');
+    }
+    return null;
+  }
 }
