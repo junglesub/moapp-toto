@@ -58,8 +58,6 @@ dependencies:
   flame: ^1.22.0
   floating_draggable_widget: ^2.3.0
   adaptive_theme: ^3.6.0
-  youtube_player_flutter: ^9.1.1
-  youtube_player_iframe: ^3.0.0
   badges: ^3.1.2
   dice_bear: ^0.1.5
   flutter_svg: ^1.1.6
@@ -67,6 +65,8 @@ dependencies:
   confetti: ^0.8.0
   lottie: ^2.3.2
   rive: ^0.13.20
+  webview_flutter: ^4.8.0
+  share_plus: ^10.1.2
 
 dev_dependencies:
   flutter_test:

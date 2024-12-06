@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
+import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/mission_game/widgets/brick_breaker.dart';
+import 'package:provider/provider.dart';
 
 // class GamePage extends StatelessWidget {
 //   const GamePage({Key? key}) : super(key: key);
@@ -61,19 +63,33 @@ class GamePage extends StatelessWidget {
   }
 
   Widget _buildGameOverOverlay(BuildContext context, BrickBreaker game) {
+    UserProvider up = context.watch();
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Game Over!",
+          Text(
+            "Game Over!\n${game.score.value} 글자 획득!",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
+          SizedBox(height: 8),
           ElevatedButton(
             onPressed: () {
+              up.ue?.addPoint(game.score.value);
+              print("${game.score.value} 적립");
               game.startGame();
             },
-            child: const Text("Retry"),
+            child: const Text("리워드 받고 재도전"),
+          ),
+          SizedBox(height: 4),
+          ElevatedButton(
+            onPressed: () {
+              up.ue?.addPoint(game.score.value);
+              print("${game.score.value} 적립");
+              Navigator.pop(context);
+            },
+            child: const Text("리워드 받고 끝내기"),
           ),
         ],
       ),
@@ -81,19 +97,24 @@ class GamePage extends StatelessWidget {
   }
 
   Widget _buildWonOverlay(BuildContext context, BrickBreaker game) {
+    UserProvider up = context.watch();
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "이겼습니다!",
+          Text(
+            "이겼습니다!\n${game.score.value} 글자 획득!\n보너스 티켓 1장 획득",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           ElevatedButton(
             onPressed: () {
-// 티켓 수령하고 미션페이지로 이동...
+              print("${game.score.value} 적립 + 티켓");
+              up.ue?.addPoint(game.score.value);
+              up.ue?.addTicket(1);
+              Navigator.pop(context);
             },
-            child: const Text("티켓 1개 받기"),
+            child: const Text("리워드 받기"),
           ),
         ],
       ),

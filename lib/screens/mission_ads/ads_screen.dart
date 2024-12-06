@@ -2,7 +2,11 @@
  */
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'dart:html' as html;
+import 'dart:ui' as ui;
+
+import 'package:moapp_toto/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class RewardAdPage extends StatefulWidget {
   @override
@@ -10,7 +14,6 @@ class RewardAdPage extends StatefulWidget {
 }
 
 class _RewardAdPageState extends State<RewardAdPage> {
-  late YoutubePlayerController _controller;
   int countdown = 15;
   bool rewardAvailable = false;
   Timer? timer;
@@ -18,37 +21,30 @@ class _RewardAdPageState extends State<RewardAdPage> {
   @override
   void initState() {
     super.initState();
-
-    // 유튜브 컨트롤러 초기화
-    _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(
-          'https://www.youtube.com/watch?v=xpXz107p8Gw')!,
-      flags: const YoutubePlayerFlags(
-        autoPlay: true, //
-        mute: false,
-      ),
-    );
+    startCountdown();
 
     // 영상이 시작될 때 카운트다운 시작
-    _controller.addListener(() {
-      if (_controller.value.isPlaying && countdown > 0) {
-        // 영상이 시작되면 카운트다운 시작
-        if (timer == null || !timer!.isActive) {
-          startCountdown();
-        }
-      }
-    });
+    // _controller.addListener(() {
+    //   if (_controller.value.isPlaying && countdown > 0) {
+    //     // 영상이 시작되면 카운트다운 시작
+    //     if (timer == null || !timer!.isActive) {
+    //       startCountdown();
+    //     }
+    //   }
+    // });
   }
 
   @override
   void dispose() {
     timer?.cancel();
-    _controller.dispose();
+    // _controller.dispose();
     super.dispose();
   }
 
   void startCountdown() {
+    debugPrint("startCountdown()");
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      debugPrint("Timer $countdown");
       if (countdown > 1) {
         setState(() {
           countdown--;
@@ -64,6 +60,7 @@ class _RewardAdPageState extends State<RewardAdPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider up = context.watch();
     return Scaffold(
       appBar: AppBar(
         title: const Text('광고 보기'),
@@ -71,9 +68,26 @@ class _RewardAdPageState extends State<RewardAdPage> {
       body: Stack(
         children: [
           // 유튜브 플레이어
-          YoutubePlayer(
-            controller: _controller,
-            showVideoProgressIndicator: true,
+          Column(
+            children: [
+              PlayerWidget(),
+              // 보상 버튼
+              if (rewardAvailable)
+                Positioned(
+                  bottom: 16,
+                  right: 16,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      up.ue?.addTicket(1);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("티켓을 받았습니다!")),
+                      );
+                      Navigator.pop(context); // 페이지 닫기
+                    },
+                    child: const Text("티켓 받기"),
+                  ),
+                ),
+            ],
           ),
 
           Positioned(
@@ -91,23 +105,32 @@ class _RewardAdPageState extends State<RewardAdPage> {
               ),
             ),
           ),
-
-          // 보상 버튼
-          if (rewardAvailable)
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("티켓을 받았습니다!")),
-                  );
-                  Navigator.pop(context); // 페이지 닫기
-                },
-                child: const Text("티켓 받기"),
-              ),
-            ),
         ],
+      ),
+    );
+  }
+}
+
+class PlayerWidget extends StatelessWidget {
+  const PlayerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Registering the view factory
+    ui.platformViewRegistry.registerViewFactory(
+      'youtube-player',
+      (int id) => html.IFrameElement()
+        ..width = '100%'
+        ..height = '100%'
+        ..src = 'https://www.youtube.com/embed/xpXz107p8Gw?autoplay=1'
+        ..allow = 'autoplay'
+        ..style.border = 'none',
+    );
+
+    return SizedBox(
+      height: 500,
+      child: HtmlElementView(
+        viewType: 'youtube-player',
       ),
     );
   }
