@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:moapp_toto/models/notification_entity.dart';
 import 'package:moapp_toto/models/toto_entity.dart';
+import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/location_select_screen.dart';
@@ -278,6 +280,19 @@ class _AddPageState extends State<AddPage> {
                         pointUsed:
                             max(textController.text.length, toto.pointUsed));
                     await t.save();
+
+                    // Send notification
+                    taggedFriendUids.forEach((id) {
+                      if (id == null) return;
+                      NotificationEntity(
+                              id: null,
+                              code: "taggedPost",
+                              from: up.ue,
+                              to: UserEntry(uid: id, gender: null),
+                              title: "게시물에 태깅되었습니다.",
+                              message: "${up.ue?.nickname}님이 당신을 게시물에 태깅했습니다.")
+                          .save();
+                    });
                     if (context.mounted) {
                       Navigator.pushNamedAndRemoveUntil(
                           context, "/", (Route<dynamic> route) => false);
