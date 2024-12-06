@@ -15,7 +15,6 @@ class RewardAdPage extends StatefulWidget {
 
 class _RewardAdPageState extends State<RewardAdPage> {
   int countdown = 15;
-  bool rewardAvailable = false;
   Timer? timer;
 
   @override
@@ -45,14 +44,11 @@ class _RewardAdPageState extends State<RewardAdPage> {
     debugPrint("startCountdown()");
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       debugPrint("Timer $countdown");
-      if (countdown > 1) {
+      if (countdown >= 1) {
         setState(() {
           countdown--;
         });
       } else {
-        setState(() {
-          rewardAvailable = true;
-        });
         timer.cancel();
       }
     });
@@ -72,7 +68,7 @@ class _RewardAdPageState extends State<RewardAdPage> {
             children: [
               PlayerWidget(),
               // 보상 버튼
-              if (rewardAvailable)
+              if (countdown == 0)
                 Positioned(
                   bottom: 16,
                   right: 16,
@@ -100,7 +96,7 @@ class _RewardAdPageState extends State<RewardAdPage> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                rewardAvailable ? "보상이 지급되었습니다!" : "남은 시간: $countdown초",
+                countdown == 0 ? "보상이 지급되었습니다!" : "남은 시간: $countdown초",
                 style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
