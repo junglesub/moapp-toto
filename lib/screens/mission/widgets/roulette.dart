@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:moapp_toto/constants.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +31,7 @@ class _RoulettePageState extends State<RoulettePage> {
 
   late final RouletteGroup group = RouletteGroup.uniform(
     options.length,
-    colorBuilder: (index) =>
-        index % 2 == 0 ? Colors.yellow[100]! : Colors.orange[100]!,
+    colorBuilder: (index) => index % 2 == 0 ? Colors.red! : Colors.orange!,
     textBuilder: (index) => options[index]["text"] as String,
     textStyleBuilder: (index) => const TextStyle(
       fontSize: 14,
@@ -60,7 +60,9 @@ class _RoulettePageState extends State<RoulettePage> {
       body: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.black!
+              : whiteBackgroundColor,
         ),
         child: Center(
           child: Column(
@@ -134,42 +136,65 @@ class _RoulettePageState extends State<RoulettePage> {
               ),
               const SizedBox(height: 40),
               // ROLL 버튼
-              FilledButton(
-                onPressed: () async {
-                  if ((up.ue?.ticket ?? 0) <= 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('티켓이 없습니다!')),
-                    );
-                    return;
-                  }
-                  up.ue?.removeTicket(1);
+              Align(
+                alignment: Alignment.center, // 버튼을 가운데 정렬
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 150, // 버튼의 최대 너비 설정 (텍스트 길이에 따라 조정)
+                  ),
+                  child: FilledButton(
+                    onPressed: () async {
+                      if ((up.ue?.ticket ?? 0) <= 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('티켓이 없습니다!')),
+                        );
+                        return;
+                      }
+                      up.ue?.removeTicket(1);
 
-                  final selectedIndex = getWeightedRandomIndex(options);
-                  final completed = await _controller.rollTo(
-                    selectedIndex,
-                    clockwise: _clockwise,
-                    offset: _random.nextDouble(),
-                  );
+                      final selectedIndex = getWeightedRandomIndex(options);
+                      final completed = await _controller.rollTo(
+                        selectedIndex,
+                        clockwise: _clockwise,
+                        offset: _random.nextDouble(),
+                      );
 
-                  if (completed) {
-                    _onResult(selectedIndex);
+                      if (completed) {
+                        _onResult(selectedIndex);
 
-                    final selectedOption = options[selectedIndex]["type"];
-                    final selectedValue =
-                        options[selectedIndex]["value"] as int;
-                    if (selectedOption == "point") {
-                      up.ue?.addPoint(selectedValue);
-                    } else if (selectedOption == "ticket") {
-                      up.ue?.addTicket(selectedValue);
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Animation cancelled')),
-                    );
-                  }
-                },
-                child: const Text('룰렛 돌리기'),
+                        final selectedOption = options[selectedIndex]["type"];
+                        final selectedValue =
+                            options[selectedIndex]["value"] as int;
+                        if (selectedOption == "point") {
+                          up.ue?.addPoint(selectedValue);
+                        } else if (selectedOption == "ticket") {
+                          up.ue?.addTicket(selectedValue);
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Animation cancelled')),
+                        );
+                      }
+                    },
+                    style: ButtonStyle(
+                      padding: WidgetStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      ),
+                      backgroundColor:
+                          WidgetStateProperty.all<Color>(Colors.amber),
+                    ),
+                    child: Text(
+                      '룰렛 돌리기',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
               ),
+
               // 방향 토글
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
