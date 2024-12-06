@@ -4,6 +4,7 @@ import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:roulette/roulette.dart';
+import 'arrow.dart';
 
 class RoulettePage extends StatefulWidget {
   const RoulettePage({Key? key}) : super(key: key);
@@ -126,6 +127,7 @@ class _RoulettePageState extends State<RoulettePage> {
                 ),
               ),
               // 룰렛 위젯
+              const SizedBox(height: 4),
               MyRoulette(
                 group: group,
                 controller: _controller,
@@ -232,6 +234,7 @@ class MyRoulette extends StatelessWidget {
             ),
           ),
         ),
+        const Arrow(),
       ],
     );
   }
