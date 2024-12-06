@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:moapp_toto/firebase_options.dart';
 import 'package:moapp_toto/provider/all_users_provider.dart';
+import 'package:moapp_toto/provider/notification_provider.dart';
 import 'package:moapp_toto/provider/toto_provider.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/add/add_screen.dart';
@@ -43,8 +44,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => TotoProvider()),
         ChangeNotifierProvider(create: (context) => AllUsersProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationProvider()),
         ChangeNotifierProvider(
-          create: (context) => UserProvider(),
+          create: (context) =>
+              UserProvider(context.read<NotificationProvider>()),
           lazy: false,
         ),
       ],
