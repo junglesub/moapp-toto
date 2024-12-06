@@ -32,6 +32,7 @@ class _MissionPageState extends State<MissionPage> {
   // 각 미션 버튼, onPressed 정의
   final List<Map<String, dynamic>> _buttonData = [
     {
+      "icon": Icons.check_circle,
       "text": "출석체크 하고 티켓 받기",
       "onPressed":
           (BuildContext context, ConfettiController? confettiController) {
@@ -62,7 +63,8 @@ class _MissionPageState extends State<MissionPage> {
       }
     },
     {
-      "text": "랜덤 게임하고 티켓받기",
+      "icon": Icons.sports_esports,
+      "text": "게임하고 티켓받기",
       "onPressed":
           (BuildContext context, ConfettiController? confettiController) {
         Navigator.pushNamed(context, '/game'); // 게임 페이지로 이동
@@ -73,6 +75,7 @@ class _MissionPageState extends State<MissionPage> {
     //   "onPressed": () => print("장소 인증 클릭됨")
     // },
     {
+      "icon": Icons.play_circle,
       "text": "광고 보고 티켓 받기",
       "onPressed":
           (BuildContext context, ConfettiController? confettiController) {
@@ -80,6 +83,7 @@ class _MissionPageState extends State<MissionPage> {
       },
     },
     {
+      "icon": Icons.share,
       "text": "친구 공유하고 티켓받기",
       "onPressed":
           (BuildContext context, ConfettiController? confettiController) {
@@ -309,12 +313,15 @@ class _MissionPageState extends State<MissionPage> {
                           ..._buttonData.map((button) => Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0, vertical: 8.0),
-                                child: ElevatedButton(
-                                  onPressed: () => button["onPressed"](
-                                      context, _confettiController), // 컨텍스트 전달
-                                  child: Text(button["text"]),
-                                  // text: button["text"],
-                                  // onPressed: button["onPressed"],
+                                child: SizedBox(
+                                  width: 250,
+                                  height: 45,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () => button["onPressed"](
+                                        context, _confettiController),
+                                    icon: Icon(button["icon"]),
+                                    label: Text(button["text"]),
+                                  ),
                                 ),
                               )),
                         ],
