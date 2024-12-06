@@ -404,7 +404,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color: Colors.grey[200],
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey[800]!
+                                          : Colors.grey[200],
                                     ),
                                     child: const Center(
                                         child: Text(
@@ -433,7 +436,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                          color: Colors.grey[200],
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.grey[800]!
+                                              : Colors.grey[200],
                                         ),
                                         child: const Center(
                                             child: Text(

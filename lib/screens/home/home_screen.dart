@@ -398,42 +398,99 @@ class _HomePageState extends State<HomePage> {
               color: Theme.of(context).dividerColor,
             ),
             _buildSelectedDateFilter(), // 선택된 날짜 필터 표시
-            Expanded(
-              child: ListView(
-                children: tp.t.where((toto) {
-                  // 자기가 팔로우중 사람 아니면 무조건 숨기기
-                  if (toto.creator != up.currentUser?.uid &&
-                      !(up.ue?.following.contains(toto.creator) ?? false)) {
-                    return false;
-                  }
-                  // 날짜 확인
-                  if (_selectedDate == null) return true;
-                  DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
-                    (toto.created as Timestamp).millisecondsSinceEpoch,
-                  );
+            // Expanded(
+            //   child: ListView(
+            //     children: tp.t.where((toto) {
+            //       // 자기가 팔로우중 사람 아니면 무조건 숨기기
+            //       if (toto.creator != up.currentUser?.uid &&
+            //           !(up.ue?.following.contains(toto.creator) ?? false)) {
+            //         return false;
+            //       }
+            //       // 날짜 확인
+            //       if (_selectedDate == null) return true;
+            //       DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
+            //         (toto.created as Timestamp).millisecondsSinceEpoch,
+            //       );
 
-                  // 선택된 날짜와 게시물 날짜 비교 (연, 월, 일만 확인)
-                  return postDate.year == _selectedDate!.year &&
-                      postDate.month == _selectedDate!.month &&
-                      postDate.day == _selectedDate!.day;
-                }).map((t) {
-                  return _buildPostCard(
-                    context: context,
-                    t: t,
-                    authorName: aup.au
-                            .firstWhere((user) => user?.uid == t.creator)
-                            ?.nickname ??
-                        t.creator,
-                    userImagePath: aup.au
-                        .firstWhere((user) => user?.uid == t.creator)
-                        ?.profileImageUrl,
-                    date: convertTimestampToKoreanDate(t.created) ?? "",
-                    content: t.description,
-                    imageUrl: t.imageUrl,
-                    cardIndex: 0,
-                  );
-                }).toList(),
-              ),
+            //       // 선택된 날짜와 게시물 날짜 비교 (연, 월, 일만 확인)
+            //       return postDate.year == _selectedDate!.year &&
+            //           postDate.month == _selectedDate!.month &&
+            //           postDate.day == _selectedDate!.day;
+            //     }).map((t) {
+            //       return _buildPostCard(
+            //         context: context,
+            //         t: t,
+            //         authorName: aup.au
+            //                 .firstWhere((user) => user?.uid == t.creator)
+            //                 ?.nickname ??
+            //             t.creator,
+            //         userImagePath: aup.au
+            //             .firstWhere((user) => user?.uid == t.creator)
+            //             ?.profileImageUrl,
+            //         date: convertTimestampToKoreanDate(t.created) ?? "",
+            //         content: t.description,
+            //         imageUrl: t.imageUrl,
+            //         cardIndex: 0,
+            //       );
+            //     }).toList(),
+            //   ),
+            // ),
+            Expanded(
+              child: tp.t.where((toto) {
+                // 자기가 팔로우중 사람 아니면 무조건 숨기기
+                if (toto.creator != up.currentUser?.uid &&
+                    !(up.ue?.following.contains(toto.creator) ?? false)) {
+                  return false;
+                }
+                // 날짜 확인
+                if (_selectedDate == null) return true;
+                DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
+                  (toto.created as Timestamp).millisecondsSinceEpoch,
+                );
+
+                // 선택된 날짜와 게시물 날짜 비교 (연, 월, 일만 확인)
+                return postDate.year == _selectedDate!.year &&
+                    postDate.month == _selectedDate!.month &&
+                    postDate.day == _selectedDate!.day;
+              }).isEmpty
+                  ? const Center(
+                      child: Text('해당 날짜에 작성된 투투가 없습니다'),
+                    )
+                  : ListView(
+                      children: tp.t.where((toto) {
+                        // 자기가 팔로우중 사람 아니면 무조건 숨기기
+                        if (toto.creator != up.currentUser?.uid &&
+                            !(up.ue?.following.contains(toto.creator) ??
+                                false)) {
+                          return false;
+                        }
+                        // 날짜 확인
+                        if (_selectedDate == null) return true;
+                        DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
+                          (toto.created as Timestamp).millisecondsSinceEpoch,
+                        );
+
+                        return postDate.year == _selectedDate!.year &&
+                            postDate.month == _selectedDate!.month &&
+                            postDate.day == _selectedDate!.day;
+                      }).map((t) {
+                        return _buildPostCard(
+                          context: context,
+                          t: t,
+                          authorName: aup.au
+                                  .firstWhere((user) => user?.uid == t.creator)
+                                  ?.nickname ??
+                              t.creator,
+                          userImagePath: aup.au
+                              .firstWhere((user) => user?.uid == t.creator)
+                              ?.profileImageUrl,
+                          date: convertTimestampToKoreanDate(t.created) ?? "",
+                          content: t.description,
+                          imageUrl: t.imageUrl,
+                          cardIndex: 0,
+                        );
+                      }).toList(),
+                    ),
             ),
           ],
         ),
