@@ -363,7 +363,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           !_taggedPosts && !_likedPosts
                               ? '내가 작성한 투투'
                               : "필터링한 투투",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Row(
@@ -388,39 +388,138 @@ class _ProfilePageState extends State<ProfilePage> {
                 ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  children: tp.t
-                      .where((item) => !_taggedPosts && !_likedPosts
-                          ? (item != null &&
-                              item.creator == up.currentUser?.uid)
-                          : (item != null &&
-                              (!_taggedPosts ||
-                                  (item.taggedFriends
-                                          ?.contains(up.currentUser?.uid) ??
-                                      false)) &&
-                              (!_likedPosts ||
-                                  (up.ue?.likedToto.contains(item.id) ??
-                                      false))))
-                      .cast<ToToEntity>()
-                      .map((item) => ToToCard(
-                            key: ValueKey(item.id),
-                            t: item,
-                            userName: aup.au
-                                    .firstWhere(
-                                        (user) => user?.uid == item.creator)
-                                    ?.nickname ??
-                                item.creator,
-                            userImagePath: aup.au
-                                    .firstWhere(
-                                        (user) => user?.uid == item.creator)
-                                    ?.profileImageUrl ??
-                                'assets/images/default_profile.jpg',
-                            postDate:
-                                convertTimestampToKoreanDate(item.created) ??
-                                    "",
-                            postContent: item.description,
-                            postImagePath: item.imageUrl,
-                          ))
-                      .toList(),
+                  children: [
+                    tp.t.isEmpty
+                        ? const Center(child: Text(''))
+                        : !_taggedPosts &&
+                                !_likedPosts &&
+                                tp.t
+                                    .where((item) =>
+                                        item != null &&
+                                        item.creator == up.currentUser?.uid)
+                                    .isEmpty
+                            ? Center(
+                                child: Container(
+                                    height: 60,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.grey[200],
+                                    ),
+                                    child: const Center(
+                                        child: Text(
+                                      '작성된 투투가 없습니다',
+                                      style: TextStyle(fontSize: 16),
+                                    ))))
+                            : tp.t
+                                    .where((item) => !_taggedPosts &&
+                                            !_likedPosts
+                                        ? (item != null &&
+                                            item.creator == up.currentUser?.uid)
+                                        : (item != null &&
+                                            (!_taggedPosts ||
+                                                (item.taggedFriends?.contains(
+                                                        up.currentUser?.uid) ??
+                                                    false)) &&
+                                            (!_likedPosts ||
+                                                (up.ue?.likedToto
+                                                        .contains(item.id) ??
+                                                    false))))
+                                    .isEmpty
+                                ? Center(
+                                    child: Container(
+                                        height: 60,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: Colors.grey[200],
+                                        ),
+                                        child: const Center(
+                                            child: Text(
+                                          '필터링된 투투가 없습니다',
+                                          style: TextStyle(fontSize: 16),
+                                        ))))
+                                : ListView(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    children: tp.t
+                                        .where((item) => !_taggedPosts &&
+                                                !_likedPosts
+                                            ? (item != null &&
+                                                item.creator ==
+                                                    up.currentUser?.uid)
+                                            : (item != null &&
+                                                (!_taggedPosts ||
+                                                    (item.taggedFriends
+                                                            ?.contains(up
+                                                                .currentUser
+                                                                ?.uid) ??
+                                                        false)) &&
+                                                (!_likedPosts ||
+                                                    (up.ue?.likedToto.contains(
+                                                            item.id) ??
+                                                        false))))
+                                        .cast<ToToEntity>()
+                                        .map((item) => ToToCard(
+                                              key: ValueKey(item.id),
+                                              t: item,
+                                              userName: aup.au
+                                                      .firstWhere((user) =>
+                                                          user?.uid ==
+                                                          item.creator)
+                                                      ?.nickname ??
+                                                  item.creator,
+                                              userImagePath: aup.au
+                                                      .firstWhere((user) =>
+                                                          user?.uid ==
+                                                          item.creator)
+                                                      ?.profileImageUrl ??
+                                                  'assets/images/default_profile.jpg',
+                                              postDate:
+                                                  convertTimestampToKoreanDate(
+                                                          item.created) ??
+                                                      "",
+                                              postContent: item.description,
+                                              postImagePath: item.imageUrl,
+                                            ))
+                                        .toList(),
+                                  ),
+                  ],
+                  //   children: tp.t
+                  //       .where((item) => !_taggedPosts && !_likedPosts
+                  //           ? (item != null &&
+                  //               item.creator == up.currentUser?.uid)
+                  //           : (item != null &&
+                  //               (!_taggedPosts ||
+                  //                   (item.taggedFriends
+                  //                           ?.contains(up.currentUser?.uid) ??
+                  //                       false)) &&
+                  //               (!_likedPosts ||
+                  //                   (up.ue?.likedToto.contains(item.id) ??
+                  //                       false))))
+                  //       .cast<ToToEntity>()
+                  //       .map((item) => ToToCard(
+                  //             key: ValueKey(item.id),
+                  //             t: item,
+                  //             userName: aup.au
+                  //                     .firstWhere(
+                  //                         (user) => user?.uid == item.creator)
+                  //                     ?.nickname ??
+                  //                 item.creator,
+                  //             userImagePath: aup.au
+                  //                     .firstWhere(
+                  //                         (user) => user?.uid == item.creator)
+                  //                     ?.profileImageUrl ??
+                  //                 'assets/images/default_profile.jpg',
+                  //             postDate:
+                  //                 convertTimestampToKoreanDate(item.created) ??
+                  //                     "",
+                  //             postContent: item.description,
+                  //             postImagePath: item.imageUrl,
+                  //           ))
+                  //       .toList(),
                 ),
               ],
             ),
