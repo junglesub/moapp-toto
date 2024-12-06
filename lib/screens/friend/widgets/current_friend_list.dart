@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:moapp_toto/models/notification_entity.dart';
 import 'package:moapp_toto/models/user_entity.dart';
 import 'package:moapp_toto/provider/user_provider.dart';
 import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
@@ -35,8 +36,16 @@ class CurrentFriendList extends StatelessWidget {
                     onPressed: (context) {
                       // Handle message action
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Messaging $friend')),
+                        SnackBar(content: Text('${friend.nickname}님을 찔렀습니다.')),
                       );
+                      NotificationEntity(
+                              id: null,
+                              code: "poke",
+                              from: up.ue,
+                              to: friend,
+                              title: "찌르기 알림",
+                              message: "${up.ue?.nickname}님이 당신을 찔렀습니다")
+                          .save();
                     },
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,

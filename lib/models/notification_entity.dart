@@ -4,7 +4,7 @@ import 'package:moapp_toto/models/user_entity.dart';
 class NotificationEntity {
   String? id;
   final UserEntry? from, to;
-  final String? code, message, totoId;
+  final String? code, title, message, totoId;
   final Timestamp? created;
   final Timestamp? modified;
 
@@ -13,6 +13,7 @@ class NotificationEntity {
     this.from,
     this.to,
     this.code,
+    this.title,
     this.message,
     this.totoId,
     this.created,
@@ -24,6 +25,7 @@ class NotificationEntity {
       "from": from?.uid,
       "to": to?.uid,
       "code": code,
+      "title": title,
       "message": message,
     };
 
@@ -55,6 +57,7 @@ class NotificationEntity {
       from: from,
       to: to,
       code: data['code'],
+      title: data['title'],
       message: data['message'],
       totoId: data['totoId'],
       created: data['created'],
@@ -83,5 +86,12 @@ class NotificationEntity {
       }
       return id!;
     }
+  }
+
+  Future delete() async {
+    await FirebaseFirestore.instance
+        .collection('notification')
+        .doc(id)
+        .delete();
   }
 }

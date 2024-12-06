@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:moapp_toto/provider/notification_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
-  final int notificationCount;
+  // final int notificationCount;
 
   const CustomBottomNavigationBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
-    this.notificationCount = 0,
+    // this.notificationCount = 0,
   });
 
   @override
   Widget build(BuildContext context) {
+    NotificationProvider np = context.watch();
     return BottomNavigationBar(
       backgroundColor:
           Theme.of(context).bottomNavigationBarTheme.backgroundColor,
@@ -59,8 +62,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: badges.Badge(
+            showBadge: np.n.isNotEmpty,
             badgeContent: Text(
-              notificationCount > 0 ? '$notificationCount' : '',
+              np.n.isNotEmpty ? '${np.n.length}' : '',
               style: const TextStyle(color: Colors.white, fontSize: 10),
             ),
             badgeStyle: const badges.BadgeStyle(

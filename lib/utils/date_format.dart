@@ -25,6 +25,30 @@ String? convertTimestampToKoreanDateTime(Timestamp? timestamp) {
       "$period ${adjustedHour.toString()}시 ${minute.toString().padLeft(2, '0')}분";
 }
 
+String? getRelativeTime(Timestamp? timestamp) {
+  if (timestamp == null) return null;
+
+  final now = DateTime.now();
+  final time = timestamp.toDate();
+  final difference = now.difference(time);
+
+  if (difference.inMinutes < 1) {
+    return '방금 전';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes}분 전';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours}시간 전';
+  } else if (difference.inDays < 7) {
+    return '${difference.inDays}일 전';
+  } else if (difference.inDays < 30) {
+    return '${(difference.inDays / 7).floor()}주 전';
+  } else if (difference.inDays < 365) {
+    return '${(difference.inDays / 30).floor()}개월 전';
+  } else {
+    return '${(difference.inDays / 365).floor()}년 전';
+  }
+}
+
 bool isToday(DateTime? date) {
   if (date == null) return false;
   final now = DateTime.now();
