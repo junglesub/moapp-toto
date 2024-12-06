@@ -313,6 +313,69 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildSelectedDateFilter() {
+    if (_selectedDate == null) {
+      return const SizedBox.shrink(); // 선택된 날짜가 없으면 아무것도 표시하지 않음
+    }
+
+    return Align(
+      alignment: Alignment.topRight,
+      // 추가된 부분
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.yellow,
+              Color.fromRGBO(255, 143, 0, 1),
+            ],
+          ),
+          // color: Colors.amber,
+          borderRadius: BorderRadius.circular(20),
+          // border: Border.all(
+          //   width: 2,
+          //   color: Colors.black,
+          // ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _selectedDate = null; // 선택된 날짜 초기화
+                });
+              },
+              child: const Icon(
+                Icons.cancel,
+                size: 20,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(
+              Icons.search,
+              size: 20,
+              color: Colors.black,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     TotoProvider tp = context.watch();
@@ -334,6 +397,7 @@ class _HomePageState extends State<HomePage> {
               // color: Color.fromARGB(255, 245, 245, 245),
               color: Theme.of(context).dividerColor,
             ),
+            _buildSelectedDateFilter(), // 선택된 날짜 필터 표시
             Expanded(
               child: ListView(
                 children: tp.t.where((toto) {
