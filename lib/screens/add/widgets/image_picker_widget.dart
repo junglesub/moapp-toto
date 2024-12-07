@@ -22,14 +22,14 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     if (pickedFile != null) {
       if (kIsWeb) {
-        // Web: Use bytes directly
+        // Web
         final bytes = await pickedFile.readAsBytes();
         widget.parentPickImage(bytes); // Pass bytes to the parent
         setState(() {
           _imageBytes = bytes;
         });
       } else {
-        // Non-Web: Use File
+        // No-Web
         widget.parentPickImage(File(pickedFile.path));
         final bytes = await pickedFile.readAsBytes();
         setState(() {

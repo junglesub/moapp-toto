@@ -7,7 +7,7 @@ import 'package:moapp_toto/screens/friend/widgets/find_friend.dart';
 import 'package:provider/provider.dart';
 
 class RecommandFriendRow extends StatefulWidget {
-  final List<UserEntry?> friends; // Friends list as a parameter
+  final List<UserEntry?> friends;
   const RecommandFriendRow({Key? key, required this.friends}) : super(key: key);
 
   @override
@@ -15,7 +15,7 @@ class RecommandFriendRow extends StatefulWidget {
 }
 
 class _RecommandFriendRowState extends State<RecommandFriendRow> {
-  int _current = 0; // Current index for the indicator
+  int _current = 0;
   final CarouselSliderController _controller = CarouselSliderController();
 
   @override
@@ -51,7 +51,7 @@ class _RecommandFriendRowState extends State<RecommandFriendRow> {
                     ),
                     child: SizedBox(
                       width: double.infinity,
-                      height: 200, // Adjust height as needed
+                      height: 200,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -68,10 +68,10 @@ class _RecommandFriendRowState extends State<RecommandFriendRow> {
           }).toList(),
           carouselController: _controller,
           options: CarouselOptions(
-            height: 200.0, // Adjust height as needed
+            height: 200.0,
             enableInfiniteScroll: false,
             enlargeCenterPage: false,
-            viewportFraction: 0.4, // Show multiple items
+            viewportFraction: 0.4,
             onPageChanged: (index, reason) {
               setState(() {
                 _current = index;

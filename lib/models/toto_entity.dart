@@ -96,14 +96,14 @@ class ToToEntity {
       final ref = FirebaseStorage.instance.ref().child('toto/$id');
 
       if (kIsWeb) {
-        // Web-specific: Ensure `imageFile` is `Uint8List`
+        // Web
         if (imageFile is Uint8List) {
           await ref.putData(imageFile);
         } else {
           throw 'Invalid file format for web. Expected Uint8List.';
         }
       } else {
-        // Non-web: Use File
+        // Not web
         if (imageFile is File) {
           await ref.putFile(imageFile);
         } else {

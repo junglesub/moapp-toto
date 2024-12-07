@@ -21,7 +21,7 @@ class MissionPage extends StatefulWidget {
 class _MissionPageState extends State<MissionPage> {
   int _currentIndex = 1;
   late ConfettiController _confettiController;
-  bool _isHovered = false; // 마우스 hover 상태를 추적
+  bool _isHovered = false;
   @override
   void initState() {
     super.initState();
@@ -29,7 +29,6 @@ class _MissionPageState extends State<MissionPage> {
         ConfettiController(duration: const Duration(seconds: 2));
   }
 
-  // 각 미션 버튼, onPressed 정의
   final List<Map<String, dynamic>> _buttonData = [
     {
       "icon": Icons.check_circle,
@@ -57,7 +56,7 @@ class _MissionPageState extends State<MissionPage> {
             ),
           );
 
-          // Trigger confetti
+          // confetti
           confettiController?.play();
         }
       }
@@ -112,8 +111,8 @@ class _MissionPageState extends State<MissionPage> {
   Widget _buildAccumulativeDiary(BuildContext context) {
     return Consumer2<UserProvider, TotoProvider>(
       builder: (context, up, tp, child) {
-        int ticketCount = up.ue?.ticket ?? 0; // Reactive ticket count
-        int pointCount = up.ue?.point ?? 0; // Reactive point count
+        int ticketCount = up.ue?.ticket ?? 0;
+        int pointCount = up.ue?.point ?? 0;
         int diaryCount = tp.findByCreator(up.currentUser?.uid).length;
 
         return Container(
@@ -121,7 +120,6 @@ class _MissionPageState extends State<MissionPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Left: Accumulative diary text
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -142,7 +140,6 @@ class _MissionPageState extends State<MissionPage> {
               ),
               Row(
                 children: [
-                  // Ticket and Point box
                   Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
@@ -166,7 +163,7 @@ class _MissionPageState extends State<MissionPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          "$ticketCount", // Reactive ticket count
+                          "$ticketCount",
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.black,
@@ -174,15 +171,14 @@ class _MissionPageState extends State<MissionPage> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        // Coin icon and count
                         const Icon(
-                          Icons.stars, // Use coin-like icon
+                          Icons.stars,
                           size: 16,
                           color: Colors.black,
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          "$pointCount", // Reactive point count
+                          "$pointCount",
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.black,
@@ -193,7 +189,6 @@ class _MissionPageState extends State<MissionPage> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Calendar icon
                 ],
               ),
             ],
@@ -238,8 +233,7 @@ class _MissionPageState extends State<MissionPage> {
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0), // 양쪽 패딩으로 너비 줄이기
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Container(
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
@@ -334,20 +328,14 @@ class _MissionPageState extends State<MissionPage> {
           ),
           Positioned.fill(
             child: Align(
-              alignment: Alignment.topCenter, // Adjust as needed
+              alignment: Alignment.topCenter,
               child: ConfettiWidget(
                 confettiController: _confettiController,
-                blastDirectionality:
-                    BlastDirectionality.explosive, // Random directions
+                blastDirectionality: BlastDirectionality.explosive,
                 shouldLoop: false,
                 emissionFrequency: 0.05,
                 numberOfParticles: 20,
-                colors: [
-                  Colors.blue,
-                  Colors.pink,
-                  Colors.orange,
-                  Colors.green
-                ], // Customize colors
+                colors: [Colors.blue, Colors.pink, Colors.orange, Colors.green],
               ),
             ),
           ),

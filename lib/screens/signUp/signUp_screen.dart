@@ -101,13 +101,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 final svgUrl = avatar.svgUri.toString();
 
-                // Print all text field values
                 print("Email: ${emailController.text}");
                 print("Nickname: ${nicknameController.text}");
                 print("Gender: ${genderController.text}");
                 print("Age: ${ageController.text}");
                 print("Terms Accepted: $isTermsAccepted");
-                print("SVG URL: $svgUrl"); // Debugging
+                print("SVG URL: $svgUrl");
 
                 UserEntry ue = UserEntry(
                   uid: up.currentUser?.uid ?? "error",
@@ -123,7 +122,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     .doc(up.currentUser?.uid);
                 await userDocRef.set(ue.toMap());
 
-                // Simulate a delay and navigate
                 await Future.delayed(const Duration(milliseconds: 500));
                 Navigator.pushNamedAndRemoveUntil(
                   context,

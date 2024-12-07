@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// A reusable custom full-width button widget
 class CustomFullWidthButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;

@@ -21,8 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  // final List<bool> _isFavorited = [false, false, false]; // 각 카드의 하트 상태 저장 (임시)
-  DateTime? _selectedDate; // 날짜 필터링용
+  DateTime? _selectedDate;
   @override
   void initState() {
     super.initState();
@@ -47,15 +46,14 @@ class _HomePageState extends State<HomePage> {
     UserProvider up = context.read();
     TotoProvider tp = context.read();
 
-    int ticketCount = up.ue?.ticket ?? 0; //파이어베이스랑 티켓정보 연결
-    int pointCount = up.ue?.point ?? 0; //
+    int ticketCount = up.ue?.ticket ?? 0;
+    int pointCount = up.ue?.point ?? 0;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Left: Accumulative diary text
           Container(
             decoration: BoxDecoration(
               border: Border.all(
@@ -76,7 +74,6 @@ class _HomePageState extends State<HomePage> {
           ),
           Row(
             children: [
-              // Ticket and Point box
               Container(
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
@@ -100,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "$ticketCount", // <<< 나중에 티켓 숫자 집어넣기>>>
+                      "$ticketCount",
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -108,15 +105,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    // Coin icon and count
                     const Icon(
-                      Icons.stars, // Use coin-like icon
+                      Icons.stars,
                       size: 16,
                       color: Colors.black,
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "$pointCount", // Point count
+                      "$pointCount",
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -127,7 +123,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(width: 8),
-              // Calendar icon
               IconButton(
                 icon: const Icon(Icons.calendar_today),
                 onPressed: () => _selectDate(context),
@@ -240,7 +235,6 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   const Spacer(),
-                  // 하트 아이콘 수정 부분
                   IconButton(
                     icon: Icon(
                       isLiked ? Icons.favorite : Icons.favorite_border,
@@ -315,7 +309,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildSelectedDateFilter() {
     if (_selectedDate == null) {
-      return const SizedBox.shrink(); // 선택된 날짜가 없으면 아무것도 표시하지 않음
+      return const SizedBox.shrink();
     }
 
     return Align(
@@ -346,7 +340,7 @@ class _HomePageState extends State<HomePage> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _selectedDate = null; // 선택된 날짜 초기화
+                  _selectedDate = null;
                 });
               },
               child: const Icon(
@@ -397,7 +391,7 @@ class _HomePageState extends State<HomePage> {
               // color: Color.fromARGB(255, 245, 245, 245),
               color: Theme.of(context).dividerColor,
             ),
-            _buildSelectedDateFilter(), // 선택된 날짜 필터 표시
+            _buildSelectedDateFilter(),
             // Expanded(
             //   child: ListView(
             //     children: tp.t.where((toto) {

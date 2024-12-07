@@ -33,7 +33,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             LatLng(locationData.latitude!, locationData.longitude!);
       });
 
-      // Only attempt to move the camera after the map controller is initialized
       if (_mapController != null) {
         _mapController!.animateCamera(
           CameraUpdate.newLatLngZoom(_currentLocation!, 16),
@@ -55,7 +54,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
   void _moveToCurrentLocation() async {
     await _fetchCurrentLocation();
     if (_currentLocation != null && _mapController != null) {
-      // Only animate the camera if the map controller is available
       _mapController!.animateCamera(
         CameraUpdate.newLatLngZoom(_currentLocation!, 16),
       );
@@ -75,7 +73,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     }
   }
 
-  // Modified function to search places
   Future<void> _searchPlaces(String query) async {
     if (query.isNotEmpty) {
       js.context.callMethod('getAutocompletePredictions', [
@@ -98,7 +95,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     }
   }
 
-  // Modified function to select location from prediction
   Future<void> _selectLocationFromPrediction(String placeId) async {
     js.context.callMethod('getPlaceDetails', [
       placeId,
@@ -106,7 +102,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
         if (place != null && place['geometry'] != null) {
           final location = place['geometry']['location'];
 
-          // Ensure that lat and lng are accessed as numeric values
           final double lat = (location['lat'] is js.JsFunction)
               ? (location['lat'] as js.JsFunction).apply([]) as double
               : (location['lat'] as num).toDouble();
@@ -121,12 +116,11 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             _selectedLocation = newLocation;
             _currentLocation = newLocation;
 
-            _selectedPlaceName = place['name']; // Store place name
-            _predictions = []; // Clear predictions
+            _selectedPlaceName = place['name'];
+            _predictions = [];
           });
 
           // if (_mapController != null) {
-          //   // Only animate the camera after the map is fully initialized
           //   _mapController!.animateCamera(
           //     CameraUpdate.newLatLngZoom(newLocation, 16),
           //   );
@@ -136,15 +130,13 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     ]);
   }
 
-  // Function to clear the search input and predictions
   void _clearSearch() {
     _searchController.clear();
     setState(() {
-      _predictions = []; // Clear predictions
+      _predictions = [];
     });
   }
 
-  // Save the selected location and return the place name and coordinates
   void _saveLocation() async {
     if (_selectedLocation == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -154,7 +146,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     }
 
     if (_selectedPlaceName == null || _selectedPlaceName!.isEmpty) {
-      // Show a dialog to ask for the place name
       final TextEditingController placeNameController = TextEditingController();
       _selectedPlaceName = await showDialog<String>(
         context: context,
@@ -170,7 +161,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close without saving
+                  Navigator.of(context).pop();
                 },
                 child: const Text('취소'),
               ),
@@ -190,13 +181,11 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       final result = LocationResult(
           coordinates: _selectedLocation!, placeName: _selectedPlaceName!);
 
-      // Show the result in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Saved location: ${result.placeName}')),
       );
 
-      Navigator.pop(
-          context, result); // Return the result (place name and coordinates)
+      Navigator.pop(context, result);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Place name is required')),

@@ -468,8 +468,7 @@ class _AddPageState extends State<AddPage> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                     ),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Handle text overflow
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 SizedBox(
@@ -512,8 +511,7 @@ class _AddPageState extends State<AddPage> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                     ),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Handle text overflow
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 SizedBox(

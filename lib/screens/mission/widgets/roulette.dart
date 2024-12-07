@@ -51,8 +51,6 @@ class _RoulettePageState extends State<RoulettePage> {
   @override
   Widget build(BuildContext context) {
     UserProvider up = context.read();
-    // int ticketCount = up.ue?.ticket ?? 0; // Reactive ticket count
-    // int pointCount = up.ue?.point ?? 0; // Reactive point count
     return Scaffold(
       appBar: AppBar(
         title: const Text('룰렛 돌리기'),
@@ -281,5 +279,5 @@ int getWeightedRandomIndex(List<Map<String, dynamic>> options) {
     }
   }
 
-  return options.length - 1; // Fallback in case of rounding issues
+  return options.length - 1;
 }

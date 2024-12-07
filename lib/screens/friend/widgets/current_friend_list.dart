@@ -34,7 +34,6 @@ class CurrentFriendList extends StatelessWidget {
                 children: [
                   SlidableAction(
                     onPressed: (context) {
-                      // Handle message action
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('${friend.nickname}님을 찔렀습니다.')),
                       );
@@ -54,7 +53,6 @@ class CurrentFriendList extends StatelessWidget {
                   ),
                   SlidableAction(
                     onPressed: (context) {
-                      // Handle unfriend action
                       up.ue?.removeFollowing(friend.uid);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -80,7 +78,6 @@ class CurrentFriendList extends StatelessWidget {
                 title: Text(friend.nickname ?? ""),
                 subtitle: Text(friend.email ?? ""),
                 onTap: () {
-                  // Navigate to friend's profile or perform another action
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Viewing $friend\'s profile')),
                   );

@@ -21,17 +21,14 @@ class _TagFriendsPageState extends State<TagFriendsPage> {
     _loadFriends();
   }
 
-  // 현재 로그인한 사용자의 following 배열에서 친구 UID를 가져오고, 친구 정보를 로드
   Future<void> _loadFriends() async {
     try {
-      // 현재 로그인한 사용자의 데이터 가져오기
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .get();
       List<dynamic> following = userDoc['following'] ?? [];
 
-      // 친구 UID에 해당하는 정보를 가져오기
       List<Map<String, dynamic>> friendsList = [];
       for (var friendUid in following) {
         DocumentSnapshot friendDoc = await FirebaseFirestore.instance
@@ -43,12 +40,10 @@ class _TagFriendsPageState extends State<TagFriendsPage> {
             'uid': friendUid,
             'nickname': friendDoc['nickname'],
             'email': friendDoc['email'],
-            // 추가적인 친구 정보가 있으면 여기서 가져올 수 있음
           });
         }
       }
 
-      // 상태 업데이트
       setState(() {
         friends = friendsList;
       });
@@ -65,7 +60,6 @@ class _TagFriendsPageState extends State<TagFriendsPage> {
         actions: [
           TextButton(
             onPressed: () {
-              // 선택된 친구들의 UID와 nickname을 반환
               List<Map<String, String>> selectedFriendDetails = [];
               for (var uid in selectedFriends) {
                 var friend =
@@ -75,8 +69,7 @@ class _TagFriendsPageState extends State<TagFriendsPage> {
                   'nickname': friend['nickname'],
                 });
               }
-              Navigator.pop(
-                  context, selectedFriendDetails); // 선택된 친구의 UID와 nickname을 넘겨줌
+              Navigator.pop(context, selectedFriendDetails);
             },
             child: const Text(
               '완료',
@@ -86,15 +79,14 @@ class _TagFriendsPageState extends State<TagFriendsPage> {
         ],
       ),
       body: friends.isEmpty
-          ? const Center(child: CircularProgressIndicator()) // 친구 목록 로딩 중일 때
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: friends.length,
               itemBuilder: (context, index) {
                 final friend = friends[index];
                 final friendName = friend['nickname'];
                 final friendUid = friend['uid'];
-                final isSelected =
-                    selectedFriends.contains(friendUid); // 선택 여부 확인
+                final isSelected = selectedFriends.contains(friendUid);
 
                 return ListTile(
                   title: Text(friendName),
