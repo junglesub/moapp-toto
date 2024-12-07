@@ -29,6 +29,7 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   TextEditingController textController = TextEditingController();
   bool isAnalysisPage = false;
+  bool isAddMode = false;
   bool isEditMode = false;
   MoodOption? selectedMood;
   LocationResult? selectedLocation;
@@ -124,7 +125,7 @@ class _AddPageState extends State<AddPage> {
               element.creator == up.currentUser?.uid &&
               isToday(element.created?.toDate()))
           : null;
-      if (todayToto != null) {
+      if (todayToto != null && !isAddMode) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('오늘의 AI 리액션'),
@@ -385,6 +386,7 @@ class _AddPageState extends State<AddPage> {
                           setState(() {
                             isAnalysisPage = true;
                             currentToto = newT;
+                            isAddMode = true;
                           });
                         },
                       ),
@@ -583,7 +585,7 @@ class _AddPageState extends State<AddPage> {
 
                 // AI 분석 결과
                 const SizedBox(height: 16),
-                Text(toto?.id ?? "Unknown ID"),
+                // Text(toto?.id ?? "Unknown ID"),
                 if (!isEditMode)
                   Column(
                     children: [
