@@ -769,6 +769,7 @@ class MoodSelectionPage extends StatelessWidget {
     List<MoodOption> moodOptions = MoodOption.moodOptions;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("기분 선택"),
       ),
